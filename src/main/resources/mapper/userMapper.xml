@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.UserMapper" >
+
+    <resultMap id="BaseResultMap" type="com.springboot.domain.User" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="person_id" property="personId" typeHandler="com.springboot.mybatis.typehandle.UUIDTypeHandle"/>
+        <result column="createDate" property="create_date" jdbcType="TIMESTAMP" />
+        <result column="createPerson" property="create_person" jdbcType="VARCHAR" />
+        <result column="modifyDate" property="modify_date" jdbcType="TIMESTAMP" />
+        <result column="modifyPerson" property="modify_person" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, name, password, email, person_id, create_date, create_person, modify_date, modify_person
+    </sql>
+
+
+
+</mapper>
