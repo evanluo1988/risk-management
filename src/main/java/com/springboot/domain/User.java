@@ -6,39 +6,23 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Created by zx on 2020/3/7.
+ * @author evan
+ * 用户
  */
-@TableName("t_users")
-public class User extends BaseDomain{
+@TableName("users")
+public class User extends BaseDomain {
     private static final long serialVersionUID = -5971060169689289963L;
 
-    private String name;
-    private String email;
+    private String userName;
     private String password;
-    private UUID personId;
+    private Boolean enable;
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public UUID getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(UUID personId) {
-        this.personId = personId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -47,5 +31,13 @@ public class User extends BaseDomain{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
     }
 }
