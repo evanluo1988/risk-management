@@ -1,9 +1,5 @@
 package com.springboot.controller;
 
-import com.springboot.Application;
-import com.springboot.domain.MyXml;
-import com.springboot.properties.ConfigServer;
-import com.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +13,6 @@ import java.util.List;
  */
 @RestController
 public class ExampleController {
-    @Autowired
-    private ConfigServer configServer;
 
     /**
      *  Application Arguments
@@ -29,16 +23,8 @@ public class ExampleController {
     @RequestMapping("/example")
     public String example(HttpSession httpSession) {
         httpSession.setAttribute("hello", "world");
-        System.out.println(configServer.isEnabled());
         System.out.println(args);
         return "Example!";
-    }
-
-    @RequestMapping("/xml")
-    public MyXml myXml() {
-        MyXml myXml = new MyXml();
-        myXml.setName("XML name!");
-        return myXml;
     }
 
 }

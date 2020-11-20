@@ -1,11 +1,9 @@
 package com.springboot;
 
 import com.springboot.config.JerseyConfig;
-import com.springboot.register.ServiceRegisterHelper;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.valves.AccessLogValve;
 import org.apache.coyote.http11.Http11NioProtocol;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.boot.SpringApplication;
