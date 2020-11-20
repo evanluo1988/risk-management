@@ -42,12 +42,6 @@ public class Application {
         sa.run(Application.class, args);
     }
 
-    @Bean
-    public ServiceRegisterHelper register(){
-        ServiceRegisterHelper register = new ServiceRegisterHelper();
-        return register;
-    }
-
     /**
      * 编码设置
      * @return
