@@ -3,11 +3,17 @@ package com.springboot.service;
 import com.springboot.domain.User;
 import com.springboot.vo.ReturnT;
 import com.springboot.vo.UserVo;
+import com.springboot.vo.UserWithRoleVo;
+
+import java.util.List;
 
 /**
  * Created by zx on 2020/3/7.
  */
 public interface UserService {
+
+    public ReturnT<UserWithRoleVo> findUserWithRoleById(Long id);
+
     public void create(User user);
 
     public void deleteById(Long id);

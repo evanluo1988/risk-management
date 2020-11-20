@@ -2,6 +2,8 @@ package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.List;
+
 /**
  * @author evan
  * 角色
@@ -12,7 +14,9 @@ public class Role extends BaseDomain {
 
     private String roleName;
     private String roleDescribe;
-    private Boolean enable;
+    private String enable;
+
+    private List<Permission> permissionList;
 
     public String getRoleName() {
         return roleName;
@@ -30,11 +34,19 @@ public class Role extends BaseDomain {
         this.roleDescribe = roleDescribe;
     }
 
-    public Boolean getEnable() {
+    public String getEnable() {
         return enable;
     }
 
-    public void setEnable(Boolean enable) {
+    public void setEnable(String enable) {
         this.enable = enable;
+    }
+
+    public List<Permission> getPermissionList() {
+        return permissionList;
+    }
+
+    public void setPermissionList(List<Permission> permissionList) {
+        this.permissionList = permissionList;
     }
 }

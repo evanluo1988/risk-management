@@ -4,11 +4,11 @@ CREATE TABLE IF NOT EXISTS `permissions`
     `id`            BIGINT NOT NULL,
     `perm_name`     varchar(50)   COLLATE utf8mb4_bin  NOT NULL COMMENT '权限名称',
     `perm_describe` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '权限描述',
-	`enable`        tinyint(1)   NOT NULL DEFAULT 1 COMMENT '是否禁用：1为正常，0为禁用',
+	`enable`        varchar(1)   NOT NULL DEFAULT 'Y' COMMENT '是否禁用：Y为正常，N为禁用',
     `create_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-	`create_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-	`update_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+	`create_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+	`update_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS `roles`
     `id`            BIGINT NOT NULL,
     `role_name`     varchar(50)   COLLATE utf8mb4_bin  NOT NULL COMMENT '角色名称',
     `role_describe` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '角色描述',
-	`enable`        tinyint(1)   NOT NULL DEFAULT 1 COMMENT '是否禁用：1为正常，0为禁用',
+	`enable`        varchar(1)   NOT NULL DEFAULT 'Y' COMMENT '是否禁用：Y为正常，N为禁用',
     `create_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-	`create_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-	`update_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+	`create_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+	`update_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -38,11 +38,11 @@ CREATE TABLE IF NOT EXISTS `users`
     `id`            BIGINT NOT NULL,
     `user_name`     varchar(50)   COLLATE utf8mb4_bin  NOT NULL COMMENT '用户名',
     `password`      varchar(2000) COLLATE utf8mb4_bin  NOT NULL COMMENT '密码',
-	`enable`        tinyint(1)   NOT NULL DEFAULT 1 COMMENT '是否禁用：1为正常，0为禁用',
+	`enable`        varchar(1)   NOT NULL DEFAULT 'Y' COMMENT '是否禁用：Y为正常，N为禁用',
     `create_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-	`create_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-	`update_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+	`create_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+	`update_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS `roles_permissions`
     `permission_id` BIGINT NOT NULL COMMENT '权限ID',
     `create_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-	`create_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-	`update_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+	`create_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+	`update_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS `users_roles`
     `role_id`       BIGINT NOT NULL COMMENT '角色ID',
     `create_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-	`create_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-	`update_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+	`create_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+	`update_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -87,11 +87,12 @@ CREATE TABLE IF NOT EXISTS `menus`
     `menu_name`     varchar(50)  COLLATE utf8mb4_bin  NOT NULL COMMENT '菜单名称',
     `menu_url`      varchar(200) COLLATE utf8mb4_bin  NOT NULL COMMENT '菜单URL',
 	`menu_type`     varchar(50)  COLLATE utf8mb4_bin  NOT NULL COMMENT '菜单类型',
-	`enable`        tinyint(1)   NOT NULL DEFAULT 1 COMMENT '是否禁用：1为正常，0为禁用',
+	`menu_level`    int          DEFAULT 0 COMMENT '菜单级别',
+	`enable`        varchar(1)   NOT NULL DEFAULT 'Y' COMMENT '是否禁用：Y为正常，N为禁用',
     `create_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-	`create_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-	`update_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+	`create_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+	`update_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -106,9 +107,42 @@ CREATE TABLE IF NOT EXISTS `menus_permissions`
     `permission_id` BIGINT NOT NULL COMMENT '权限ID',
     `create_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  	timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-	`create_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
-	`update_by` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
+	`create_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建者',
+	`update_by` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin;
+
+INSERT INTO `permissions` (`id`, `perm_name`, `perm_describe`, `enable`,`create_time`, `update_time`,`create_by`,`update_by`) 
+VALUES (100, 'perm.list','权限列表','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+       (101, 'perm.view','查看权限','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (102, 'perm.create','新增权限','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (103, 'perm.update','更改权限','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (104, 'perm.delete','删除权限','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+       (200, 'user.list','用户列表','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+       (201, 'user.view','查看用户','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (202, 'user.create','新增用户','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (203, 'user.update','更改用户','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (204, 'user.delete','删除用户','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin')
+			 
+INSERT INTO `roles` (`id`, `role_name`, `role_describe`, `enable`,`create_time`, `update_time`,`create_by`,`update_by`) 
+VALUES (1, 'ADMIN_ROLE','管理员','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin')
+			 
+INSERT INTO `roles_permissions` (`id`, `role_id`, `permission_id`, `create_time`, `update_time`,`create_by`,`update_by`) 
+VALUES (1, 1, 100, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+       (2, 1, 101, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (3, 1, 102, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (4, 1, 103, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (5, 1, 104, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (6, 1, 200, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (7, 1, 201, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (8, 1, 202, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (9, 1, 203, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin'),
+	   (10, 1, 204, '2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin')
+	   
+INSERT INTO `users` (`id`, `user_name`, `password`, `enable`,`create_time`, `update_time`,`create_by`,`update_by`) 
+VALUES (1, 'admin','123456','Y','2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin')
+
+INSERT INTO `users_roles` (`id`, `user_id`, `role_id`, `create_time`, `update_time`,`create_by`,`update_by`) 
+VALUES (1, 1, 1,'2020-11-23 00:00:01','2020-11-23 00:00:01','admin','admin')

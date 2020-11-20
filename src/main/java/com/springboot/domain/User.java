@@ -3,6 +3,7 @@ package com.springboot.domain;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -15,7 +16,9 @@ public class User extends BaseDomain {
 
     private String userName;
     private String password;
-    private Boolean enable;
+    private String enable;
+
+    private List<Role> roleList;
 
     public String getUserName() {
         return userName;
@@ -33,11 +36,19 @@ public class User extends BaseDomain {
         this.password = password;
     }
 
-    public Boolean getEnable() {
+    public String getEnable() {
         return enable;
     }
 
-    public void setEnable(Boolean enable) {
+    public void setEnable(String enable) {
         this.enable = enable;
+    }
+
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
     }
 }

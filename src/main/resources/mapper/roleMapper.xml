@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.RoleMapper" >
+
+    <resultMap id="BaseResultMap" type="com.springboot.domain.Role" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="role_describe" property="roleDescribe" jdbcType="VARCHAR" />
+
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="RolePermissionResultMap" type="com.springboot.domain.Role" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="role_describe" property="roleDescribe" jdbcType="VARCHAR" />
+
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <collection property="permissionList" column="id" ofType="com.springboot.domain.Permission"
+                    select="com.springboot.mapper.PermMapper.findByRoleId" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        r.id, r.role_name, r.role_describe, r.create_time, r.create_by, r.update_time, r.update_by
+    </sql>
+
+    <select id="findByUserId" parameterType="Long" resultMap="RolePermissionResultMap">
+        select <include refid="Base_Column_List"/> from roles r
+        inner join users_roles ur on (r.id = ur.role_id)
+        where ur.user_id = #{userId} and r.enable = 'Y'
+    </select>
+
+
+
+</mapper>

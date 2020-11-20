@@ -12,7 +12,7 @@ public class Permission extends BaseDomain {
 
     private String permName;
     private String permDescribe;
-    private Boolean enable;
+    private String enable;
 
     public String getPermName() {
         return permName;
@@ -30,11 +30,11 @@ public class Permission extends BaseDomain {
         this.permDescribe = permDescribe;
     }
 
-    public Boolean getEnable() {
+    public String getEnable() {
         return enable;
     }
 
-    public void setEnable(Boolean enable) {
+    public void setEnable(String enable) {
         this.enable = enable;
     }
 }

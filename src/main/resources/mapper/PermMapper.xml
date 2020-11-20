@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.PermMapper" >
+
+    <resultMap id="BaseResultMap" type="com.springboot.domain.Permission" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="perm_name" property="permName" jdbcType="VARCHAR" />
+        <result column="perm_describe" property="permDescribe" jdbcType="VARCHAR" />
+
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        p.id, p.perm_name, p.perm_describe, p.create_time, p.create_by, p.update_time, p.update_by
+    </sql>
+
+    <select id="findByRoleId" parameterType="Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from permissions p
+        inner join roles_permissions rp on (p.id = rp.permission_id)
+        where rp.role_id = #{roleId} and p.enable = 'Y'
+    </select>
+
+
+
+</mapper>

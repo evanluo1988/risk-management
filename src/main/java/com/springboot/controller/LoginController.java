@@ -25,7 +25,7 @@ public class LoginController {
     public void login(HttpServletRequest request, HttpServletResponse response, @RequestParam String username, @RequestParam String password){
         logger.info("name {" + username + "},password {"+password+"}");
         User user = new User();
-        user.setName(username);
+        user.setUserName(username);
         user.setPassword(password);
         request.setAttribute("user", user);
         request.getSession().setAttribute("sessionId", request.getSession().getId());

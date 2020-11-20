@@ -7,18 +7,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by zx on 2020/7/25.
+ * @author evan
  */
 public class BaseDomain implements Serializable {
 
-    @TableId(value="id", type= IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    @TableField(value = "create_date", fill = FieldFill.INSERT)
-    private Date createDate;
-    private String createPerson;
-    @TableField(value = "modify_date", fill = FieldFill.INSERT_UPDATE)
-    private Date modifyDate;
-    private String modifyPerson;
+    @TableField(value = "create_time")
+    private Date createTime;
+    @TableField(value = "create_by")
+    private String createBy;
+    @TableField(value = "update_time")
+    private Date updateTime;
+    @TableField(value = "update_by")
+    private String updateBy;
 
     public Long getId() {
         return id;
@@ -27,35 +29,36 @@ public class BaseDomain implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Date getCreateDate() {
-        return createDate;
+
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public String getCreatePerson() {
-        return createPerson;
+    public String getCreateBy() {
+        return createBy;
     }
 
-    public void setCreatePerson(String createPerson) {
-        this.createPerson = createPerson;
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
     }
 
-    public Date getModifyDate() {
-        return modifyDate;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = modifyDate;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
-    public String getModifyPerson() {
-        return modifyPerson;
+    public String getUpdateBy() {
+        return updateBy;
     }
 
-    public void setModifyPerson(String modifyPerson) {
-        this.modifyPerson = modifyPerson;
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
     }
 }
