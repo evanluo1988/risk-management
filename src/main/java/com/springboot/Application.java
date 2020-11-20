@@ -65,44 +65,4 @@ public class Application {
         return registration;
     }
 
-    /**
-     * 修改默认内嵌tomcat配置
-     * @return
-     */
-//    @Bean
-//    public ConfigurableServletWebServerFactory createServletWebServerFactory(){
-//        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
-//        factory.setPort(8888);//tomcat端口
-//        //factory.setBaseDirectory(new File("d:/temp/tomcat"));//缓存路径
-//        factory.addContextValves(getLogAccessLogValue());//设置日志
-//        factory.addConnectorCustomizers(new MyTomcatConnectorCustomizer());//tomcat自定义访问连接
-//        factory.setSession(getSession());
-//        return factory;
-//    }
-//    private AccessLogValve getLogAccessLogValue(){
-//        AccessLogValve log=new AccessLogValve();
-//        log.setDirectory("d:/temp/logs");//日志路径
-//        log.setEnabled(true);//启用日志
-//        log.setPattern("common");//输入日志格式
-//        log.setPrefix("springboot-access-log");//日志名称
-//        log.setSuffix(".txt");//日志后缀
-//        return log;
-//    }
-
-//    private Session getSession(){
-//        Session session = new Session();
-//        session.setTimeout(Duration.ofSeconds(10));
-//        session.setPersistent(true);
-//        return session;
-//    }
-
-//    private class MyTomcatConnectorCustomizer implements TomcatConnectorCustomizer {
-//        @Override
-//        public void customize(Connector connector) {
-//            Http11NioProtocol protocal=(Http11NioProtocol)connector.getProtocolHandler();
-//            protocal.setMaxConnections(20000);//最大连接数
-//            protocal.setMaxThreads(500);//最大线程数
-//        }
-//    }
-
 }
