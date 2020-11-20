@@ -2,6 +2,8 @@ package com.springboot.controller;
 
 import com.springboot.domain.User;
 import com.springboot.service.UserService;
+import com.springboot.vo.ReturnT;
+import com.springboot.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -28,7 +30,7 @@ public class UserController {
     private RedisTemplate redisTemplate;
 
     @GetMapping("{id}")
-    public User findUserById(@PathVariable Long id){
+    public ReturnT<UserVo> findUserById(@PathVariable Long id){
 //        ValueOperations<String, User> operations = redisTemplate.opsForValue();
 //        User user = operations.get(id.toString());
 //        if(user == null){

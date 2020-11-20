@@ -4,9 +4,13 @@ import com.springboot.annotation.MyWebService;
 import com.springboot.mapper.UserMapper;
 import com.springboot.domain.User;
 import com.springboot.service.UserService;
+import com.springboot.utils.ReturnTUtils;
+import com.springboot.vo.ReturnT;
+import com.springboot.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +26,11 @@ public class UserServiceImpl implements UserService{
     private UserMapper userMapper;
 
     @Override
-    public User getById(Long id) {
-        return userMapper.selectById(id);
+    public ReturnT<UserVo> getById(Long id) {
+        User user = userMapper.selectById(id);
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user, userVo);
+        return ReturnTUtils.getReturnT(userVo);
     }
 
     @Override
