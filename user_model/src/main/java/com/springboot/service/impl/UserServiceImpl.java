@@ -16,6 +16,7 @@ import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
@@ -90,24 +91,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void update(User user) {
         userMapper.updateById(user);
     }
 
     @Override
-    @Transactional
-    public void updateEmailByName(String name) {
-        userMapper.updateEmailByName(name, "333@qq.com");
-    }
-
-    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void deleteById(Long id) {
-        userMapper.deleteById(id);
+        userMapper.disableById(id);
     }
 
     @Override
-    @Transactional( "transactionManager")
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void create(User user) {
          userMapper.insert(user);
     }

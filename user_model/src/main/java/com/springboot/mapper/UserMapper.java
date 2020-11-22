@@ -14,9 +14,9 @@ import java.util.List;
  */
 @Repository
 public interface UserMapper extends BaseMapper<User> {
-    @Update("Update t_users SET email=#{email} WHERE name = #{name}")
-    void updateEmailByName(@Param("name")String name, @Param("email")String email);
-
     List<User> findAllUsers();
     UserRole findUserWithRoleById(Long id);
+
+    @Update("Update users SET enable='N' WHERE id = #{id}")
+    void disableById(@Param("id")Long id);
 }

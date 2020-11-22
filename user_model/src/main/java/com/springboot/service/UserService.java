@@ -11,17 +11,41 @@ import java.util.List;
  * @author evan
  */
 public interface UserService {
+    /**
+     * 获取所有的用户列表
+     * @return
+     */
     public ReturnT<List<UserVo>> findAllUsers();
 
+    /**
+     * 通过用户ID获取带权限的用户信息
+     * @param id
+     * @return
+     */
     public ReturnT<UserWithRoleVo> findWithRoleById(Long id);
 
-    public void create(User user);
-
-    public void deleteById(Long id);
-
+    /**
+     * 通过用户ID获取用户信息
+     * @param id
+     * @return
+     */
     public ReturnT<UserVo> getById(Long id);
 
-    public void update(User user);
+    /**
+     * 新建用户
+     * @param user
+     */
+    public void create(User user);
 
-    public void updateEmailByName(String name);
+    /**
+     * 注销用户
+     * @param id
+     */
+    public void deleteById(Long id);
+
+    /**
+     * 修改用户
+     * @param user
+     */
+    public void update(User user);
 }

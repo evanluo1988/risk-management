@@ -1,15 +1,11 @@
 package com.springboot.interceptor;
 
-import com.springboot.authority.Authority;
 import com.springboot.authority.AuthorityManagement;
 import com.springboot.authority.Subject;
-import com.springboot.utils.HttpServletLocalThread;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * @author evan
