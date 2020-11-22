@@ -6,12 +6,15 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author evan
+ */
 public abstract class AbstractAuthority implements AuthorityService{
 
     @Override
     public boolean verifyPermission(Subject subject) throws ServiceException{
         List<Authority> accessAuthorityList = getAccessAuthorities(subject);
-        List<Authority> authorityList = subject.getAuthorities();
+        List<Authority> authorityList = getAuthorities(subject);
         if(CollectionUtils.isEmpty(accessAuthorityList)){
             return true;
         }
@@ -33,4 +36,11 @@ public abstract class AbstractAuthority implements AuthorityService{
      * @return
      */
     public abstract List<Authority> getAccessAuthorities(Subject subject);
+
+    /**
+     * 获取当前已有的权限列表
+     * @param subject
+     * @return
+     */
+    public abstract List<Authority> getAuthorities(Subject subject);
 }

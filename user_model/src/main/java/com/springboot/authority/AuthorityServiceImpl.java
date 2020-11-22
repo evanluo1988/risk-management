@@ -2,8 +2,9 @@ package com.springboot.authority;
 
 import com.springboot.domain.Menu;
 import com.springboot.domain.Permission;
-import com.springboot.model.PermWithMenuId;
+import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.ServerCacheUtils;
+import com.springboot.utils.ServletUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author evan
+ */
 public class AuthorityServiceImpl extends AbstractAuthority {
 
     @Override
@@ -33,5 +37,13 @@ public class AuthorityServiceImpl extends AbstractAuthority {
         }
 
         return authorityList;
+    }
+
+    @Override
+    public List<Authority> getAuthorities(Subject subject) {
+        if(CollectionUtils.isEmpty(subject.getAuthorities())) {
+            //TODO 得到当前用户的权限列表
+        }
+        return subject.getAuthorities();
     }
 }
