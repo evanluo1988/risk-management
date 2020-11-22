@@ -30,14 +30,13 @@ import java.time.Duration;
 import java.util.Set;
 
 /**
- * Created by zx on 2020/3/7.
+ * @author evan
  */
 @SpringBootApplication
 @ServletComponentScan(basePackages = "com.springboot.config")
 public class Application {
     public static void main(String[] args) {
-        SpringApplication sa = new SpringApplication();
-        sa.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     /**

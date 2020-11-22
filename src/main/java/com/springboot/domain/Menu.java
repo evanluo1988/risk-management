@@ -18,16 +18,19 @@ public class Menu extends BaseDomain {
     private Long parentId;
     @TableField(value = "menu_name")
     private String menuName;
+    @TableField(value = "menu_describe")
+    private String menuDescribe;
     @TableField(value = "menu_url")
     private String menuUrl;
     @TableField(value = "menu_type")
     private String menuType;
-    @TableField(value = "menu_leve")
-    private int menu_level;
+    @TableField(value = "menu_level")
+    private int menuLevel;
     @TableField(value = "enable")
     private String enable;
 
     private List<Permission> permissionList;
+    private List<Menu> subMenuList;
 
     public Long getParentId() {
         return parentId;
@@ -43,6 +46,14 @@ public class Menu extends BaseDomain {
 
     public void setMenuName(String menuName) {
         this.menuName = menuName;
+    }
+
+    public String getMenuDescribe() {
+        return menuDescribe;
+    }
+
+    public void setMenuDescribe(String menuDescribe) {
+        this.menuDescribe = menuDescribe;
     }
 
     public String getMenuUrl() {
@@ -61,12 +72,12 @@ public class Menu extends BaseDomain {
         this.menuType = menuType;
     }
 
-    public int getMenu_level() {
-        return menu_level;
+    public int getMenuLevel() {
+        return menuLevel;
     }
 
-    public void setMenu_level(int menu_level) {
-        this.menu_level = menu_level;
+    public void setMenuLevel(int menuLevel) {
+        this.menuLevel = menuLevel;
     }
 
     public String getEnable() {
@@ -83,5 +94,13 @@ public class Menu extends BaseDomain {
 
     public void setPermissionList(List<Permission> permissionList) {
         this.permissionList = permissionList;
+    }
+
+    public List<Menu> getSubMenuList() {
+        return subMenuList;
+    }
+
+    public void setSubMenuList(List<Menu> subMenu) {
+        this.subMenuList = subMenu;
     }
 }

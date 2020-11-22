@@ -13,8 +13,19 @@
         <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     </resultMap>
 
+    <resultMap id="MenuPremResultMap" type="com.springboot.model.PremWithMenuId" >
+        <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="perm_name" property="permName" jdbcType="VARCHAR" />
+        <result column="perm_describe" property="permDescribe" jdbcType="VARCHAR" />
+    </resultMap>
+
     <sql id="Base_Column_List" >
         p.id, p.perm_name, p.perm_describe, p.create_time, p.create_by, p.update_time, p.update_by
+    </sql>
+
+    <sql id="MenuPrem_Column_List" >
+        mp.menu_id, p.id, p.perm_name, p.perm_describe
     </sql>
 
     <select id="findByRoleId" parameterType="Long" resultMap="BaseResultMap">
@@ -23,6 +34,24 @@
         where rp.role_id = #{roleId} and p.enable = 'Y'
     </select>
 
+    <select id="findByMenuId" parameterType="Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from permissions p
+        inner join menus_permissions mp on (p.id = mp.permission_id)
+        where mp.menu_id = #{menuId} and p.enable = 'Y'
+    </select>
+
+
+    <select id="findWithMenuIdByMenuIds" parameterType="java.util.List" resultMap="MenuPremResultMap">
+        select <include refid="MenuPrem_Column_List"/> from permissions p
+        inner join menus_permissions mp on (p.id = mp.permission_id)
+        <where>
+            mp.id in (
+            <foreach collection="list"  item="id" index="index" separator=",">
+                #{id}
+            </foreach>
+            ) and p.enable = 'Y'
+        </where>
+    </select>
 
 
 </mapper>
