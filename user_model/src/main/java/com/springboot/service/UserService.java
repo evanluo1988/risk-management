@@ -5,12 +5,15 @@ import com.springboot.ret.ReturnT;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
 
+import java.util.List;
+
 /**
- * Created by zx on 2020/3/7.
+ * @author evan
  */
 public interface UserService {
+    public ReturnT<List<UserVo>> findAllUsers();
 
-    public ReturnT<UserWithRoleVo> findUserWithRoleById(Long id);
+    public ReturnT<UserWithRoleVo> findWithRoleById(Long id);
 
     public void create(User user);
 

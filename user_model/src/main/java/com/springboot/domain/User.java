@@ -16,8 +16,6 @@ public class User extends BaseDomain {
     private String password;
     private String enable;
 
-    private List<Role> roleList;
-
     public String getUserName() {
         return userName;
     }
@@ -42,11 +40,4 @@ public class User extends BaseDomain {
         this.enable = enable;
     }
 
-    public List<Role> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
-    }
 }

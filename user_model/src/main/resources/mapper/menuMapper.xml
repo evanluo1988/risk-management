@@ -22,12 +22,11 @@
     </sql>
 
     <select id="findMenuListByUserId" parameterType="Long" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> from users u
-        inner join users_roles ru on ru.user_id = u.id
-        inner join roles_permissions rp on rp.role_id = ru.role_id
+        select <include refid="Base_Column_List"/> from users_roles ur
+        inner join roles_permissions rp on rp.role_id = ur.role_id
         inner join menus_permissions mp on mp.permission_id = rp.permission_id
         inner join menus m on m.id = mp.menu_id
-        where u.id = #{userId} and m.enable = 'Y'
+        where ur.user_id = #{userId} and m.enable = 'Y'
     </select>
 
 

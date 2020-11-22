@@ -4,7 +4,7 @@ import com.springboot.domain.Menu;
 import com.springboot.domain.Permission;
 import com.springboot.mapper.MenuMapper;
 import com.springboot.mapper.PermMapper;
-import com.springboot.model.PremWithMenuId;
+import com.springboot.model.PermWithMenuId;
 import com.springboot.service.MenuService;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.MenuVo;
@@ -69,14 +69,14 @@ public class MenuServiceImpl implements MenuService {
         if(CollectionUtils.isEmpty(menuList)){
             return new ArrayList<>();
         }
-        List<PremWithMenuId> premWithMenuIdList = permMapper.findWithMenuIdByMenuIds(menuList.stream().map(Menu::getId).collect(Collectors.toList()));
+        List<PermWithMenuId> permWithMenuIdList = permMapper.findWithMenuIdByMenuIds(menuList.stream().map(Menu::getId).collect(Collectors.toList()));
 
-        if(CollectionUtils.isEmpty(premWithMenuIdList)){
+        if(CollectionUtils.isEmpty(permWithMenuIdList)){
             return menuList;
         }
         for(Menu menu : menuList){
             menu.setPermissionList(new ArrayList<>());
-            List<Permission> permissionList = premWithMenuIdList.stream().filter(item -> item.getMenuId().equals(menu.getId())).collect(Collectors.toList());
+            List<Permission> permissionList = permWithMenuIdList.stream().filter(item -> item.getMenuId().equals(menu.getId())).collect(Collectors.toList());
             menu.setPermissionList(permissionList);
         }
 

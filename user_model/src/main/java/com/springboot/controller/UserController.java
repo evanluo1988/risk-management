@@ -8,6 +8,8 @@ import com.springboot.vo.UserWithRoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * @author evan
@@ -18,35 +20,34 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("{id}/role")
-    public ReturnT<UserWithRoleVo> findUserWithRoleById(@PathVariable Long id){
-        return userService.findUserWithRoleById(id);
+    @GetMapping("/list")
+    public ReturnT<List<UserVo>> findAllUsers(){
+        return  userService.findAllUsers();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/view/{id}/role")
+    public ReturnT<UserWithRoleVo> findUserWithRoleById(@PathVariable Long id){
+        return userService.findWithRoleById(id);
+    }
+
+    @GetMapping("/view/{id}")
     public ReturnT<UserVo> findUserById(@PathVariable Long id){
         return  userService.getById(id);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public void createUser(@RequestBody User user){
         userService.create(user);
-
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/del/{id}")
     public void deleteUser(@PathVariable Long id){
         userService.deleteById(id);
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public void updateUser(@RequestBody User user){
         userService.update(user);
-    }
-
-    @PutMapping("{name}")
-    public void updateUserEmail(@PathVariable String name){
-        userService.updateEmailByName(name);
     }
 
 }

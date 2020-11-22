@@ -4,6 +4,7 @@ import com.springboot.domain.Permission;
 import com.springboot.domain.Role;
 import com.springboot.mapper.UserMapper;
 import com.springboot.domain.User;
+import com.springboot.model.UserRole;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.UserService;
 import com.springboot.utils.ReturnTUtils;
@@ -30,17 +31,35 @@ public class UserServiceImpl implements UserService{
     private UserMapper userMapper;
 
     @Override
-    public ReturnT<UserWithRoleVo> findUserWithRoleById(Long id) {
-        User user = userMapper.findUserWithRoleById(id);
+    public ReturnT<List<UserVo>> findAllUsers() {
+        List<User> users = userMapper.findAllUsers();
+        if(ObjectUtils.isEmpty(users)){
+            return ReturnTUtils.getReturnT(new ArrayList<>());
+        }
+        List<UserVo> userVos = new ArrayList<>();
+        for(User user : users){
+            userVos.add(convertUserToUserVo(user));
+        }
+        return ReturnTUtils.getReturnT(userVos);
+    }
+
+    private UserVo convertUserToUserVo(User user) {
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user, userVo);
+        return userVo;
+    }
+
+    @Override
+    public ReturnT<UserWithRoleVo> findWithRoleById(Long id) {
+        UserRole user = userMapper.findUserWithRoleById(id);
         if(ObjectUtils.isEmpty(user)){
             return ReturnTUtils.getReturnT(new UserWithRoleVo());
         }
-        UserWithRoleVo vo = new UserWithRoleVo();
-        convertUserToUserWithRoleVo(user, vo);
-        return ReturnTUtils.getReturnT(vo);
+        return ReturnTUtils.getReturnT(convertUserToUserWithRoleVo(user));
     }
 
-    private void convertUserToUserWithRoleVo(User user, UserWithRoleVo vo) {
+    private UserWithRoleVo convertUserToUserWithRoleVo(UserRole user) {
+        UserWithRoleVo vo = new UserWithRoleVo();
         BeanUtils.copyProperties(user, vo);
         List<RoleVo> roleVoList = new ArrayList<>();
         for(Role role : user.getRoleList()) {
@@ -56,6 +75,7 @@ public class UserServiceImpl implements UserService{
             roleVo.setPermissionVoList(permVoList);
         }
         vo.setRoleList(roleVoList);
+        return vo;
     }
 
     @Override

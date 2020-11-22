@@ -1,5 +1,7 @@
 package com.springboot;
 
+import com.springboot.authority.AuthorityManagement;
+import com.springboot.authority.AuthorityServiceImpl;
 import com.springboot.config.JerseyConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
