@@ -24,10 +24,20 @@ public abstract class AbstractAuthority implements AuthorityService{
             return true;
         }
         List permissions = authorityList.stream().map(Authority::getPremission).collect(Collectors.toList());
-        if(!permissions.contains(accessPermissions)){
+        if(verify(permissions, accessPermissions)){
             throw new ServiceException("没有权限！");
         }
         return true;
+    }
+
+    /**
+     * 此方法有需要可覆盖，目前当前所有权限包含所有的访问所需权限才可以访问
+     * @param permissions 当前所有权限
+     * @param accessPermissions 访问所需权限
+     * @return
+     */
+    public boolean verify(List<Object> permissions, List<Object> accessPermissions){
+        return permissions.contains(accessPermissions);
     }
 
     /**
