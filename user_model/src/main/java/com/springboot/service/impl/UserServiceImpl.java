@@ -12,6 +12,7 @@ import com.springboot.vo.PermVo;
 import com.springboot.vo.RoleVo;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
+import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author evan
@@ -61,20 +63,21 @@ public class UserServiceImpl implements UserService{
     private UserWithRoleVo convertUserToUserWithRoleVo(UserRole user) {
         UserWithRoleVo vo = new UserWithRoleVo();
         BeanUtils.copyProperties(user, vo);
-        List<RoleVo> roleVoList = new ArrayList<>();
+        Set<RoleVo> roleVoSet = Sets.newHashSet();
+        Set<PermVo> permVoSet = Sets.newHashSet();
         for(Role role : user.getRoleList()) {
             RoleVo roleVo = new RoleVo();
             BeanUtils.copyProperties(role, roleVo);
-            roleVoList.add(roleVo);
-            List<PermVo> permVoList = new ArrayList<>();
+            roleVoSet.add(roleVo);
+
             for(Permission permission : role.getPermissionList()) {
                 PermVo permVo = new PermVo();
                 BeanUtils.copyProperties(permission, permVo);
-                permVoList.add(permVo);
+                permVoSet.add(permVo);
             }
-            roleVo.setPermissionVoList(permVoList);
         }
-        vo.setRoleList(roleVoList);
+        vo.setRoleVoSet(roleVoSet);
+        vo.setPermVoSet(permVoSet);
         return vo;
     }
 

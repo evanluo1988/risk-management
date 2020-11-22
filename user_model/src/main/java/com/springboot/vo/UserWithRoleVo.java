@@ -1,11 +1,12 @@
 package com.springboot.vo;
 
-import java.util.List;
+import java.util.Set;
 
 public class UserWithRoleVo {
     private Long id;
     private String userName;
-    private List<RoleVo> roleList;
+    private Set<RoleVo> roleVoSet;
+    private Set<PermVo> permVoSet;
 
     public Long getId() {
         return id;
@@ -23,11 +24,19 @@ public class UserWithRoleVo {
         this.userName = userName;
     }
 
-    public List<RoleVo> getRoleList() {
-        return roleList;
+    public Set<RoleVo> getRoleVoSet() {
+        return roleVoSet;
     }
 
-    public void setRoleList(List<RoleVo> roleList) {
-        this.roleList = roleList;
+    public void setRoleVoSet(Set<RoleVo> roleVoSet) {
+        this.roleVoSet = roleVoSet;
+    }
+
+    public Set<PermVo> getPermVoSet() {
+        return permVoSet;
+    }
+
+    public void setPermVoSet(Set<PermVo> permVoSet) {
+        this.permVoSet = permVoSet;
     }
 }
