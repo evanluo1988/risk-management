@@ -6,7 +6,12 @@
 
     <groupId>com.springboot</groupId>
     <artifactId>MyProject-Springboot</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>common</module>
+        <module>user_model</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
