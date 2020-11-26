@@ -14,15 +14,14 @@ public abstract class AbstractAuthority implements AuthorityService{
     @Override
     public boolean verifyPermission(Subject subject) throws ServiceException{
         List<Authority> accessAuthorityList = getAccessAuthorities(subject);
-        List<Authority> authorityList = getAuthorities(subject);
         if(CollectionUtils.isEmpty(accessAuthorityList)){
             return true;
         }
-        List accessPermissions = accessAuthorityList.stream().map(Authority::getPremission).collect(Collectors.toList());
+        List<Authority> authorityList = getAuthorities(subject);
         if(CollectionUtils.isEmpty(authorityList)){
-            //throw new ServiceException("没有权限！");
-            return true;
+            throw new ServiceException("没有权限！");
         }
+        List accessPermissions = accessAuthorityList.stream().map(Authority::getPremission).collect(Collectors.toList());
         List permissions = authorityList.stream().map(Authority::getPremission).collect(Collectors.toList());
         if(verify(permissions, accessPermissions)){
             throw new ServiceException("没有权限！");
