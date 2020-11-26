@@ -6,14 +6,17 @@ import com.springboot.ret.ReturnT;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
 /**
  * @author evan
  */
+@Validated
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -35,9 +38,10 @@ public class UserController {
         return  userService.getById(id);
     }
 
+    @Validated(UserVo.UserAddGroup.class)
     @PostMapping("/add")
-    public void createUser(@RequestBody User user){
-        userService.create(user);
+    public void createUser(@RequestBody @Valid UserVo userVo){
+        userService.create(userVo);
     }
 
     @DeleteMapping("/del/{id}")

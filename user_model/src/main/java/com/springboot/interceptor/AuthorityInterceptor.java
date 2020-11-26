@@ -18,7 +18,6 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
         this.authorityManagement = authorityManagement;
     }
 
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         authorityManagement.validAuthority(new Subject(request));

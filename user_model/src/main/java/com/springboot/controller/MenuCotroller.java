@@ -1,6 +1,7 @@
 package com.springboot.controller;
 
 import com.springboot.service.MenuService;
+import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.MenuVo;
 import com.springboot.ret.ReturnT;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class MenuCotroller {
     @Autowired
     private MenuService menuService;
 
-    @GetMapping("/user/{userId}")
-    public ReturnT<List<MenuVo>> findMenuListByUserId(@PathVariable Long userId){
-       return menuService.findMenuByUserId(userId);
+    @GetMapping
+    public ReturnT<List<MenuVo>> findMenuList(){
+       return menuService.findMenuByUserId(UserAuthInfoContext.getUserId());
     }
 }

@@ -1,18 +1,17 @@
 package com.springboot.model;
 
-import com.springboot.domain.Role;
 import com.springboot.domain.User;
 
 import java.util.List;
 
 public class UserRole extends User {
-    private List<Role> roleList;
+    private List<RolePerm> roleList;
 
-    public List<Role> getRoleList() {
+    public List<RolePerm> getRoleList() {
         return roleList;
     }
 
-    public void setRoleList(List<Role> roleList) {
+    public void setRoleList(List<RolePerm> roleList) {
         this.roleList = roleList;
     }
 }

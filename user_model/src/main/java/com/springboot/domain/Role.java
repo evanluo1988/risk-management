@@ -16,8 +16,6 @@ public class Role extends BaseDomain {
     private String roleDescribe;
     private String enable;
 
-    private List<Permission> permissionList;
-
     public String getRoleName() {
         return roleName;
     }
@@ -40,13 +38,5 @@ public class Role extends BaseDomain {
 
     public void setEnable(String enable) {
         this.enable = enable;
-    }
-
-    public List<Permission> getPermissionList() {
-        return permissionList;
-    }
-
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
     }
 }
