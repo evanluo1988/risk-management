@@ -1,5 +1,7 @@
 package com.springboot.enums;
 
+import org.springframework.util.StringUtils;
+
 /**
  * @Author 刘宏飞
  * @Date 2020/11/26 11:27
@@ -32,5 +34,25 @@ public enum AreaTypeEnum {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    /**
+     *
+     * @param type
+     * @return
+     */
+    public static AreaTypeEnum typeOf(String type){
+        if (StringUtils.isEmpty(type)){
+            return null;
+        }
+
+        AreaTypeEnum[] values = AreaTypeEnum.values();
+        for (AreaTypeEnum value : values) {
+            if (type.equalsIgnoreCase(value.getCode())){
+                return value;
+            }
+        }
+
+        return null;
     }
 }

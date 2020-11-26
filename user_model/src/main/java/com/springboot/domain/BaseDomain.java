@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class BaseDomain implements Serializable {
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId
     private Long id;
     @TableField(value = "create_time")
     private Date createTime;

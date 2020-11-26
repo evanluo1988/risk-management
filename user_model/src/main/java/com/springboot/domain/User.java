@@ -1,6 +1,7 @@
 package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * 用户
  */
 @TableName("users")
+@Accessors(chain = true)
 public class User extends BaseDomain {
     private static final long serialVersionUID = -5971060169689289963L;
 

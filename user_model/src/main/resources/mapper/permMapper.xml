@@ -45,7 +45,7 @@
         select <include refid="MenuPrem_Column_List"/> from permissions p
         inner join menus_permissions mp on (p.id = mp.permission_id)
         <where>
-            mp.id in (
+            mp.menu_id in (
             <foreach collection="list"  item="id" index="index" separator=",">
                 #{id}
             </foreach>

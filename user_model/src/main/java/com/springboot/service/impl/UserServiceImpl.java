@@ -3,18 +3,24 @@ package com.springboot.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.springboot.constant.GlobalConstants;
+import com.springboot.domain.Area;
 import com.springboot.domain.Permission;
 import com.springboot.domain.Role;
+import com.springboot.enums.AreaTypeEnum;
 import com.springboot.enums.EnableEnum;
+import com.springboot.enums.RoleEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.UserMapper;
 import com.springboot.domain.User;
 import com.springboot.model.RolePerm;
 import com.springboot.model.UserRole;
 import com.springboot.ret.ReturnT;
+import com.springboot.service.AreaService;
 import com.springboot.service.UserService;
+import com.springboot.util.ConvertUtils;
 import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.ReturnTUtils;
+import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.PermVo;
 import com.springboot.vo.RoleVo;
 import com.springboot.vo.UserVo;
@@ -27,15 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author evan
@@ -46,6 +50,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private AreaService areaService;
 
     @Override
     public ReturnT<List<UserVo>> findAllUsers() {
@@ -162,7 +168,7 @@ public class UserServiceImpl implements UserService {
      * @return 用户信息
      */
     private User getUserByUsername(String userName) {
-        if (StringUtils.isEmpty(userName)){
+        if (StringUtils.isEmpty(userName)) {
             return null;
         }
 
@@ -181,13 +187,72 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void create(UserVo userVo) {
-        //如果没输入密码 填充默认密码
-        if (StringUtils.isEmpty(userVo.getPassword())){
-            userVo.setPassword(BCrypt.hashpw(GlobalConstants.DEFAULT_PASSWORD,BCrypt.gensalt()));
+        //如果没输入密码 填充默认密码 否则加密用户输入密码
+        if (StringUtils.isEmpty(userVo.getPassword())) {
+            userVo.setPassword(BCrypt.hashpw(GlobalConstants.DEFAULT_PASSWORD, BCrypt.gensalt()));
+        }else {
+            userVo.setPassword(BCrypt.hashpw(userVo.getPassword(),BCrypt.gensalt()));
         }
 
         //校验area
+        Area areaById = areaService.getById(userVo.getAreaId());
+        checkOpAreaPermissionEnough(areaById);
 
-        //userMapper.insert(user);
+        //convert and store user
+        User user = ConvertUtils.sourceToTarget(userVo, User.class);
+
+        userMapper.insert(user);
+    }
+
+    /**
+     * 校验当前登录用户操作此区域的权限是否足够
+     *
+     * @param area 区域
+     */
+    private void checkOpAreaPermissionEnough(Area area) {
+        if (Objects.isNull(area)) {
+            throw new ServiceException("区域不存在");
+        }
+
+        Collection<RolePerm> rolePerms = UserAuthInfoContext.getRolePerms();
+        RolePerm highestLevelRole = getHighestLevelRole(rolePerms);
+        if (Objects.isNull(highestLevelRole)) {
+            throw new ServiceException("当前用户角色错误");
+        }
+
+        RoleEnum highestLevelRoleEnum = RoleEnum.nameOf(highestLevelRole.getRoleName());
+        AreaTypeEnum areaTypeEnum = AreaTypeEnum.typeOf(area.getType());
+
+        //需要最低的管理员等级
+        RoleEnum acquireLowestLevelRoleEnum;
+        if (AreaTypeEnum.R == areaTypeEnum) {
+            acquireLowestLevelRoleEnum = RoleEnum.SYS_ADMIN;
+        } else if (AreaTypeEnum.S == areaTypeEnum) {
+            acquireLowestLevelRoleEnum = RoleEnum.REGION_ADMIN;
+        } else {
+            throw new ServiceException("区域类型错误");
+        }
+        //权限校验
+        if (highestLevelRoleEnum.ordinal() > acquireLowestLevelRoleEnum.ordinal()) {
+            throw new ServiceException("没有建此区域用户的权限");
+        }
+    }
+
+    private RolePerm getHighestLevelRole(Collection<RolePerm> rolePerms) {
+        if (CollectionUtils.isEmpty(rolePerms)) {
+            return null;
+        }
+
+        RolePerm highestLevelRole = null;
+        for (RolePerm rolePerm : rolePerms) {
+            //如果最高权限是null或者最高权限级别小于当前权限级别
+            if (Objects.isNull(highestLevelRole)
+                    || RoleEnum.nameOf(rolePerm.getRoleName()).ordinal()
+                    < RoleEnum.nameOf(highestLevelRole.getRoleName()).ordinal()) {
+                highestLevelRole = rolePerm;
+            }
+        }
+
+        return highestLevelRole;
     }
 }
