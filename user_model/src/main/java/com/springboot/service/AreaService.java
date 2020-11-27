@@ -16,7 +16,7 @@ import java.util.List;
 public interface AreaService extends IService<Area> {
 
     /**
-     * 根据当前区域ID获取它自己以及下面的区域ID集合
+     * 根据当前区域ID获取它下面的区域ID集合
      * @param areaId
      * @return
      */
