@@ -91,9 +91,11 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
 
     public List<Long> findAreaIdsById(Long areaId) {
         HashSet<Long> areaIds = Sets.newHashSetWithExpectedSize(1);
-        areaIds.add(areaId);
-        Collection<Area> areas = listAreaByParentIds(areaIds);
+        if (Objects.nonNull(areaId)){
+            areaIds.add(areaId);
+        }
 
+        Collection<Area> areas = listAreaByParentIds(areaIds);
         Set<Long> subAreaIds = areas.stream().map(Area::getId).collect(Collectors.toSet());
         Collection<Area> subAreas = listAreaByParentIds(subAreaIds);
 

@@ -37,9 +37,7 @@
     </select>
 
     <select id="findAllRolePermission" resultMap="RolePermissionResultMap">
-        select <include refid="Base_Column_List"/> from roles r
-        inner join users_roles ur on (r.id = ur.role_id)
-        where r.enable = 'Y'
+        select <include refid="Base_Column_List"/> from roles r where r.enable = 'Y'
     </select>
 
 </mapper>
