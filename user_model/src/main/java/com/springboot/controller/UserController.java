@@ -43,8 +43,9 @@ public class UserController {
 
     @Validated(UserVo.UserAddGroup.class)
     @PostMapping("/add")
-    public void createUser(@RequestBody @Valid UserVo userVo){
+    public ReturnT createUser(@RequestBody @Valid UserVo userVo){
         userService.create(userVo);
+        return ReturnTUtils.newCorrectReturnT();
     }
 
     @DeleteMapping("/del/{id}")

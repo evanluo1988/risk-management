@@ -4,7 +4,7 @@ import com.springboot.domain.User;
 
 import java.util.List;
 
-public class UserRole extends User {
+public class UserRoleDomain extends User {
     private List<RolePerm> roleList;
 
     public List<RolePerm> getRoleList() {

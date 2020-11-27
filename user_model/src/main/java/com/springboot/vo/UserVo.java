@@ -21,7 +21,7 @@ public class UserVo implements Serializable {
     }
 
     private static final long serialVersionUID = 4438086802592253397L;
-    private long id;
+    private Long id;
     @NotBlank(groups = {LoginGroup.class, UserAddGroup.class}, message = "用户名不能为空")
     private String userName;
     @NotBlank(groups = {LoginGroup.class}, message = "密码不能为空")
@@ -29,11 +29,11 @@ public class UserVo implements Serializable {
     @NotNull(groups = {UserAddGroup.class}, message = "区域信息不能为空")
     private Long areaId;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
