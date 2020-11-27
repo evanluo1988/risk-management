@@ -23,10 +23,7 @@ import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.utils.RoleUtils;
 import com.springboot.utils.UserAuthInfoContext;
-import com.springboot.vo.PermVo;
-import com.springboot.vo.RoleVo;
-import com.springboot.vo.UserVo;
-import com.springboot.vo.UserWithRoleVo;
+import com.springboot.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.internal.guava.Sets;
 import org.mindrot.jbcrypt.BCrypt;
@@ -127,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void login(UserVo userVo) {
+    public void login(RegUserVo userVo) {
         log.info("login param:{}", JSON.toJSONString(userVo));
         User user = getUserByUsername(userVo.getUserName());
         //用户不存在
@@ -195,7 +192,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-    public void create(UserVo userVo) {
+    public void create(RegUserVo userVo) {
         //如果没输入密码 填充默认密码 否则加密用户输入密码
         if (StringUtils.isEmpty(userVo.getPassword())) {
             userVo.setPassword(BCrypt.hashpw(GlobalConstants.DEFAULT_PASSWORD, BCrypt.gensalt()));

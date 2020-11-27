@@ -6,6 +6,7 @@ import com.springboot.page.Pagination;
 import com.springboot.service.UserService;
 import com.springboot.ret.ReturnT;
 import com.springboot.utils.ReturnTUtils;
+import com.springboot.vo.RegUserVo;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class UserController {
 
     @Validated(UserVo.UserAddGroup.class)
     @PostMapping("/add")
-    public ReturnT createUser(@RequestBody @Valid UserVo userVo){
+    public ReturnT createUser(@RequestBody @Valid RegUserVo userVo){
         userService.create(userVo);
         return ReturnTUtils.newCorrectReturnT();
     }

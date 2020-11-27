@@ -2,7 +2,7 @@ package com.springboot.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.springboot.ApplicationTest;
-import com.springboot.vo.UserVo;
+import com.springboot.vo.RegUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class LoginControllerTest extends ApplicationTest {
     @Test
     public void testLogin() throws Exception {
-        UserVo body = new UserVo();
+        RegUserVo body = new RegUserVo();
         body.setUserName("sysadmin");
         body.setPassword("123456");
 
