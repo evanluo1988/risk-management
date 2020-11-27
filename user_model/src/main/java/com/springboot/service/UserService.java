@@ -1,11 +1,12 @@
 package com.springboot.service;
 
 import com.springboot.domain.User;
+import com.springboot.page.PageIn;
+import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -13,11 +14,10 @@ import java.util.List;
  */
 public interface UserService {
     /**
-     * 获取所有的用户列表
-     *
+     * 获取用户列表
      * @return
      */
-    public ReturnT<List<UserVo>> findAllUsers();
+    public Pagination<UserVo> findUsers(PageIn pageIn);
 
     /**
      * 通过用户ID获取带权限的用户信息
