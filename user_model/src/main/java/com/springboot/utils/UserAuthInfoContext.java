@@ -37,6 +37,7 @@ public class UserAuthInfoContext {
         private Date updateTime;
         private String createBy;
         private String updateBy;
+        private String enable;
 
         private Collection<RolePerm> rolePerms;
     }
@@ -54,6 +55,10 @@ public class UserAuthInfoContext {
         //link rolePerm
         userAuthInfoHolder.setRolePerms(rolePerms);
         clear().set(userAuthInfoHolder);
+    }
+
+    public static UserAuthInfoHolder getUser(){
+        return context.get();
     }
 
     /**
@@ -81,6 +86,14 @@ public class UserAuthInfoContext {
      */
     public static Long getAreaId() {
         return context.get().getAreaId();
+    }
+
+    /**
+     * 获取用户状态
+     * @return
+     */
+    public static String getEnable(){
+        return context.get().getEnable();
     }
 
     /**

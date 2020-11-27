@@ -74,4 +74,10 @@ public interface UserService {
      * @return
      */
     User getUserEntityById(Long userId);
+
+    /**
+     * 修改用户密码
+     * @param regUserVo
+     */
+    void updateUserPassword(RegUserVo regUserVo);
 }

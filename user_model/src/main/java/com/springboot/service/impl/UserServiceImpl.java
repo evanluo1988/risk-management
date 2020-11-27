@@ -263,5 +263,15 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void updateUserPassword(RegUserVo regUserVo) {
+        if(!UserAuthInfoContext.getUserId().equals(regUserVo.getId())) {
+            throw new ServiceException("用户无修改密码权限");
+        }
+        User user = new User();
+        BeanUtils.copyProperties(UserAuthInfoContext.getUser(), user);
+        user.setPassword(BCrypt.hashpw(regUserVo.getPassword(), BCrypt.gensalt()));
+        userMapper.updateById(user);
+    }
 
 }
