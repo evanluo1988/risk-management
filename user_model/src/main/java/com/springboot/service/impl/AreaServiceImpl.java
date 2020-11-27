@@ -14,11 +14,12 @@ import com.springboot.util.ConvertUtils;
 import com.springboot.utils.RoleUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.AreaVo;
+import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -37,13 +38,18 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
         if (Objects.isNull(highestLevelRole)){
             throw new ServiceException("用户角色错误");
         }
-        RoleEnum roleEnum = RoleEnum.nameOf(highestLevelRole.getRoleName());
 
+        Set<Long> areaIds = Sets.newHashSetWithExpectedSize(1);
+        if (Objects.nonNull(parentId)){
+            areaIds.add(parentId);
+        }
+
+        RoleEnum roleEnum = RoleEnum.nameOf(highestLevelRole.getRoleName());
         Collection<AreaVo> areaVos = Lists.newArrayList();
         //一级
         if (Objects.isNull(parentId)){
             if (RoleEnum.SYS_ADMIN == roleEnum){
-                Collection<Area> areas = listAreaByParentId0(parentId);
+                Collection<Area> areas = listAreaByParentIds(areaIds);
                 areaVos = ConvertUtils.sourceToTarget(areas, AreaVo.class);
             }else if (RoleEnum.REGION_ADMIN == roleEnum){
                 Area area = getAreaById(UserAuthInfoContext.getAreaId());
@@ -57,7 +63,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
                 AreaVo areaVo = ConvertUtils.sourceToTarget(area, AreaVo.class);
                 areaVos.add(areaVo);
             }else {
-                Collection<Area> areas = listAreaByParentId0(parentId);
+                Collection<Area> areas = listAreaByParentIds(areaIds);
                 areaVos = ConvertUtils.sourceToTarget(areas, AreaVo.class);
             }
         }
@@ -75,15 +81,23 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
         return getOne(queryWrapper,false);
     }
 
-    private Collection<Area> listAreaByParentId0(Long parentId) {
+    private Collection<Area> listAreaByParentIds(Set<Long> parentIds) {
         LambdaQueryWrapper<Area> queryWrapper = new LambdaQueryWrapper<Area>()
-                .eq(Objects.nonNull(parentId), Area::getParentId, parentId)
-                .isNull(Objects.isNull(parentId), Area::getParentId)
+                .in(!CollectionUtils.isEmpty(parentIds), Area::getParentId, parentIds)
+                .isNull(CollectionUtils.isEmpty(parentIds), Area::getParentId)
                 .eq(Area::getEnable, EnableEnum.Y.getCode());
         return list(queryWrapper);
     }
 
     public List<Long> findAreaIdsById(Long areaId) {
-        return null;
+        HashSet<Long> areaIds = Sets.newHashSetWithExpectedSize(1);
+        areaIds.add(areaId);
+        Collection<Area> areas = listAreaByParentIds(areaIds);
+
+        Set<Long> subAreaIds = areas.stream().map(Area::getId).collect(Collectors.toSet());
+        Collection<Area> subAreas = listAreaByParentIds(subAreaIds);
+
+        areas.addAll(subAreas);
+        return areas.stream().map(Area::getId).collect(Collectors.toList());
     }
 }

@@ -30,6 +30,6 @@ public interface AreaService extends IService<Area> {
      * @param areaId
      * @return
      */
-    public List<Long> findAreaIdsById(Long areaId);
+    List<Long> findAreaIdsById(Long areaId);
 
 }
