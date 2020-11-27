@@ -55,14 +55,17 @@ public class UserController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    @Validated(UserVo.UserUpdateGroup.class)
     @PutMapping("/update")
-    public void updateUser(@RequestBody User user){
-        userService.update(user);
+    public ReturnT updateUser(@RequestBody @Valid RegUserVo regUserVo){
+        userService.update(regUserVo);
+        return ReturnTUtils.newCorrectReturnT();
     }
 
 
+    @Validated(UserVo.UserUpdatePasswordGroup.class)
     @PutMapping("/password")
-    public ReturnT updateUserPassword(@RequestBody RegUserVo regUserVo){
+    public ReturnT updateUserPassword(@RequestBody @Valid RegUserVo regUserVo){
         userService.updateUserPassword(regUserVo);
         return ReturnTUtils.newCorrectReturnT();
     }

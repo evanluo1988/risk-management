@@ -21,11 +21,24 @@ public class UserVo implements Serializable {
     public interface UserAddGroup {
     }
 
+    /**
+     * 修改用户
+     */
+    public interface UserUpdateGroup {
+    }
+
+    /**
+     * 修改用户密码
+     */
+    public interface UserUpdatePasswordGroup {
+    }
+
     private static final long serialVersionUID = 4438086802592253397L;
+    @NotNull(groups = {UserUpdateGroup.class}, message = "用户ID不能为空")
     private Long id;
-    @NotBlank(groups = {LoginGroup.class, UserAddGroup.class}, message = "用户名不能为空")
+    @NotBlank(groups = {LoginGroup.class, UserAddGroup.class, UserUpdateGroup.class}, message = "用户名不能为空")
     private String userName;
-    @NotNull(groups = {UserAddGroup.class}, message = "区域信息不能为空")
+    @NotNull(groups = {UserAddGroup.class, UserUpdateGroup.class}, message = "区域信息不能为空")
     private Long areaId;
     private String enable;
     private String areaName;

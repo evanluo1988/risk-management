@@ -55,7 +55,7 @@ public interface UserService {
      *
      * @param user
      */
-    public void update(User user);
+    public void update(RegUserVo user);
 
     /**
      * 用户登录
