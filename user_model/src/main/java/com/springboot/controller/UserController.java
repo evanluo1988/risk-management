@@ -60,4 +60,11 @@ public class UserController {
         userService.update(user);
     }
 
+
+    @PutMapping("/password")
+    public ReturnT updateUserPassword(@RequestBody RegUserVo regUserVo){
+        userService.updateUserPassword(regUserVo);
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
 }

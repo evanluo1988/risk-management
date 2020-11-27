@@ -94,6 +94,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
         return list(queryWrapper);
     }
 
+    @Override
     public List<Long> findAreaIdsById(Long areaId) {
         HashSet<Long> areaIds = Sets.newHashSetWithExpectedSize(1);
         if (Objects.nonNull(areaId)){

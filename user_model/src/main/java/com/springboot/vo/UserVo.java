@@ -27,6 +27,8 @@ public class UserVo implements Serializable {
     private String userName;
     @NotNull(groups = {UserAddGroup.class}, message = "区域信息不能为空")
     private Long areaId;
+    private String enable;
+    private String areaName;
 
     public Long getId() {
         return id;
@@ -42,5 +44,29 @@ public class UserVo implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Long getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Long areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getEnable() {
+        return enable;
+    }
+
+    public void setEnable(String enable) {
+        this.enable = enable;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 }
