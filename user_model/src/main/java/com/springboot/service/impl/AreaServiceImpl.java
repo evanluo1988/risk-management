@@ -55,6 +55,11 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
                 Area area = getAreaById(UserAuthInfoContext.getAreaId());
                 AreaVo areaVo = ConvertUtils.sourceToTarget(area, AreaVo.class);
                 areaVos.add(areaVo);
+            } else if (RoleEnum.STREET_ADMIN == roleEnum){
+                Area area = getAreaById(UserAuthInfoContext.getAreaId());
+                Long areaParentId = area.getParentId();
+                Area parentArea = getAreaById(areaParentId);
+                areaVos.add(ConvertUtils.sourceToTarget(parentArea,AreaVo.class));
             }
         }else{
             //二级

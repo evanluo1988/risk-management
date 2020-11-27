@@ -109,11 +109,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ReturnT<UserVo> getById(Long id) {
-        User user = userMapper.selectById(id);
+    public UserVo getById(Long id) {
         UserVo userVo = new UserVo();
-        BeanUtils.copyProperties(user, userVo);
-        return ReturnTUtils.getReturnT(userVo);
+
+        User user = userMapper.selectById(id);
+        if (Objects.isNull(user)){
+            throw new ServiceException("用户信息不存在");
+        }
+
+        if (hasDataPermission(user.getAreaId())){
+            BeanUtils.copyProperties(user, userVo);
+        }
+        return userVo;
+    }
+
+    private boolean hasDataPermission(Long areaId) {
+        List<Long> permissionAreaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        return permissionAreaIds.contains(areaId)
+                || (RoleEnum.SYS_ADMIN.getName().equalsIgnoreCase(RoleUtils.getHighestLevelRole(UserAuthInfoContext.getRolePerms()).getRoleName()) && Objects.isNull(areaId));
     }
 
     @Override
@@ -187,7 +200,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void deleteById(Long id) {
-        userMapper.disableById(id);
+        UserVo byId = getById(id);
+        if (Objects.isNull(byId)){
+            throw new ServiceException("用户信息不存在");
+        }
+
+        if (hasDataPermission(byId.getAreaId())){
+            userMapper.disableById(id);
+        }
     }
 
     @Override
@@ -202,7 +222,10 @@ public class UserServiceImpl implements UserService {
 
         //校验area
         Area areaById = areaService.getById(userVo.getAreaId());
-        checkOpAreaPermissionEnough(areaById);
+        if (!hasDataPermission(userVo.getAreaId())){
+            throw new ServiceException("没有建此区域用户的权限");
+        }
+        //checkOpAreaPermissionEnough(areaById);
 
         //convert and store user
         User user = ConvertUtils.sourceToTarget(userVo, User.class);

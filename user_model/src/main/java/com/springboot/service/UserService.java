@@ -34,7 +34,7 @@ public interface UserService {
      * @param id
      * @return
      */
-    public ReturnT<UserVo> getById(Long id);
+    public UserVo getById(Long id);
 
     /**
      * 新建用户

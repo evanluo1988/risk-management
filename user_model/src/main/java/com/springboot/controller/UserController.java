@@ -39,7 +39,7 @@ public class UserController {
 
     @GetMapping("/view/{id}")
     public ReturnT<UserVo> findUserById(@PathVariable Long id){
-        return  userService.getById(id);
+        return  ReturnTUtils.getReturnT(userService.getById(id));
     }
 
     @Validated(UserVo.UserAddGroup.class)
@@ -50,8 +50,9 @@ public class UserController {
     }
 
     @DeleteMapping("/del/{id}")
-    public void deleteUser(@PathVariable Long id){
+    public ReturnT deleteUser(@PathVariable Long id){
         userService.deleteById(id);
+        return ReturnTUtils.newCorrectReturnT();
     }
 
     @PutMapping("/update")
