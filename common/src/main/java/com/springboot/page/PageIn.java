@@ -1,5 +1,6 @@
 package com.springboot.page;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 
 /**
@@ -19,4 +20,8 @@ public class PageIn {
      * 页大小
      */
     private Integer pageSize;
+
+    public Page convertPage() {
+        return new Page(pageNo, pageSize);
+    }
 }

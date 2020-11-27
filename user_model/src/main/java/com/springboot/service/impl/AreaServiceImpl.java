@@ -33,7 +33,6 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
 
     @Override
     public Collection<AreaVo> listAreaByParentId(Long parentId) {
-
         RolePerm highestLevelRole = RoleUtils.getHighestLevelRole(UserAuthInfoContext.getRolePerms());
         if (Objects.isNull(highestLevelRole)){
             throw new ServiceException("用户角色错误");
@@ -82,5 +81,9 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
                 .isNull(Objects.isNull(parentId), Area::getParentId)
                 .eq(Area::getEnable, EnableEnum.Y.getCode());
         return list(queryWrapper);
+    }
+
+    public List<Long> findAreaIdsById(Long areaId) {
+        return null;
     }
 }

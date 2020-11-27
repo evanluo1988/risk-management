@@ -6,6 +6,8 @@ import com.springboot.vo.AreaVo;
 
 import java.util.Collection;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -22,4 +24,12 @@ public interface AreaService extends IService<Area> {
      * @return
      */
     Collection<AreaVo> listAreaByParentId(Long parentId);
+
+    /**
+     * 根据当前区域ID获取它下面的区域ID集合
+     * @param areaId
+     * @return
+     */
+    public List<Long> findAreaIdsById(Long areaId);
+
 }
