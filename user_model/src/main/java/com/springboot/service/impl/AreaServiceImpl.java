@@ -6,6 +6,8 @@ import com.springboot.mapper.AreaDao;
 import com.springboot.service.AreaService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaService {
 
+    @Override
+    public List<Long> findAreaIdsById(Long areaId) {
+        return null;
+    }
 }

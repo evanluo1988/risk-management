@@ -31,4 +31,11 @@ public class Pagination<T> {
         tPagination.setData(entityIPage.getRecords());
         return tPagination;
     }
+
+    public static<T> Pagination<T> of(Collection<T> data,Long count){
+        Pagination<T> pagination = new Pagination<>();
+        pagination.setData(data);
+        pagination.setCount(count);
+        return pagination;
+    }
 }
