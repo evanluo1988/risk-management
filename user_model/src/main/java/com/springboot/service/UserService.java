@@ -4,6 +4,7 @@ import com.springboot.domain.User;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
+import com.springboot.vo.RegUserVo;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
 
@@ -40,7 +41,7 @@ public interface UserService {
      *
      * @param userVo
      */
-    public void create(UserVo userVo);
+    public void create(RegUserVo userVo);
 
     /**
      * 注销用户
@@ -61,7 +62,7 @@ public interface UserService {
      *
      * @param user    用户名密码信息
      */
-    void login(UserVo user);
+    void login(RegUserVo user);
     /**
      * 用户登出
      */

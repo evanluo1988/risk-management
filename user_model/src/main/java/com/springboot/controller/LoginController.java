@@ -3,6 +3,7 @@ package com.springboot.controller;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.UserService;
 import com.springboot.utils.ReturnTUtils;
+import com.springboot.vo.RegUserVo;
 import com.springboot.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,7 @@ public class LoginController {
 
     @Validated(UserVo.LoginGroup.class)
     @PostMapping
-    public ReturnT login(@RequestBody @Valid UserVo user){
+    public ReturnT login(@RequestBody @Valid RegUserVo user){
         userService.login(user);
         return ReturnTUtils.newCorrectReturnT();
     }

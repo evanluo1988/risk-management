@@ -2,6 +2,7 @@ package com.springboot.vo;
 
 import lombok.Data;
 
+import javax.servlet.Registration;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -24,8 +25,6 @@ public class UserVo implements Serializable {
     private Long id;
     @NotBlank(groups = {LoginGroup.class, UserAddGroup.class}, message = "用户名不能为空")
     private String userName;
-    @NotBlank(groups = {LoginGroup.class}, message = "密码不能为空")
-    private String password;
     @NotNull(groups = {UserAddGroup.class}, message = "区域信息不能为空")
     private Long areaId;
 
@@ -43,13 +42,5 @@ public class UserVo implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
