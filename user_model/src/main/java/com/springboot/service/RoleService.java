@@ -17,4 +17,6 @@ import java.util.Collection;
 public interface RoleService extends IService<Role> {
 
     Collection<RolePerm> findAllRolePermission();
+
+    Role getRoleByName(String name);
 }

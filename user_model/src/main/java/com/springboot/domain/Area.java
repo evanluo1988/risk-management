@@ -32,7 +32,7 @@ public class Area extends BaseDomain {
     /**
      * 区域描述
      */
-    private String areaDiscribe;
+    private String areaDescribe;
 
     /**
      * 是否禁用：Y为正常，N为禁用

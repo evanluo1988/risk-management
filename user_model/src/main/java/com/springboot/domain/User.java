@@ -1,6 +1,7 @@
 package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
  * @author evan
  * 用户
  */
+@Data
 @TableName("users")
 @Accessors(chain = true)
 public class User extends BaseDomain {
@@ -17,6 +19,7 @@ public class User extends BaseDomain {
     private String userName;
     private String password;
     private String enable;
+    private Long areaId;
 
     public String getUserName() {
         return userName;

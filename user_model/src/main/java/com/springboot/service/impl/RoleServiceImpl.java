@@ -3,6 +3,7 @@ package com.springboot.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.domain.Role;
+import com.springboot.enums.EnableEnum;
 import com.springboot.mapper.RoleDao;
 import com.springboot.mapper.RoleMapper;
 import com.springboot.model.RolePerm;
@@ -29,5 +30,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
     @Override
     public Collection<RolePerm> findAllRolePermission() {
         return roleMapper.findAllRolePermission();
+    }
+
+    @Override
+    public Role getRoleByName(String name) {
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<Role>()
+                .eq(Role::getRoleName, name)
+                .eq(Role::getEnable, EnableEnum.Y.getCode());
+        return getOne(queryWrapper,false);
     }
 }

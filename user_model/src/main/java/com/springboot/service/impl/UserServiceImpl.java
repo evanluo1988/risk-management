@@ -3,23 +3,22 @@ package com.springboot.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.springboot.constant.GlobalConstants;
-import com.springboot.domain.Area;
-import com.springboot.domain.Permission;
-import com.springboot.domain.Role;
+import com.springboot.domain.*;
 import com.springboot.enums.AreaTypeEnum;
 import com.springboot.enums.EnableEnum;
 import com.springboot.enums.RoleEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.UserMapper;
-import com.springboot.domain.User;
 import com.springboot.model.RolePerm;
-import com.springboot.model.UserRole;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.AreaService;
+import com.springboot.service.RoleService;
+import com.springboot.service.UserRoleService;
 import com.springboot.service.UserService;
 import com.springboot.util.ConvertUtils;
 import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.ReturnTUtils;
+import com.springboot.utils.RoleUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.PermVo;
 import com.springboot.vo.RoleVo;
@@ -33,13 +32,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import com.springboot.model.UserRoleDomain;
 
 /**
  * @author evan
@@ -52,6 +51,10 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private AreaService areaService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public ReturnT<List<UserVo>> findAllUsers() {
@@ -74,14 +77,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ReturnT<UserWithRoleVo> findWithRoleById(Long id) {
-        UserRole user = userMapper.findUserWithRoleById(id);
+        UserRoleDomain user = userMapper.findUserWithRoleById(id);
         if (ObjectUtils.isEmpty(user)) {
             return ReturnTUtils.getReturnT(new UserWithRoleVo());
         }
         return ReturnTUtils.getReturnT(convertUserToUserWithRoleVo(user));
     }
 
-    private UserWithRoleVo convertUserToUserWithRoleVo(UserRole user) {
+    private UserWithRoleVo convertUserToUserWithRoleVo(UserRoleDomain user) {
         UserWithRoleVo vo = new UserWithRoleVo();
         BeanUtils.copyProperties(user, vo);
         Set<RoleVo> roleVoSet = Sets.newHashSet();
@@ -190,8 +193,8 @@ public class UserServiceImpl implements UserService {
         //如果没输入密码 填充默认密码 否则加密用户输入密码
         if (StringUtils.isEmpty(userVo.getPassword())) {
             userVo.setPassword(BCrypt.hashpw(GlobalConstants.DEFAULT_PASSWORD, BCrypt.gensalt()));
-        }else {
-            userVo.setPassword(BCrypt.hashpw(userVo.getPassword(),BCrypt.gensalt()));
+        } else {
+            userVo.setPassword(BCrypt.hashpw(userVo.getPassword(), BCrypt.gensalt()));
         }
 
         //校验area
@@ -200,8 +203,27 @@ public class UserServiceImpl implements UserService {
 
         //convert and store user
         User user = ConvertUtils.sourceToTarget(userVo, User.class);
-
         userMapper.insert(user);
+
+        //store role
+        UserRole userRole = buildUserRole(user,judgeRoleByArea(areaById));
+        userRoleService.save(userRole);
+    }
+
+    private UserRole buildUserRole(User user, Role role) {
+        UserRole userRole = new UserRole();
+        userRole.setUserId(user.getId())
+                .setRoleId(role.getId());
+        return userRole;
+    }
+
+    private Role judgeRoleByArea(Area area) {
+        if (Objects.isNull(area)) {
+            throw new ServiceException("区域信息错误");
+        }
+
+        AreaTypeEnum areaTypeEnum = AreaTypeEnum.typeOf(area.getType());
+        return roleService.getRoleByName(AreaTypeEnum.R == areaTypeEnum ? RoleEnum.REGION_ADMIN.getName() : RoleEnum.STREET_ADMIN.getName());
     }
 
     /**
@@ -215,7 +237,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Collection<RolePerm> rolePerms = UserAuthInfoContext.getRolePerms();
-        RolePerm highestLevelRole = getHighestLevelRole(rolePerms);
+        RolePerm highestLevelRole = RoleUtils.getHighestLevelRole(rolePerms);
         if (Objects.isNull(highestLevelRole)) {
             throw new ServiceException("当前用户角色错误");
         }
@@ -238,21 +260,5 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private RolePerm getHighestLevelRole(Collection<RolePerm> rolePerms) {
-        if (CollectionUtils.isEmpty(rolePerms)) {
-            return null;
-        }
 
-        RolePerm highestLevelRole = null;
-        for (RolePerm rolePerm : rolePerms) {
-            //如果最高权限是null或者最高权限级别小于当前权限级别
-            if (Objects.isNull(highestLevelRole)
-                    || RoleEnum.nameOf(rolePerm.getRoleName()).ordinal()
-                    < RoleEnum.nameOf(highestLevelRole.getRoleName()).ordinal()) {
-                highestLevelRole = rolePerm;
-            }
-        }
-
-        return highestLevelRole;
-    }
 }
