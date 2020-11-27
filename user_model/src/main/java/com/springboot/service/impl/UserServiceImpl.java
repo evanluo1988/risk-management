@@ -11,6 +11,7 @@ import com.springboot.enums.RoleEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.UserMapper;
 import com.springboot.model.RolePerm;
+import com.springboot.model.UserInfo;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
@@ -59,11 +60,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Pagination<UserVo> findUsers(PageIn pageIn) {
         //根据当前权限过滤用户
-        //List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
-        List<Long> areaIds = new ArrayList<>();
-        areaIds.add(1L);
-        IPage<User> userPage = userMapper.findAllUsersByAreaIds(areaIds, pageIn.convertPage());
-        List<User> users = userPage.getRecords();
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        IPage<UserInfo> userPage = userMapper.findAllUsersByAreaIds(areaIds, pageIn.convertPage());
+        List<UserInfo> users = userPage.getRecords();
         List<UserVo> userVos = new ArrayList<>();
         for (User user : users) {
             userVos.add(convertUserToUserVo(user));
