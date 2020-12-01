@@ -1,7 +1,7 @@
 package com.springboot.service;
 
-import com.springboot.domain.InformReward;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.springboot.domain.InformReward;
 
 /**
  * <p>

@@ -1,11 +1,26 @@
 package com.springboot.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.springboot.easyexcel.LocalDateTimeConverter;
-import com.springboot.easyexcel.LocalDateTimeFormat;
+import com.springboot.domain.Inform;
+import com.springboot.domain.InformCheck;
+import com.springboot.domain.InformPerson;
+import com.springboot.domain.InformReward;
+import com.springboot.easyexcel.converter.InformAnonymousConverter;
+import com.springboot.easyexcel.converter.InformCheckStatusConverter;
+import com.springboot.easyexcel.converter.InformOverDueConverter;
+import com.springboot.easyexcel.converter.InformTransferConverter;
+import com.springboot.util.ConvertUtils;
+import com.springboot.utils.UserAuthInfoContext;
 import lombok.Data;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * 投诉举报
@@ -15,7 +30,7 @@ import java.time.LocalDateTime;
  * @Version 1.0
  */
 @Data
-public class InformVo {
+public class InformImportVo {
     /**
      * 线索编号
      */
@@ -24,7 +39,8 @@ public class InformVo {
     /**
      * 是否实名举报，1为匿名，0为实名
      */
-    private String anonymous;
+    @ExcelProperty(converter = InformAnonymousConverter.class)
+    private Boolean anonymous;
     /**
      * 举报人姓名
      */
@@ -49,9 +65,7 @@ public class InformVo {
     /**
      * 举报时间
      */
-    //@ExcelProperty(converter = LocalDateTimeConverter.class)
-    //@LocalDateTimeFormat("yyyy/MM/dd")
-    private String informTimeStr;
+    private Date informTimeStr;
 
     /**
      * 被举报对象名称
@@ -66,9 +80,7 @@ public class InformVo {
     /**
      * 案发时间
      */
-    //@ExcelProperty(converter = LocalDateTimeConverter.class)
-    //@LocalDateTimeFormat("yyyy/MM/dd")
-    private String crimeTimeStr;
+    private Date crimeTimeStr;
 
     /**
      * 案发地（区）
@@ -96,6 +108,7 @@ public class InformVo {
     /**
      * 核查状态
      */
+    @ExcelProperty(converter = InformCheckStatusConverter.class)
     private String checkStatus;
     /**
      * 核查单位
@@ -104,13 +117,12 @@ public class InformVo {
     /**
      * 核查时间
      */
-    //@ExcelProperty(converter = LocalDateTimeConverter.class)
-    //@LocalDateTimeFormat("yyyy/MM/dd")
-    private String checkTimeStr;
+    private Date checkTimeStr;
     /**
      * 是否逾期，1为逾期，0为未逾期
      */
-    private String overdue;
+    @ExcelProperty(converter = InformOverDueConverter.class)
+    private Boolean overdue;
     /**
      * 企业全称
      */
@@ -142,7 +154,8 @@ public class InformVo {
     /**
      * 是否移交，1为移交，0为未移交
      */
-    private String transfer;
+    @ExcelProperty(converter = InformTransferConverter.class)
+    private Boolean transfer;
 
     /**
      * 移交单位
@@ -169,7 +182,39 @@ public class InformVo {
     /**
      * 奖励时间
      */
-    //@ExcelProperty(converter = LocalDateTimeConverter.class)
-    //@LocalDateTimeFormat("yyyy/MM/dd")
-    private String rewardTimeStr;
+    private Date rewardTimeStr;
+
+    public Inform toInform() {
+        Inform inform = ConvertUtils.sourceToTarget(this, Inform.class);
+        inform.setAttachment(informAttachment);
+        inform.setInformTime(Objects.isNull(informTimeStr) ? null : informTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        inform.setCrimeTime(Objects.isNull(crimeTimeStr) ? null : crimeTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        inform.setCreateBy(UserAuthInfoContext.getUserName());
+        inform.setCreateTime(new Date());
+        return inform;
+    }
+
+    public InformCheck toInformCheck() {
+        InformCheck informCheck = ConvertUtils.sourceToTarget(this, InformCheck.class);
+        informCheck.setAttachment(informCheckAttachment);
+        informCheck.setCheckTime(Objects.isNull(checkTimeStr) ? null : checkTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        informCheck.setCreateBy(UserAuthInfoContext.getUserName());
+        informCheck.setCreateTime(new Date());
+        return informCheck;
+    }
+
+    public InformPerson toInformPerson() {
+        InformPerson informPerson = ConvertUtils.sourceToTarget(this, InformPerson.class);
+        informPerson.setCreateBy(UserAuthInfoContext.getUserName());
+        informPerson.setCreateTime(new Date());
+        return informPerson;
+    }
+
+    public InformReward toInformReward() {
+        InformReward informReward = ConvertUtils.sourceToTarget(this, InformReward.class);
+        informReward.setRewardTime(Objects.isNull(rewardTimeStr) ? null : rewardTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        informReward.setCreateBy(UserAuthInfoContext.getUserName());
+        informReward.setCreateTime(new Date());
+        return informReward;
+    }
 }

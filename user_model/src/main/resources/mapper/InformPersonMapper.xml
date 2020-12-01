@@ -9,7 +9,6 @@
         <result column="identity_card" property="identityCard" />
         <result column="contact_way" property="contactWay" />
         <result column="address" property="address" />
-        <result column="source" property="source" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="create_by" property="createBy" />

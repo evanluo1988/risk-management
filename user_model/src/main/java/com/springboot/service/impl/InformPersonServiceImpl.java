@@ -1,9 +1,9 @@
 package com.springboot.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.domain.InformPerson;
 import com.springboot.mapper.InformPersonDao;
 import com.springboot.service.InformPersonService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
