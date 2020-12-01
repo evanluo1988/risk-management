@@ -1,9 +1,9 @@
 package com.springboot.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.domain.InformReward;
 import com.springboot.mapper.InformRewardDao;
 import com.springboot.service.InformRewardService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

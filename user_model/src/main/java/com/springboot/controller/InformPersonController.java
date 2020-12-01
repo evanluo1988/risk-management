@@ -1,9 +1,9 @@
 package com.springboot.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -13,8 +13,8 @@ import org.springframework.stereotype.Controller;
  * @author 刘宏飞
  * @since 2020-11-30
  */
-@Controller
-@RequestMapping("/inform-person")
+@RestController
+@RequestMapping("/inform-persons")
 public class InformPersonController {
 
 }

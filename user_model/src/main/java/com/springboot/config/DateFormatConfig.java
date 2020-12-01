@@ -1,4 +1,4 @@
-package com.ycyl.facade.conf;
+package com.springboot.config;
 
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -18,8 +18,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * @Author Cent.Chen  2019-07-14
- * @Description Dateformat Configuration.
+ * @Author lhf
+ * @Description LocalDateTime&DateTime类型转换
  */
 @Configuration
 public class DateFormatConfig {

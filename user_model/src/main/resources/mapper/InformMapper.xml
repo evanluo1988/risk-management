@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.springboot.domain.Inform">
     <result column="id" property="id" />
         <result column="clue_number" property="clueNumber" />
+        <result column="source" property="source" />
         <result column="anonymous" property="anonymous" />
         <result column="inform_time" property="informTime" />
         <result column="inform_name" property="informName" />
@@ -19,6 +20,7 @@
         <result column="assignment" property="assignment" />
         <result column="check_status" property="checkStatus" />
         <result column="inform_person_id" property="informPersonId" />
+        <result column="attach" property="attachment"/>
         <result column="enable" property="enable" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

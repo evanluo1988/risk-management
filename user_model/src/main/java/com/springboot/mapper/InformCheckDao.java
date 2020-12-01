@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
-import com.springboot.domain.InformCheck;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.springboot.domain.InformCheck;
 
 /**
  * <p>

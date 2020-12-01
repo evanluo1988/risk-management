@@ -3,16 +3,17 @@ package com.springboot.controller;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.springboot.ret.ReturnT;
-import com.springboot.utils.ReturnTUtils;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,11 +28,11 @@ import java.util.List;
 @RequestMapping("/toolbox")
 public class ToolboxController {
 
-    @GetMapping
-    public ReturnT importExcel(){
-
-        return ReturnTUtils.newCorrectReturnT();
-    }
+//    @PostMapping("upload")
+//    public String upload(MultipartFile file) throws IOException {
+//        EasyExcel.read(file.getInputStream(), DemoData.class, new UploadDataListener(uploadDAO)).sheet().doRead();
+//        return "success";
+//    }
 
     @GetMapping("/export")
     public void export(HttpServletResponse response) throws IOException {

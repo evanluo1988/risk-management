@@ -1,13 +1,12 @@
 package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import BaseDomain;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -20,8 +19,8 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("inform_person")
-public class InformPerson extends BaseDomain<InformPerson> {
+@TableName("inform_persons")
+public class InformPerson extends BaseDomain {
 
     private static final long serialVersionUID = 1L;
 
@@ -44,36 +43,4 @@ public class InformPerson extends BaseDomain<InformPerson> {
      * 单位/住址
      */
     private String address;
-
-    /**
-     * 举报来源
-     */
-    private String source;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 修改时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 创建者
-     */
-    private String createBy;
-
-    /**
-     * 更新者
-     */
-    private String updateBy;
-
-
-    @Override
-    protected Serializable pkVal() {
-        return null;
-    }
-
 }

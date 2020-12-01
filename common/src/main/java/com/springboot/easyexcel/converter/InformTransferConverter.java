@@ -1,10 +1,11 @@
-package com.springboot.enums;
+package com.springboot.easyexcel.converter;
 
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.enums.CellDataTypeEnum;
 import com.alibaba.excel.metadata.CellData;
 import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
+import com.springboot.enums.InformTransferEnum;
 
 import java.util.Objects;
 

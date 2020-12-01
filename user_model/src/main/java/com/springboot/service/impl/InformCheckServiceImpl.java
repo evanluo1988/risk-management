@@ -1,9 +1,9 @@
 package com.springboot.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.domain.InformCheck;
 import com.springboot.mapper.InformCheckDao;
 import com.springboot.service.InformCheckService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

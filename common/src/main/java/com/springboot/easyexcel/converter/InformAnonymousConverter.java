@@ -1,4 +1,4 @@
-package com.springboot.vo;
+package com.springboot.easyexcel.converter;
 
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.enums.CellDataTypeEnum;
@@ -14,10 +14,10 @@ import java.util.Objects;
  * @Date 2020/12/1 9:35
  * @Version 1.0
  */
-public class InformAnonymousConverter implements Converter<Integer> {
+public class InformAnonymousConverter implements Converter<Boolean> {
     @Override
     public Class supportJavaTypeKey() {
-        return Integer.class;
+        return Boolean.class;
     }
 
     @Override
@@ -26,14 +26,14 @@ public class InformAnonymousConverter implements Converter<Integer> {
     }
 
     @Override
-    public Integer convertToJavaData(CellData cellData, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+    public Boolean convertToJavaData(CellData cellData, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
         String stringValue = cellData.getStringValue();
         InformAnonymousEnum informAnonymousEnum = InformAnonymousEnum.descOf(stringValue);
         return Objects.isNull(informAnonymousEnum)?null:informAnonymousEnum.getCode();
     }
 
     @Override
-    public CellData convertToExcelData(Integer s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+    public CellData convertToExcelData(Boolean s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
         return new CellData(s);
     }
 }
