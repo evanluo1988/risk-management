@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.mapper.InformCheckDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.springboot.domain.InformCheck">
+    <result column="id" property="id" />
+        <result column="check_unit" property="checkUnit" />
+        <result column="check_time" property="checkTime" />
+        <result column="enterprise_name" property="enterpriseName" />
+        <result column="check_place" property="checkPlace" />
+        <result column="overdue" property="overdue" />
+        <result column="industry" property="industry" />
+        <result column="verification" property="verification" />
+        <result column="check_details" property="checkDetails" />
+        <result column="check_enterprise_name" property="checkEnterpriseName" />
+        <result column="disposal_measures" property="disposalMeasures" />
+        <result column="transfer" property="transfer" />
+        <result column="transfer_unit" property="transferUnit" />
+        <result column="transfer_reason" property="transferReason" />
+        <result column="inform_id" property="informId" />
+        <result column="attachment" property="attachment" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+</mapper>
