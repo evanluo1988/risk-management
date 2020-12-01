@@ -130,7 +130,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-    public void update(User user) {
+    public void update(RegUserVo regUserVo) {
+        if(!hasDataPermission(regUserVo.getAreaId())) {
+            throw new ServiceException("当前用户无修改此用户权限");
+        }
+
+        User oldUser = userMapper.selectById(regUserVo.getId());
+        User user = new User();
+        BeanUtils.copyProperties(regUserVo, user);
+        user.setPassword(oldUser.getPassword());
+        user.setEnable(oldUser.getEnable());
         userMapper.updateById(user);
     }
 
@@ -287,9 +296,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserPassword(RegUserVo regUserVo) {
-        if(!UserAuthInfoContext.getUserId().equals(regUserVo.getId())) {
-            throw new ServiceException("用户无修改密码权限");
-        }
         User user = new User();
         BeanUtils.copyProperties(UserAuthInfoContext.getUser(), user);
         user.setPassword(BCrypt.hashpw(regUserVo.getPassword(), BCrypt.gensalt()));
