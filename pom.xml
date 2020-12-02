@@ -11,6 +11,8 @@
     <modules>
         <module>common</module>
         <module>user_model</module>
+        <module>inform_model</module>
+        <module>examination_model</module>
     </modules>
 
     <parent>
