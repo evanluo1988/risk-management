@@ -83,9 +83,9 @@ public class Inform extends BaseDomain {
     private String informContent;
 
     /**
-     * 是否分派
+     * 分派状态：NOT_ASSIGNED未分派，ASSIGNED已分派，RETURNED已撤回
      */
-    private Boolean assignment;
+    private String assignment;
 
     /**
      * 核查状态

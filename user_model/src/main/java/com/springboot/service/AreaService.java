@@ -32,4 +32,10 @@ public interface AreaService extends IService<Area> {
      */
     List<Long> findAreaIdsById(Long areaId);
 
+    /**
+     * 根据AreaId查询Area
+     * @param areaId
+     * @return
+     */
+    Area getAreaById(Long areaId);
 }

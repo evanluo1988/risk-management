@@ -26,4 +26,17 @@ public interface InformService extends IService<Inform> {
      * @param data
      */
     void importInforms0(InformImportVo data);
+
+    /**
+     * 分派
+     * @param id
+     * @param areaId
+     */
+    void dispatcher(Long id, Long areaId);
+
+    /**
+     * 退回
+     * @param id
+     */
+    void goBack(Long id);
 }

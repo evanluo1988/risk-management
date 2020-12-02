@@ -75,7 +75,8 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
         return areaVos;
     }
 
-    private Area getAreaById(Long areaId) {
+    @Override
+    public Area getAreaById(Long areaId) {
         if (Objects.isNull(areaId)){
             return null;
         }

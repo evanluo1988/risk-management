@@ -8,7 +8,8 @@ package com.springboot.enums;
 public enum InformAssignmentEnum {
     NOT_ASSIGNED("NOT_ASSIGNED","未分派"),
     ASSIGNED("ASSIGNED","已分派"),
-    RETURNED("RETURNED","已撤回")
+    RETURNED("RETURNED","已撤回"),
+    ASSIGNED_FAIL("ASSIGNED_FAIL","分派失败")
 
 
     ;

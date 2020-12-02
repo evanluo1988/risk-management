@@ -4,18 +4,17 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
-import com.springboot.domain.Inform;
-import com.springboot.domain.InformCheck;
-import com.springboot.domain.InformPerson;
-import com.springboot.domain.InformReward;
+import com.springboot.domain.*;
+import com.springboot.enums.EnableEnum;
+import com.springboot.enums.InformAssignmentEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.InformDao;
-import com.springboot.service.InformCheckService;
-import com.springboot.service.InformPersonService;
-import com.springboot.service.InformRewardService;
-import com.springboot.service.InformService;
+import com.springboot.service.*;
+import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.InformImportVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -46,6 +48,8 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     private InformCheckService informCheckService;
     @Autowired
     private InformRewardService informRewardService;
+    @Autowired
+    private AreaService areaService;
 
     @Override
     public void importInforms(MultipartFile file) {
@@ -75,6 +79,59 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         //store informReward
         informReward.setInformId(inform.getId());
         informRewardService.save(informReward);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void dispatcher(Long id, Long areaId) {
+        Area area = areaService.getAreaById(areaId);
+        if (Objects.isNull(area)){
+            throw new ServiceException("区域信息不存在");
+        }
+
+        Inform inform = getInformById(id);
+        if (Objects.isNull(inform)){
+            throw new ServiceException("举报信息不存在");
+        }
+
+        inform.setAreaId(areaId)
+                .setAssignment(InformAssignmentEnum.ASSIGNED.getCode());
+        inform.setUpdateTime(new Date());
+        inform.setUpdateBy(UserAuthInfoContext.getUserName());
+        updateById(inform);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void goBack(Long id) {
+        Inform informById = getInformById(id);
+        if (Objects.isNull(informById)){
+            throw new ServiceException("举报信息不存在");
+        }
+
+        if (!informById.getAssignment().equalsIgnoreCase(InformAssignmentEnum.ASSIGNED.getCode())){
+            throw new ServiceException("当前状态不允许撤回");
+        }
+
+        LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
+                .set(Inform::getAssignment, InformAssignmentEnum.RETURNED.getCode())
+                .set(Inform::getAreaId, null)
+                .set(Inform::getUpdateBy,UserAuthInfoContext.getUserName())
+                .set(Inform::getUpdateTime, LocalDateTime.now())
+                .eq(Inform::getId,id)
+                .eq(Inform::getAssignment,InformAssignmentEnum.ASSIGNED.getCode());
+        update(updateWrapper);
+    }
+
+    private Inform getInformById(Long id) {
+        if (Objects.isNull(id)){
+            return null;
+        }
+
+        LambdaQueryWrapper<Inform> queryWrapper = new LambdaQueryWrapper<Inform>()
+                .eq(Inform::getEnable, EnableEnum.Y.getCode())
+                .eq(Inform::getId, id);
+        return getOne(queryWrapper,false);
     }
 
     @Slf4j
