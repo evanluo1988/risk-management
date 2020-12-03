@@ -28,4 +28,57 @@
         <result column="update_by" property="updateBy" />
     </resultMap>
 
+    <sql id="Inform_Page_Column" >
+      i.id,
+      i.clue_number,
+	  i.inform_name,
+	  '受理地区' AS acceptanceArea,
+	  i.inform_time,
+	  i.source,
+	  i.check_status,
+	  ic.overdue,
+	  ic.verification,
+	  ir.reward_content
+    </sql>
+
+    <select id="informPage" parameterType="Map" resultType="com.springboot.model.InformPageModel">
+        SELECT <include refid="Inform_Page_Column"/>
+        FROM informs i
+            LEFT JOIN inform_checks ic ON i.id = ic.inform_id
+            LEFT JOIN inform_rewards ir ON i.id = ir.inform_id
+        WHERE i.enable = 'Y'
+        <if test="source != null and source != '' ">
+            AND i.source = #{source}
+        </if>
+        <if test="checkStatus != null and checkStatus != '' ">
+            AND i.check_status = #{checkStatus}
+        </if>
+        <if test="informTimeStart != null">
+            AND i.inform_time &gt;= #{informTimeStart}' 00:00:00'
+        </if>
+        <if test="informTimeEnd != null">
+            AND i.inform_time &lt;= #{informTimeEnd}' 23:59:59'
+        </if>
+        <if test="rewardContent != null and rewardContent != '' ">
+            AND ir.reward_content = #{rewardContent}
+        </if>
+        <if test="informName != null and informName != '' ">
+            AND i.inform_name = #{informName}
+        </if>
+        <if test="verification != null and verification != '' ">
+            AND ic.verification = #{verification}
+        </if>
+        <if test="overdue != null">
+            AND ic.overdue = #{overdue}
+        </if>
+        <if test="checkTimeStart != null">
+            AND ic.check_time &gt;= #{checkTimeStart}' 00:00:00'
+        </if>
+        <if test="checkTimeEnd != null">
+            AND ic.check_time &lt;= #{checkTimeEnd}' 23:59:59'
+        </if>
+        <if test="areaId != null">
+            AND ic.check_unit = #{areaId}
+        </if>
+    </select>
 </mapper>

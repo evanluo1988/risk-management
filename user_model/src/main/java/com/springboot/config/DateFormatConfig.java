@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.convert.converter.Converter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,15 +28,15 @@ public class DateFormatConfig {
     /**
      * Date格式化字符串
      */
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_FORMAT = "yyyy/MM/dd";
     /**
      * DateTime格式化字符串
      */
-    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
     /**
      * Time格式化字符串
      */
-    private static final String TIME_FORMAT = "HH:mm:ss";
+    public static final String TIME_FORMAT = "HH:mm:ss";
 
     /**
      * 自定义Bean
@@ -45,7 +46,8 @@ public class DateFormatConfig {
     @Bean
     @Primary
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-        return builder -> builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+        return builder -> builder
+                .serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .serializerByType(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_FORMAT)))
                 .serializerByType(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(TIME_FORMAT)))
                 .serializerByType(Long.class, ToStringSerializer.instance)
@@ -53,5 +55,4 @@ public class DateFormatConfig {
                 .deserializerByType(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_FORMAT)))
                 .deserializerByType(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(TIME_FORMAT)));
     }
-
 }
