@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.Objects;
 
 public class DateUtils {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
@@ -19,7 +20,7 @@ public class DateUtils {
         return convertStr(DATE_FORMAT, date);
     }
 
-    public static  Date localDateTimeToDate(LocalDateTime localDateTime){
+    public static Date localDateTimeToDate(LocalDateTime localDateTime){
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime zdt = localDateTime.atZone(zoneId);
         return Date.from(zdt.toInstant());
@@ -27,6 +28,13 @@ public class DateUtils {
 
     public static String convertDateStr(LocalDateTime localDateTime){
         return convertDateStr(localDateTimeToDate(localDateTime));
+    }
+
+    public static LocalDateTime dateToLocalDateTime(Date date){
+        if(Objects.isNull(date)){
+            return null;
+        }
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
 }
