@@ -86,7 +86,6 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
                 List<TaskCheck> taskCheckList = Lists.newArrayList();
                 List<Enterprise> enterpriseList = Lists.newArrayList();
-                List<EnterpriseDetail> enterpriseDetailList = Lists.newArrayList();
                 List<TaskDisposition> taskDispositionList = Lists.newArrayList();
                 taskImportModel.setTaskCheckList(taskCheckList);
                 taskImportModel.setEnterpriseList(enterpriseList);
