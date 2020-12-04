@@ -1,7 +1,10 @@
 package com.springboot.domain;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class Task extends BaseDomain {
 
     private static final long serialVersionUID = -6444412657849554771L;
@@ -29,52 +32,4 @@ public class Task extends BaseDomain {
      * 到期时间
      */
     private LocalDateTime dueTime;
-
-    public String getTaskNumber() {
-        return taskNumber;
-    }
-
-    public void setTaskNumber(String taskNumber) {
-        this.taskNumber = taskNumber;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getStartUnit() {
-        return startUnit;
-    }
-
-    public void setStartUnit(String startUnit) {
-        this.startUnit = startUnit;
-    }
-
-    public String getTaskSource() {
-        return taskSource;
-    }
-
-    public void setTaskSource(String taskSource) {
-        this.taskSource = taskSource;
-    }
-
-    public LocalDateTime getDueTime() {
-        return dueTime;
-    }
-
-    public void setDueTime(LocalDateTime dueTime) {
-        this.dueTime = dueTime;
-    }
 }
