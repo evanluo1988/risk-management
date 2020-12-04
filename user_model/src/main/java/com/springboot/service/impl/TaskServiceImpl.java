@@ -90,12 +90,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
                 List<TaskDisposition> taskDispositionList = Lists.newArrayList();
                 taskImportModel.setTaskCheckList(taskCheckList);
                 taskImportModel.setEnterpriseList(enterpriseList);
-                taskImportModel.setEnterpriseDetailList(enterpriseDetailList);
                 taskImportModel.setTaskDispositionList(taskDispositionList);
                 for(TaskImportVo taskImportVo : taskImportVoList){
                     taskCheckList.add(taskImportVo.toTaskCheck());
                     enterpriseList.add(taskImportVo.toEnterprise());
-                    enterpriseDetailList.add(taskImportVo.toEnterpriseDetail());
                     taskDispositionList.add(taskImportVo.toTaskDisposition());
                 }
                 taskImportModelList.add(taskImportModel);
@@ -123,7 +121,6 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         //save(task);
 
         List<Enterprise> enterpriseList = data.getEnterpriseList();
-        List<EnterpriseDetail> enterpriseDetailList = data.getEnterpriseDetailList();
         List<TaskCheck> taskCheckList = data.getTaskCheckList();
         List<TaskDisposition> taskDispositionList = data.getTaskDispositionList();
 

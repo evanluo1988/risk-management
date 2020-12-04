@@ -2,7 +2,6 @@ package com.springboot.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.springboot.domain.*;
-import com.springboot.easyexcel.converter.InformCheckStatusConverter;
 import com.springboot.easyexcel.converter.TaskEstablishedTimeConverter;
 import com.springboot.util.ConvertUtils;
 import com.springboot.util.DateUtils;
@@ -375,13 +374,6 @@ public class TaskImportVo {
         enterprise.setCreateBy(UserAuthInfoContext.getUserName());
         enterprise.setCreateTime(new Date());
         return enterprise;
-    }
-
-    public EnterpriseDetail toEnterpriseDetail(){
-        EnterpriseDetail enterpriseDetail = ConvertUtils.sourceToTarget(this, EnterpriseDetail.class);
-        enterpriseDetail.setCreateBy(UserAuthInfoContext.getUserName());
-        enterpriseDetail.setCreateTime(new Date());
-        return enterpriseDetail;
     }
 
     public TaskDisposition toTaskDisposition(){
