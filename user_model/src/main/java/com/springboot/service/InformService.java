@@ -5,6 +5,7 @@ import com.springboot.domain.Inform;
 import com.springboot.page.Pagination;
 import com.springboot.vo.InformImportVo;
 import com.springboot.vo.InformPageVo;
+import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -78,4 +79,11 @@ public interface InformService extends IService<Inform> {
      * @param id
      */
     void del(Long id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    InformViewVo view(Long id);
 }

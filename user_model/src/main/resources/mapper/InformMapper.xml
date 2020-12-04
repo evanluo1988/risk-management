@@ -36,6 +36,9 @@
 	  i.inform_time,
 	  i.source,
 	  i.check_status,
+	  i.assignment,
+	  i.area_id,
+	  a.area_name,
 	  ic.overdue,
 	  ic.verification,
 	  ir.reward_content
@@ -46,6 +49,7 @@
         FROM informs i
             LEFT JOIN inform_checks ic ON i.id = ic.inform_id
             LEFT JOIN inform_rewards ir ON i.id = ir.inform_id
+            LEFT JOIN areas a ON i.area_id = a.id
         WHERE i.enable = 'Y'
         <if test="source != null and source != '' ">
             AND i.source = #{source}

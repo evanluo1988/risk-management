@@ -2,23 +2,14 @@ package com.springboot.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.springboot.domain.*;
-import com.springboot.easyexcel.converter.InformAnonymousConverter;
-import com.springboot.easyexcel.converter.InformCheckStatusConverter;
-import com.springboot.easyexcel.converter.InformOverDueConverter;
-import com.springboot.easyexcel.converter.InformTransferConverter;
+import com.springboot.easyexcel.converter.*;
 import com.springboot.enums.InformAssignmentEnum;
-import com.springboot.exception.ServiceException;
 import com.springboot.util.ConvertUtils;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import lombok.Data;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 
@@ -57,6 +48,7 @@ public class InformImportVo {
     /**
      * 单位/住址
      */
+    @ExcelProperty(converter = InformSourceConverter.class)
     private String address;
     /**
      * 举报来源
@@ -177,6 +169,7 @@ public class InformImportVo {
     /**
      * 奖励金额
      */
+    @ExcelProperty(converter = InformRewardConverter.class)
     private Float rewardAmountFloat;
 
     /**

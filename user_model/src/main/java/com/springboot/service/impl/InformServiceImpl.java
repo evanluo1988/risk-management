@@ -23,8 +23,10 @@ import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.InformImportVo;
 import com.springboot.vo.InformPageVo;
+import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,12 +159,18 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         if (Objects.isNull(informById)) {
             throw new ServiceException("举报信息不存在");
         }
-
+        //store informCheck
         InformCheck informCheck = ConvertUtils.sourceToTarget(informVo, InformCheck.class);
         informCheck.setInformId(informById.getId());
         informCheck.setCreateBy(UserAuthInfoContext.getUserName());
         informCheck.setCreateTime(new Date());
         informCheckService.save(informCheck);
+
+        //update checkStatus
+        informById.setCheckStatus(informVo.getCheckStatus());
+        informById.setUpdateTime(new Date());
+        informById.setUpdateBy(UserAuthInfoContext.getUserName());
+        updateById(informById);
     }
 
     @Override
@@ -193,6 +201,18 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
                 .set(Inform::getEnable, EnableEnum.N.getCode())
                 .eq(Inform::getId, id);
         this.update(updateWrapper);
+    }
+
+    @Override
+    public InformViewVo view(Long id) {
+        Inform informById = getInformById(id);
+        InformViewVo informViewVo = new InformViewVo();
+        informViewVo.setInform(informById);
+        if (Objects.nonNull(informById)){
+            InformCheck informCheck = informCheckService.getByInformId(id);
+            informViewVo.setInformCheck(informCheck);
+        }
+        return informViewVo;
     }
 
     private Inform getInformById(Long id) {

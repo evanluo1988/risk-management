@@ -13,4 +13,5 @@ import com.springboot.domain.InformCheck;
  */
 public interface InformCheckService extends IService<InformCheck> {
 
+    InformCheck getByInformId(Long informId);
 }

@@ -31,4 +31,10 @@ public class InformPageVo {
     private String verification;
     //奖励情况
     private String rewardContent;
+    //分派状态
+    private String assignment;
+    //分派区域ID
+    private Long areaId;
+    //分派区域
+    private String areaName;
 }

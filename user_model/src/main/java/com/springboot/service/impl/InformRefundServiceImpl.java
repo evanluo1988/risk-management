@@ -1,10 +1,15 @@
 package com.springboot.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.springboot.domain.InformRefund;
 import com.springboot.mapper.InformRefundDao;
 import com.springboot.service.InformRefundService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -17,4 +22,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class InformRefundServiceImpl extends ServiceImpl<InformRefundDao, InformRefund> implements InformRefundService {
 
+    @Override
+    public List<InformRefund> listRefundByInformId(Long informId) {
+        if (Objects.isNull(informId)){
+            return Lists.newArrayListWithCapacity(0);
+        }
+        LambdaQueryWrapper<InformRefund> queryWrapper = new LambdaQueryWrapper<InformRefund>()
+                .eq(InformRefund::getInformId, informId);
+        return list(queryWrapper);
+    }
 }

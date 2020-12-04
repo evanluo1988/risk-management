@@ -1,11 +1,14 @@
 package com.springboot.controller;
 
 
+import com.springboot.domain.InformRefund;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
+import com.springboot.service.InformRefundService;
 import com.springboot.service.InformService;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.InformPageVo;
+import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <p>
@@ -29,6 +33,8 @@ public class InformController {
 
     @Autowired
     private InformService informService;
+    @Autowired
+    private InformRefundService informRefundService;
 
     @GetMapping("/page")
     public ReturnT page(InformVo informVo) {
@@ -41,6 +47,18 @@ public class InformController {
                 informVo.getAreaId(),
                 informVo.getPageNo(),informVo.getPageSize());
         return ReturnTUtils.getReturnT(pagination);
+    }
+
+    @GetMapping("/view/{id}")
+    public ReturnT view(@PathVariable("id") Long id){
+        InformViewVo informViewVo = informService.view(id);
+        return ReturnTUtils.getReturnT(informViewVo);
+    }
+
+    @GetMapping("/refund/list/{informId}")
+    public ReturnT refundList(@PathVariable("informId")Long informId){
+        List<InformRefund> refundList = informRefundService.listRefundByInformId(informId);
+        return ReturnTUtils.getReturnT(refundList);
     }
 
     @PostMapping("/import")
