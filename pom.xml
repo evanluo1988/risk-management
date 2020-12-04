@@ -124,6 +124,12 @@
             <artifactId>easyexcel</artifactId>
             <version>2.2.6</version>
         </dependency>
+        <!--open feign-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
 
     </dependencies>
 

@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -18,6 +19,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
  */
 @SpringBootApplication
 @ServletComponentScan(basePackages = "com.springboot.config")
+@EnableFeignClients(basePackages = "com.springboot.service.remote")
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
