@@ -15,11 +15,11 @@ public class PageIn {
     /**
      * 页码
      */
-    private Integer pageNo;
+    private Integer pageNo = 1;
     /**
      * 页大小
      */
-    private Integer pageSize;
+    private Integer pageSize = 10;
 
     public Page convertPage() {
         return new Page(pageNo, pageSize);

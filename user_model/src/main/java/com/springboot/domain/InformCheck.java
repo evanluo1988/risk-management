@@ -26,7 +26,7 @@ public class InformCheck extends BaseDomain {
     /**
      * 核查单位
      */
-    private String checkUnit;
+    private Long checkUnit;
 
     /**
      * 核查时间

@@ -1,5 +1,6 @@
 package com.springboot.cache;
 
+import com.springboot.service.AreaService;
 import com.springboot.service.MenuService;
 import com.springboot.service.RoleService;
 import com.springboot.utils.ServerCacheUtils;
@@ -20,6 +21,8 @@ public class ServerCacheLoader implements CommandLineRunner {
     private MenuService menuService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private AreaService areaService;
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
@@ -31,5 +34,7 @@ public class ServerCacheLoader implements CommandLineRunner {
         ServerCacheUtils.setMenuListCache(menuService.findAllMenus());
         log.info("loading role permission......");
         ServerCacheUtils.setRolePermissionCache(roleService.findAllRolePermission());
+        log.info("loading area ......");
+        ServerCacheUtils.setAreas(areaService.list());
     }
 }

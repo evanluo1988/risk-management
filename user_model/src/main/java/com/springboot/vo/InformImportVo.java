@@ -1,15 +1,15 @@
 package com.springboot.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.springboot.domain.Inform;
-import com.springboot.domain.InformCheck;
-import com.springboot.domain.InformPerson;
-import com.springboot.domain.InformReward;
+import com.springboot.domain.*;
 import com.springboot.easyexcel.converter.InformAnonymousConverter;
 import com.springboot.easyexcel.converter.InformCheckStatusConverter;
 import com.springboot.easyexcel.converter.InformOverDueConverter;
 import com.springboot.easyexcel.converter.InformTransferConverter;
+import com.springboot.enums.InformAssignmentEnum;
+import com.springboot.exception.ServiceException;
 import com.springboot.util.ConvertUtils;
+import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import lombok.Data;
 
@@ -113,7 +113,7 @@ public class InformImportVo {
     /**
      * 核查单位
      */
-    private String checkUnit;
+    private String checkUnitStr;
     /**
      * 核查时间
      */
@@ -177,7 +177,7 @@ public class InformImportVo {
     /**
      * 奖励金额
      */
-    private String rewardAmount;
+    private Float rewardAmountFloat;
 
     /**
      * 奖励时间
@@ -186,6 +186,7 @@ public class InformImportVo {
 
     public Inform toInform() {
         Inform inform = ConvertUtils.sourceToTarget(this, Inform.class);
+        inform.setAssignment(InformAssignmentEnum.NOT_ASSIGNED.getCode());
         inform.setAttachment(informAttachment);
         inform.setInformTime(Objects.isNull(informTimeStr) ? null : informTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         inform.setCrimeTime(Objects.isNull(crimeTimeStr) ? null : crimeTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
@@ -200,6 +201,8 @@ public class InformImportVo {
         informCheck.setCheckTime(Objects.isNull(checkTimeStr) ? null : checkTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         informCheck.setCreateBy(UserAuthInfoContext.getUserName());
         informCheck.setCreateTime(new Date());
+
+        informCheck.setCheckUnit(Objects.isNull(ServerCacheUtils.getAreaByName(checkUnitStr)) ? null : ServerCacheUtils.getAreaByName(checkUnitStr).getId());
         return informCheck;
     }
 
@@ -215,6 +218,7 @@ public class InformImportVo {
         informReward.setRewardTime(Objects.isNull(rewardTimeStr) ? null : rewardTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         informReward.setCreateBy(UserAuthInfoContext.getUserName());
         informReward.setCreateTime(new Date());
+        informReward.setRewardAmount(Objects.isNull(rewardAmountFloat) ? null : Float.valueOf(rewardAmountFloat * 100).longValue());
         return informReward;
     }
 }
