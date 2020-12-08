@@ -1,8 +1,12 @@
 package com.springboot.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
+@TableName("task_checks")
 public class TaskCheck extends BaseDomain {
     private static final long serialVersionUID = 8846340164072346603L;
     /**
@@ -37,4 +41,9 @@ public class TaskCheck extends BaseDomain {
      * 分发区域
      */
     private Long areaId;
+    private String enable;
+    /**
+     * 风险等级
+     */
+    private String riskLevel;
 }

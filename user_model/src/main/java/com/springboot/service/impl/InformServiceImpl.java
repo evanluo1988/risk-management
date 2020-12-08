@@ -11,8 +11,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.springboot.domain.*;
 import com.springboot.enums.EnableEnum;
-import com.springboot.enums.InformAssignmentEnum;
-import com.springboot.enums.InformCheckStatusEnum;
+import com.springboot.enums.AssignmentEnum;
+import com.springboot.enums.CheckStatusEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.InformDao;
 import com.springboot.model.InformPageModel;
@@ -26,7 +26,6 @@ import com.springboot.vo.InformPageVo;
 import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,7 +98,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void dispatcher(Long id, Long areaId) {
-        Area area = areaService.getAreaById(areaId);
+        Area area = ServerCacheUtils.getAreaById(areaId);
         if (Objects.isNull(area)) {
             throw new ServiceException("区域信息不存在");
         }
@@ -109,8 +108,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("举报信息不存在");
         }
 
+        if (AssignmentEnum.ASSIGNED.getCode().equalsIgnoreCase(inform.getAssignment())){
+            throw new ServiceException("已分派的不能分派");
+        }
+
         inform.setAreaId(areaId)
-                .setAssignment(InformAssignmentEnum.ASSIGNED.getCode());
+                .setAssignment(AssignmentEnum.ASSIGNED.getCode());
         inform.setUpdateTime(new Date());
         inform.setUpdateBy(UserAuthInfoContext.getUserName());
         updateById(inform);
@@ -124,23 +127,18 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("举报信息不存在");
         }
 
-        if (!informById.getAssignment().equalsIgnoreCase(InformAssignmentEnum.ASSIGNED.getCode())) {
-            log.error("当前状态不是已分派状态，不允许退回");
-            throw new ServiceException("当前状态不允许退回");
-        }
-
-        if (informById.getCheckStatus().equalsIgnoreCase(InformCheckStatusEnum.CHECKED.getCode())){
+        if (informById.getCheckStatus().equalsIgnoreCase(CheckStatusEnum.CHECKED.getCode())){
             log.error("已经核查的举报不允许撤回");
             throw new ServiceException("已核查不允许退回");
         }
 
         LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
-                .set(Inform::getAssignment, InformAssignmentEnum.RETURNED.getCode())
+                .set(Inform::getAssignment, AssignmentEnum.RETURNED.getCode())
                 .set(Inform::getAreaId, null)
                 .set(Inform::getUpdateBy, UserAuthInfoContext.getUserName())
                 .set(Inform::getUpdateTime, LocalDateTime.now())
                 .eq(Inform::getId, id)
-                .eq(Inform::getAssignment, InformAssignmentEnum.ASSIGNED.getCode());
+                .eq(Inform::getAssignment, AssignmentEnum.ASSIGNED.getCode());
         update(updateWrapper);
 
         //store inform refund
@@ -181,8 +179,8 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
                                                LocalDate checkTimeStart, LocalDate checkTimeEnd,
                                                Long areaId, Integer pageNo, Integer pageSize) {
 
-        InformCheckStatusEnum informCheckStatusEnum = InformCheckStatusEnum.descOf(checkStatus);
-        Page<InformPageModel> page = informDao.informPage(source, Objects.isNull(informCheckStatusEnum) ? null : informCheckStatusEnum.getCode(), informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaId, new Page(pageNo, pageSize));
+        CheckStatusEnum checkStatusEnum = CheckStatusEnum.descOf(checkStatus);
+        Page<InformPageModel> page = informDao.informPage(source, Objects.isNull(checkStatusEnum) ? null : checkStatusEnum.getCode(), informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaId, new Page(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
     }
 
@@ -193,12 +191,14 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("举报信息不存在");
         }
 
-        if (informById.getAssignment().equalsIgnoreCase(InformAssignmentEnum.ASSIGNED.getCode())){
-            throw new ServiceException("已分派的不能删除");
+        if (CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(informById.getCheckStatus())){
+            throw new ServiceException("已核查任务不能删除");
         }
 
         LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
                 .set(Inform::getEnable, EnableEnum.N.getCode())
+                .set(Inform::getUpdateTime,new Date())
+                .set(Inform::getUpdateBy,UserAuthInfoContext.getUserName())
                 .eq(Inform::getId, id);
         this.update(updateWrapper);
     }
@@ -213,6 +213,40 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             informViewVo.setInformCheck(informCheck);
         }
         return informViewVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void revoke(Long id) {
+        Inform informById = getInformById(id);
+        if (Objects.isNull(informById)){
+            throw new ServiceException("举报信息不存在");
+        }
+
+        if (CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(informById.getCheckStatus())){
+            throw new ServiceException("已核查不能撤回");
+        }
+
+        LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
+                .set(Inform::getAssignment, AssignmentEnum.REVOKE.getCode())
+                .set(Inform::getAreaId, null)
+                .set(Inform::getUpdateBy, UserAuthInfoContext.getUserName())
+                .set(Inform::getUpdateTime, new Date())
+                .eq(Inform::getId, informById.getId());
+        this.update(updateWrapper);
+    }
+
+    @Override
+    public void recheck(Long id) {
+        Inform informById = getInformById(id);
+        if (Objects.isNull(informById)){
+            throw new ServiceException("举报信息不存在");
+        }
+
+        informById.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());
+        informById.setUpdateBy(UserAuthInfoContext.getUserName());
+        informById.setUpdateTime(new Date());
+        updateById(informById);
     }
 
     private Inform getInformById(Long id) {

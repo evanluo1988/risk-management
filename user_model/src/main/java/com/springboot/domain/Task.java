@@ -1,10 +1,12 @@
 package com.springboot.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@TableName("tasks")
 public class Task extends BaseDomain {
 
     private static final long serialVersionUID = -6444412657849554771L;

@@ -36,8 +36,44 @@
         t.task_number, t.task_name, t.start_time, t.task_source, t.due_time, t.create_time, t.create_by, t.update_time, t.update_by
     </sql>
 
+    <sql id="TaskPage">
+        t.task_number,
+        e.enterprise_name,
+        tc.check_region,
+        tc.related_clues,
+        tc.check_status,
+        tc.enable
+        e.disposal_stage,
+        tc.overdue,
+        tc.assignment
+    </sql>
+
     <select id="findPageTasks" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from tasks t
+    </select>
+
+    <select id="pageTasks" resultType="com.springboot.model.TaskModel">
+        SELECT <include refid="TaskPage"/>
+        FROM task_checks tc
+        LEFT JOIN tasks t ON tc.task_id = t.id
+        LEFT JOIN task_dispositions td ON td.task_check_id = tc.id
+        LEFT JOIN enterprises e ON tc.enterprise_id = e.id
+        WHERE 1=1
+        <if test="enterpriseName!=null and enterpriseName!=''">
+            AND e.enterprise_name = #{enterpriseName}
+        </if>
+        <if test="checkStatus!=null and checkStatus!=''">
+            AND tc.check_status = #{checkStatus}
+        </if>
+        <if test="disposalStage!=null and disposalStage!=''">
+            AND e.disposal_stage = #{disposalStage}
+        </if>
+        <if test="assignment!=null and assignment!=''">
+            AND tc.assignment = #{assignment}
+        </if>
+        <if test="checkRegion!=null and checkRegion!=''">
+            AND tc.check_region = #{checkRegion}
+        </if>
     </select>
 
 </mapper>

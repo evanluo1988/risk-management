@@ -1,10 +1,14 @@
 package com.springboot.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
 @Data
+@Accessors(chain = true)
+@TableName("task_dispositions")
 public class TaskDisposition extends BaseDomain {
     private static final long serialVersionUID = -8959866075037296525L;
     /**
@@ -71,4 +75,5 @@ public class TaskDisposition extends BaseDomain {
      * 其他时间
      */
     private LocalDateTime otherTime;
+
 }

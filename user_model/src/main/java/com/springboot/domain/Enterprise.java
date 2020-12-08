@@ -1,10 +1,12 @@
 package com.springboot.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@TableName("enterprises")
 public class Enterprise extends BaseDomain {
     private static final long serialVersionUID = 1423774902833637941L;
     /**
@@ -36,10 +38,6 @@ public class Enterprise extends BaseDomain {
      */
     private String registrationNumber;
     /**
-     * 处置阶段
-     */
-    private String disposalStage;
-    /**
      * 是否司立案
      */
     private Boolean judicialCase;
@@ -63,6 +61,10 @@ public class Enterprise extends BaseDomain {
      * 行政处罚
      */
     private String punishment;
+    /**
+     * 处置阶段
+     */
+    private String disposalStage;
     /**
      * 风险等级
      */

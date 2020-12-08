@@ -4,19 +4,25 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.springboot.domain.*;
+import com.springboot.enums.AssignmentEnum;
+import com.springboot.enums.CheckStatusEnum;
+import com.springboot.enums.EnableEnum;
 import com.springboot.exception.ServiceException;
-import com.springboot.mapper.InformDao;
 import com.springboot.mapper.TaskMapper;
-import com.springboot.model.TaskImportModel;
 import com.springboot.model.TaskModel;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
-import com.springboot.service.TaskService;
+import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
+import com.springboot.utils.ServerCacheUtils;
+import com.springboot.utils.UserAuthInfoContext;
+import com.springboot.vo.TaskDetailVo;
 import com.springboot.vo.TaskImportVo;
 import com.springboot.vo.TaskVo;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +33,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,13 +41,23 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements TaskService {
     @Autowired
     private TaskMapper taskMapper;
+    @Autowired
+    private EnterpriseService enterpriseService;
+    @Autowired
+    private TaskCheckService taskCheckService;
+    @Autowired
+    private TaskDispositionService taskDispositionService;
+    @Autowired
+    private TaskRefundService taskRefundService;
+
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void importTasks(MultipartFile file) {
         try {
             EasyExcel.read(file.getInputStream(), TaskImportVo.class, new TasksUploadDataListener(this)).sheet().headRowNumber(1).doRead();
         } catch (IOException e) {
-            log.error("导入举报信息异常：{}",e);
+            log.error("导入举报信息异常：{}", e);
             throw new ServiceException("导入举报信息错误");
         }
     }
@@ -71,70 +84,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         @Override
         public void doAfterAllAnalysed(AnalysisContext analysisContext) {
             log.debug("import doAfter");
-            if(CollectionUtils.isEmpty(data)) {
+            if (CollectionUtils.isEmpty(data)) {
                 return;
             }
-            Map<String, List<TaskImportVo>> taskImportMap = data.stream().collect(Collectors.groupingBy(TaskImportVo::getTaskNumber));
-
-            List<TaskImportModel> taskImportModelList = Lists.newArrayList();
-            for(Map.Entry<String, List<TaskImportVo>> entry : taskImportMap.entrySet()) {
-                List<TaskImportVo> taskImportVoList = entry.getValue();
-                //set task
-                Task task = taskImportVoList.get(0).toTask();
-                TaskImportModel taskImportModel = new TaskImportModel();
-                taskImportModel.setTask(task);
-
-                List<TaskCheck> taskCheckList = Lists.newArrayList();
-                List<Enterprise> enterpriseList = Lists.newArrayList();
-                List<TaskDisposition> taskDispositionList = Lists.newArrayList();
-                taskImportModel.setTaskCheckList(taskCheckList);
-                taskImportModel.setEnterpriseList(enterpriseList);
-                taskImportModel.setTaskDispositionList(taskDispositionList);
-                for(TaskImportVo taskImportVo : taskImportVoList){
-                    taskCheckList.add(taskImportVo.toTaskCheck());
-                    enterpriseList.add(taskImportVo.toEnterprise());
-                    taskDispositionList.add(taskImportVo.toTaskDisposition());
-                }
-                taskImportModelList.add(taskImportModel);
-            }
-
-            for (TaskImportModel taskImportModel : taskImportModelList) {
-                try {
-                    taskService.importTask(taskImportModel);
-                }catch (Exception e){
-                    log.error("导入数据出错：{}",e);
-                    errors.add(taskImportModel.getTask().getTaskName());
-                }
-            }
-
-            if (!CollectionUtils.isEmpty(errors)){
-                throw new ServiceException("导入失败的线索编号："+ Arrays.toString(errors.toArray()));
-            }
+            taskService.importTasks0(data);
         }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void importTask(TaskImportModel data) {
-        Task task = data.getTask();
-        //save(task);
-
-        List<Enterprise> enterpriseList = data.getEnterpriseList();
-        List<TaskCheck> taskCheckList = data.getTaskCheckList();
-        List<TaskDisposition> taskDispositionList = data.getTaskDispositionList();
-
-        //store enterprise
-        //enterpriseService.save(enterprise);
-        //store enterprise detail
-        //inform.setInformPersonId(informPerson.getId());
-
-
-        //store TaskCheck
-        //informCheck.setInformId(inform.getId());
-        //informCheckService.save(informCheck);
-        //store TaskDisposition
-        //informReward.setInformId(inform.getId());
-        //informRewardService.save(informReward);
     }
 
     @Override
@@ -149,4 +103,158 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         return Pagination.of(taskVos, taskPage.getTotal());
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void importTasks0(List<TaskImportVo> taskImportVos) {
+        Map<String, List<TaskImportVo>> taskImportMap = taskImportVos.stream().collect(Collectors.groupingBy(TaskImportVo::getTaskNumber));
+        taskImportMap.forEach((k, v) -> {
+            Task task = v.get(0).toTask();
+            this.save(task);
+
+            for (TaskImportVo taskImportVo : v) {
+                TaskCheck taskCheck = taskImportVo.toTaskCheck();
+                TaskDisposition taskDisposition = taskImportVo.toTaskDisposition();
+                Enterprise enterprise = taskImportVo.toEnterprise();
+                enterpriseService.save(enterprise);
+
+                taskCheck.setTaskId(task.getId());
+                taskCheck.setEnterpriseId(enterprise.getId());
+                taskCheckService.save(taskCheck);
+
+                taskDisposition.setTaskCheckId(taskCheck.getId());
+                taskDispositionService.save(taskDisposition);
+            }
+        });
+    }
+
+    @Override
+    public Pagination<TaskVo> pageTasks(String enterpriseName, String checkStatus, String disposalStage,
+                                        String assignment, String checkRegion, Integer pageNo, Integer pageSize) {
+        Page<TaskModel> page = taskMapper.pageTasks(enterpriseName, checkStatus, disposalStage, assignment, checkRegion, new Page<>(pageNo, pageSize));
+        return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), TaskVo.class), page.getTotal());
+    }
+
+    @Override
+    public TaskDetailVo detail(Long id) {
+        TaskCheck taskCheck = taskCheckService.getTaskCheckById(id);
+        Task task = getTaskById(taskCheck.getTaskId());
+        TaskDisposition taskDisposition = taskDispositionService.getDispositionByTaskCheckId(taskCheck.getId());
+        Enterprise enterprise = enterpriseService.getEnterpriseById(taskCheck.getEnterpriseId());
+        return new TaskDetailVo(task, taskCheck, taskDisposition, enterprise);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void del(Long id) {
+        TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
+        if (Objects.isNull(taskCheckById)) {
+            throw new ServiceException("任务不存在");
+        }
+
+        if (CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(taskCheckById.getCheckStatus())) {
+            throw new ServiceException("已核查任务不可删除");
+        }
+
+        taskCheckById.setEnable(EnableEnum.N.getCode());
+        taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+        taskCheckById.setUpdateTime(new Date());
+        taskCheckService.updateById(taskCheckById);
+    }
+
+    @Override
+    public void dispatcher(Long id, Long areaId) {
+        Area area = ServerCacheUtils.getAreaById(areaId);
+        if (Objects.isNull(area)) {
+            throw new ServiceException("区域信息不存在");
+        }
+
+        TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
+        if (Objects.isNull(taskCheckById)) {
+            throw new ServiceException("任务不存在");
+        }
+
+        if (AssignmentEnum.ASSIGNED.getCode().equalsIgnoreCase(taskCheckById.getAssignment())) {
+            throw new ServiceException("已分派的不能分派");
+        }
+
+        taskCheckById.setAssignment(AssignmentEnum.ASSIGNED.getCode())
+                .setAreaId(areaId);
+        taskCheckById.setUpdateTime(new Date());
+        taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+        taskCheckService.updateById(taskCheckById);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void goBack(Long id, String refundReason) {
+        TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
+        if (Objects.isNull(taskCheckById)) {
+            throw new ServiceException("核查数据不存在");
+        }
+
+        if (taskCheckById.getCheckStatus().equalsIgnoreCase(CheckStatusEnum.CHECKED.getCode())) {
+            log.error("已经核查的核查任务不允许撤回");
+            throw new ServiceException("已核查不允许退回");
+        }
+
+        taskCheckService.goBack(id);
+        taskRefundService.refund(id, refundReason);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void revoke(Long id) {
+        TaskCheck taskCheckById = taskCheckService.getById(id);
+        if (Objects.isNull(taskCheckById)) {
+            throw new ServiceException("任务不存在");
+        }
+
+        if (CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(taskCheckById.getCheckStatus())) {
+            throw new ServiceException("已核查不能撤回");
+        }
+
+        taskCheckService.revoke(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void check(Long id, TaskVo taskVo) {
+        TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
+        if (Objects.isNull(taskCheckById)) {
+            throw new ServiceException("任务不存在");
+        }
+
+        TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(taskVo, TaskDisposition.class);
+        taskDisposition.setTaskCheckId(id);
+        taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
+        taskDisposition.setCreateTime(new Date());
+        taskDispositionService.save(taskDisposition);
+
+        taskCheckById.setCheckStatus(taskVo.getCheckStatus());
+        taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+        taskCheckById.setUpdateTime(new Date());
+        taskCheckService.updateById(taskCheckById);
+    }
+
+    @Override
+    public void recheck(Long id) {
+        TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
+        if (Objects.isNull(taskCheckById)) {
+            throw new ServiceException("核查不存在");
+        }
+
+        taskCheckById.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());
+        taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+        taskCheckById.setUpdateTime(new Date());
+        taskCheckService.updateById(taskCheckById);
+    }
+
+    private Task getTaskById(Long id) {
+        if (Objects.isNull(id)) {
+            return null;
+        }
+        LambdaQueryWrapper<Task> queryWrapper = new LambdaQueryWrapper<Task>()
+                .eq(Task::getId, id);
+        return getOne(queryWrapper, false);
+    }
 }

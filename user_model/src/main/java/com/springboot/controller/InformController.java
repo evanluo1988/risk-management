@@ -75,10 +75,17 @@ public class InformController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    @Validated(InformVo.RefundGroup.class)
     @PutMapping("/return/{id}")
     public ReturnT goBack(@PathVariable("id") Long id,
-                          @RequestBody InformVo informVo) {
+                          @RequestBody @Valid InformVo informVo) {
         informService.goBack(id,informVo.getRefundReason());
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @PutMapping("/revoke/{id}")
+    public ReturnT revoke(@PathVariable("id") Long id){
+        informService.revoke(id);
         return ReturnTUtils.newCorrectReturnT();
     }
 
@@ -86,6 +93,12 @@ public class InformController {
     public ReturnT check(@PathVariable("id") Long id,
                          @RequestBody InformVo informVo) {
         informService.check(id, informVo);
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @PutMapping("/recheck/{id}")
+    public ReturnT recheck(@PathVariable("id") Long id){
+        informService.recheck(id);
         return ReturnTUtils.newCorrectReturnT();
     }
 

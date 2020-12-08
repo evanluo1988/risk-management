@@ -3,7 +3,7 @@ package com.springboot.vo;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.springboot.domain.*;
 import com.springboot.easyexcel.converter.*;
-import com.springboot.enums.InformAssignmentEnum;
+import com.springboot.enums.AssignmentEnum;
 import com.springboot.util.ConvertUtils;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
@@ -179,7 +179,7 @@ public class InformImportVo {
 
     public Inform toInform() {
         Inform inform = ConvertUtils.sourceToTarget(this, Inform.class);
-        inform.setAssignment(InformAssignmentEnum.NOT_ASSIGNED.getCode());
+        inform.setAssignment(AssignmentEnum.NOT_ASSIGNED.getCode());
         inform.setAttachment(informAttachment);
         inform.setInformTime(Objects.isNull(informTimeStr) ? null : informTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         inform.setCrimeTime(Objects.isNull(crimeTimeStr) ? null : crimeTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());

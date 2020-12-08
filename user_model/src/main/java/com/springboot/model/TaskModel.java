@@ -3,11 +3,18 @@ package com.springboot.model;
 import com.springboot.domain.Task;
 import com.springboot.util.DateUtils;
 import com.springboot.vo.TaskVo;
+import lombok.Data;
 
+@Data
 public class TaskModel extends Task {
     private String taskStatus;
     private Boolean overdue;
     private int waitCheckCount;
+    private String enterpriseName;
+    private String checkStatus;
+    private String disposalStage;
+    private String assignment;
+    private String checkRegion;
 
     public String getTaskStatus() {
         return taskStatus;

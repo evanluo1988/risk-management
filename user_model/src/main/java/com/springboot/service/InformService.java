@@ -86,4 +86,8 @@ public interface InformService extends IService<Inform> {
      * @return
      */
     InformViewVo view(Long id);
+
+    void revoke(Long id);
+
+    void recheck(Long id);
 }

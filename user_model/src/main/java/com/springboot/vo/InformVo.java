@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class InformVo extends PageIn {
     public interface DispatcherGroup{}
     public interface CheckGroup{}
+    public interface RefundGroup{}
 
     @NotNull(groups = DispatcherGroup.class,message = "区域不能为空")
     private Long areaId;
@@ -132,6 +133,7 @@ public class InformVo extends PageIn {
     /**
      * 退回原因
      */
+    @NotBlank(message = "退回原因必填",groups = RefundGroup.class)
     private String refundReason;
 
 }

@@ -2,30 +2,35 @@ package com.springboot.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.springboot.domain.*;
+import com.springboot.easyexcel.converter.DisposalStageConverter;
+import com.springboot.easyexcel.converter.InvolveInternetConverter;
+import com.springboot.easyexcel.converter.RiskLevelConverter;
 import com.springboot.easyexcel.converter.TaskEstablishedTimeConverter;
 import com.springboot.util.ConvertUtils;
 import com.springboot.util.DateUtils;
 import com.springboot.utils.UserAuthInfoContext;
+import lombok.Data;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@Data
 public class TaskImportVo {
 
-    @ExcelProperty(value = {"单号"}, index=0)
+    @ExcelProperty(value = {"单号"}, index = 0)
     private String taskNumber;
 
-    @ExcelProperty(value = {"核查企业"}, index=1)
+    @ExcelProperty(value = {"核查企业"}, index = 1)
     private String enterpriseName;
 
-    @ExcelProperty(value = {"核查地区"}, index=2)
+    @ExcelProperty(value = {"核查地区"}, index = 2)
     private String checkRegion;
 
-    @ExcelProperty(value = {"创建时间"}, index=3)
+    @ExcelProperty(value = {"创建时间"}, index = 3)
     private Date startTimeStr;
 
-    @ExcelProperty(value = {"风险等级"}, index = 4)
+    @ExcelProperty(value = {"风险等级"}, index = 4, converter = RiskLevelConverter.class)
     private String riskLevel;
 
     @ExcelProperty(value = {"注册号"}, index = 5)
@@ -46,7 +51,7 @@ public class TaskImportVo {
     @ExcelProperty(value = {"住址"}, index = 10)
     private String registrationAddress;
 
-    @ExcelProperty(value = {"处置阶段"}, index = 11)
+    @ExcelProperty(value = {"处置阶段"}, index = 11, converter = DisposalStageConverter.class)
     private String disposalStage;
 
     @ExcelProperty(value = {"所属行业"}, index = 12)
@@ -64,7 +69,7 @@ public class TaskImportVo {
     @ExcelProperty(value = {"员工人数"}, index = 16)
     private String employeesNumber;
 
-    @ExcelProperty(value = {"是否涉及互联网"}, index = 17)
+    @ExcelProperty(value = {"是否涉及互联网"}, index = 17, converter = InvolveInternetConverter.class)
     private String involveInternet;
 
     @ExcelProperty(value = {"跨省跨区情况"}, index = 18)
@@ -362,21 +367,21 @@ public class TaskImportVo {
         return task;
     }
 
-    public TaskCheck toTaskCheck(){
+    public TaskCheck toTaskCheck() {
         TaskCheck taskCheck = ConvertUtils.sourceToTarget(this, TaskCheck.class);
         taskCheck.setCreateBy(UserAuthInfoContext.getUserName());
         taskCheck.setCreateTime(new Date());
         return taskCheck;
     }
 
-    public Enterprise toEnterprise(){
+    public Enterprise toEnterprise() {
         Enterprise enterprise = ConvertUtils.sourceToTarget(this, Enterprise.class);
         enterprise.setCreateBy(UserAuthInfoContext.getUserName());
         enterprise.setCreateTime(new Date());
         return enterprise;
     }
 
-    public TaskDisposition toTaskDisposition(){
+    public TaskDisposition toTaskDisposition() {
         TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(this, TaskDisposition.class);
         taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
         taskDisposition.setCreateTime(new Date());

@@ -5,10 +5,11 @@ package com.springboot.enums;
  * @Date 2020/12/1 10:59
  * @Version 1.0
  */
-public enum InformAssignmentEnum {
+public enum AssignmentEnum {
     NOT_ASSIGNED("NOT_ASSIGNED","未分派"),
     ASSIGNED("ASSIGNED","已分派"),
-    RETURNED("RETURNED","已撤回"),
+    RETURNED("RETURNED","已退回"),
+    REVOKE("REVOKE","已撤回"),
     ASSIGNED_FAIL("ASSIGNED_FAIL","分派失败")
 
 
@@ -16,7 +17,7 @@ public enum InformAssignmentEnum {
     private String code;
     private String desc;
 
-    InformAssignmentEnum(String code, String desc) {
+    AssignmentEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -37,9 +38,9 @@ public enum InformAssignmentEnum {
         this.desc = desc;
     }
 
-    public static InformAssignmentEnum codeOf(String code){
-        InformAssignmentEnum[] values = InformAssignmentEnum.values();
-        for (InformAssignmentEnum value : values) {
+    public static AssignmentEnum codeOf(String code){
+        AssignmentEnum[] values = AssignmentEnum.values();
+        for (AssignmentEnum value : values) {
             if (value.getCode().equalsIgnoreCase(code)){
                 return value;
             }
@@ -47,9 +48,9 @@ public enum InformAssignmentEnum {
         return null;
     }
 
-    public static InformAssignmentEnum descOf(String desc){
-        InformAssignmentEnum[] values = InformAssignmentEnum.values();
-        for (InformAssignmentEnum value : values) {
+    public static AssignmentEnum descOf(String desc){
+        AssignmentEnum[] values = AssignmentEnum.values();
+        for (AssignmentEnum value : values) {
             if (value.getDesc().equalsIgnoreCase(desc)){
                 return value;
             }
