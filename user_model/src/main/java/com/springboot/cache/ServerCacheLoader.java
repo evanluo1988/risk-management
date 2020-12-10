@@ -1,13 +1,8 @@
 package com.springboot.cache;
 
-import com.springboot.service.AreaService;
-import com.springboot.service.MenuService;
-import com.springboot.service.RoleService;
+import com.springboot.service.*;
 import com.springboot.utils.ServerCacheUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +18,14 @@ public class ServerCacheLoader implements CommandLineRunner {
     private RoleService roleService;
     @Autowired
     private AreaService areaService;
+    @Autowired
+    private EtlTranRuleService etlTranRuleService;
+    @Autowired
+    private TableStructService tableStructService;
+    @Autowired
+    private QuotaRuleService quotaRuleService;
+    @Autowired
+    private QuotaGrandService quotaGrandService;
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
@@ -36,5 +39,14 @@ public class ServerCacheLoader implements CommandLineRunner {
         ServerCacheUtils.setRolePermissionCache(roleService.findAllRolePermission());
         log.info("loading area ......");
         ServerCacheUtils.setAreas(areaService.list());
+        log.info("loading etl tran rule list......");
+        ServerCacheUtils.setEtlTranRuleListCache(etlTranRuleService.findEnableRules());
+        log.info("loading std table struct......");
+        ServerCacheUtils.setStdTableMap(tableStructService.getStdTableStruct());
+        log.info("loading quota list......");
+        ServerCacheUtils.setQuotaList(quotaRuleService.findEnableQuotaRules());
+        log.info("loading quota grand list......");
+        ServerCacheUtils.setQuotaGrandList(quotaGrandService.findQuotaGrandList());
+
     }
 }

@@ -2,6 +2,7 @@ package com.springboot.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -35,6 +36,10 @@ public class DateUtils {
             return null;
         }
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public int disDateFrom(LocalDate date) {
+        return LocalDate.now().getYear() - date.getYear();
     }
 
 }
