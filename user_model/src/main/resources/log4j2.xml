@@ -76,7 +76,7 @@
 
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
         <logger name="org.mybatis" level="info" additivity="false">
-            <AppenderRef ref="DEBUG"/>
+            <AppenderRef ref="INFO"/>
         </logger>
         <!--监控系统信息-->
         <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->
@@ -84,7 +84,7 @@
             <AppenderRef ref="Console"/>
         </Logger>
 
-        <root level="DEBUG">
+        <root level="INFO">
             <appender-ref ref="Console"/>
             <appender-ref ref="Filelog"/>
             <appender-ref ref="RollingFileInfo"/>

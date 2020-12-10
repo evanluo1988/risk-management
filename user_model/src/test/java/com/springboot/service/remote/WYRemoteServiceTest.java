@@ -1,7 +1,10 @@
 package com.springboot.service.remote;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.springboot.ApplicationTest;
+import com.springboot.model.RemoteDataModel;
 import com.springboot.util.StrUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,8 +51,9 @@ public class WYRemoteServiceTest extends ApplicationTest {
         System.out.println("请求报文："+JSON.toJSONString(customerDataCollectionRequest));
         WYRemoteService.CustomerDataCollectionResponse customerDataCollectionResponse = wyRemoteService.customerDataCollection(customerDataCollectionRequest);
         System.out.println("响应报文："+JSON.toJSONString(customerDataCollectionResponse));
-        WYRemoteService.CustomerDataCollectionResponse.Data data = customerDataCollectionResponse.toData();
-        System.out.println("转换后的报文："+JSON.toJSONString(data));
-        Assert.assertTrue(customerDataCollectionResponse.succ());
+
+        JSONObject jsonObject = JSONObject.parseObject(customerDataCollectionResponse.getData());
+        JSONArray dataJsonArr = (JSONArray)jsonObject.getJSONObject("R11C53").get("data");
+       // RemoteDataModel data = JSON.parseObject(dataJsonArr.get(0).toString(), RemoteDataModel.class);
     }
 }
