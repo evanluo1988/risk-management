@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
+
 @Data
 @Accessors(chain = true)
 @TableName("task_checks")
@@ -43,7 +45,7 @@ public class TaskCheck extends BaseDomain {
     private Long areaId;
     private String enable;
     /**
-     * 风险等级
+     * 逾期时间
      */
-    private String riskLevel;
+    private LocalDate expireTime;
 }

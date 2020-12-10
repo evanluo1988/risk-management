@@ -1,10 +1,13 @@
 package com.springboot.vo;
 
+import com.springboot.config.DateFormatConfig;
 import com.springboot.page.PageIn;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -44,10 +47,6 @@ public class TaskVo extends PageIn {
      * 处置阶段
      */
     private String disposalStage;
-    /**
-     * 逾期
-     */
-    private Boolean overdue;
     /**
      * 下发状态
      */
@@ -128,23 +127,32 @@ public class TaskVo extends PageIn {
     /**
      * 警示约谈时间
      */
-    private LocalDateTime warnInterviewTime;
+    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
+    private LocalDate warnInterviewTime;
     /**
      * 责令整改时间
      */
-    private LocalDateTime orderRectificationTime;
+    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
+    private LocalDate orderRectificationTime;
     /**
      * 停业整顿时间
      */
-    private LocalDateTime stopRectificationTime;
+    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
+    private LocalDate stopRectificationTime;
     /**
      * 查封、冻结资金时间
      */
-    private LocalDateTime freezingFundsTime;
+    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
+    private LocalDate freezingFundsTime;
     /**
      * 其他时间
      */
-    private LocalDateTime otherTime;
+    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
+    private LocalDate otherTime;
+
+    private LocalDate expireTime;
+
+    private String enable;
 
     public Long getId() {
         return id;
@@ -208,13 +216,5 @@ public class TaskVo extends PageIn {
 
     public void setDueTime(String dueTime) {
         this.dueTime = dueTime;
-    }
-
-    public boolean isOverdue() {
-        return overdue;
-    }
-
-    public void setOverdue(boolean overdue) {
-        this.overdue = overdue;
     }
 }

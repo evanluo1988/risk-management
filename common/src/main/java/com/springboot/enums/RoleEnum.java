@@ -3,6 +3,7 @@ package com.springboot.enums;
 import org.springframework.util.StringUtils;
 
 /**
+ * 角色
  * @Author 刘宏飞
  * @Date 2020/11/26 13:29
  * @Version 1.0

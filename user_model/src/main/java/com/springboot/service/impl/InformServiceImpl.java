@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.google.common.collect.Lists;
 import com.springboot.domain.*;
 import com.springboot.enums.EnableEnum;
@@ -26,6 +27,7 @@ import com.springboot.vo.InformPageVo;
 import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,6 +67,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     private InformDao informDao;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void importInforms(MultipartFile file) {
         try {
             EasyExcel.read(file.getInputStream(), InformImportVo.class, new InformsUploadDataListener(this)).sheet().headRowNumber(2).doRead();
@@ -157,12 +161,23 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         if (Objects.isNull(informById)) {
             throw new ServiceException("举报信息不存在");
         }
-        //store informCheck
-        InformCheck informCheck = ConvertUtils.sourceToTarget(informVo, InformCheck.class);
-        informCheck.setInformId(informById.getId());
-        informCheck.setCreateBy(UserAuthInfoContext.getUserName());
-        informCheck.setCreateTime(new Date());
-        informCheckService.save(informCheck);
+
+        InformCheck informCheckByInformId = informCheckService.getByInformId(id);
+        if (Objects.isNull(informCheckByInformId)){
+            //store informCheck
+            InformCheck informCheck = ConvertUtils.sourceToTarget(informVo, InformCheck.class);
+            informCheck.setCheckTime(LocalDateTime.of(informVo.getCheckTime(), LocalTime.of(0,0)));
+            informCheck.setInformId(informById.getId());
+            informCheck.setCreateBy(UserAuthInfoContext.getUserName());
+            informCheck.setCreateTime(new Date());
+            informCheckService.save(informCheck);
+        }else {
+            BeanUtils.copyProperties(informVo,informCheckByInformId);
+            informCheckByInformId.setCheckTime(LocalDateTime.of(informVo.getCheckTime(), LocalTime.of(0,0)));
+            informCheckByInformId.setUpdateBy(UserAuthInfoContext.getUserName());
+            informCheckByInformId.setUpdateTime(new Date());
+            informCheckService.updateById(informCheckByInformId);
+        }
 
         //update checkStatus
         informById.setCheckStatus(informVo.getCheckStatus());
@@ -179,8 +194,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
                                                LocalDate checkTimeStart, LocalDate checkTimeEnd,
                                                Long areaId, Integer pageNo, Integer pageSize) {
 
-        CheckStatusEnum checkStatusEnum = CheckStatusEnum.descOf(checkStatus);
-        Page<InformPageModel> page = informDao.informPage(source, Objects.isNull(checkStatusEnum) ? null : checkStatusEnum.getCode(), informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaId, new Page(pageNo, pageSize));
+        Page<InformPageModel> page = informDao.informPage(source, checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaId, new Page(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
     }
 

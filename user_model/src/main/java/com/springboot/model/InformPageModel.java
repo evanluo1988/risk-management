@@ -2,6 +2,7 @@ package com.springboot.model;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -38,5 +39,6 @@ public class InformPageModel {
     private Long areaId;
     //分派区域
     private String areaName;
-
+    //逾期时间
+    private LocalDate expireTime;
 }

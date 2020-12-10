@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -105,4 +106,8 @@ public class Inform extends BaseDomain {
      * 是否禁用：Y为正常，N为禁用
      */
     private String enable;
+    /**
+     * 逾期时间
+     */
+    private LocalDate expireTime;
 }

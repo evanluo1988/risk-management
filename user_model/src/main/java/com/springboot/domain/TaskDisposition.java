@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -58,22 +59,22 @@ public class TaskDisposition extends BaseDomain {
     /**
      * 警示约谈时间
      */
-    private LocalDateTime warnInterviewTime;
+    private LocalDate warnInterviewTime;
     /**
      * 责令整改时间
      */
-    private LocalDateTime orderRectificationTime;
+    private LocalDate orderRectificationTime;
     /**
      * 停业整顿时间
      */
-    private LocalDateTime stopRectificationTime;
+    private LocalDate stopRectificationTime;
     /**
      * 查封、冻结资金时间
      */
-    private LocalDateTime freezingFundsTime;
+    private LocalDate freezingFundsTime;
     /**
      * 其他时间
      */
-    private LocalDateTime otherTime;
+    private LocalDate otherTime;
 
 }

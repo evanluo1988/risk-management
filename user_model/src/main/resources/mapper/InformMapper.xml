@@ -38,6 +38,7 @@
 	  i.check_status,
 	  i.assignment,
 	  i.area_id,
+	  i.expire_time,
 	  a.area_name,
 	  ic.overdue,
 	  ic.verification,

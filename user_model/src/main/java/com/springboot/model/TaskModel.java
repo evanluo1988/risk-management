@@ -5,6 +5,8 @@ import com.springboot.util.DateUtils;
 import com.springboot.vo.TaskVo;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class TaskModel extends Task {
     private String taskStatus;
@@ -15,6 +17,8 @@ public class TaskModel extends Task {
     private String disposalStage;
     private String assignment;
     private String checkRegion;
+    private LocalDate expireTime;
+    private String enable;
 
     public String getTaskStatus() {
         return taskStatus;
@@ -50,7 +54,6 @@ public class TaskModel extends Task {
         taskVo.setWaitCheckCount(this.getWaitCheckCount());
         taskVo.setTaskStatus(this.getTaskStatus());
         taskVo.setDueTime(this.getDueTime() != null ? DateUtils.convertDateStr(this.getStartTime()):"");
-        taskVo.setOverdue(this.getOverdue());
         return taskVo;
     }
 }

@@ -1,22 +1,20 @@
 package com.springboot.enums;
 
 /**
- * 风险等级
+ * 地域规模
  * @Author 刘宏飞
- * @Date 2020/12/7 10:03
+ * @Date 2020/12/10 15:12
  * @Version 1.0
  */
-public enum RiskLevelEnum {
-    HIGH("HIGN","高"),
-    MIDDLE("HIDDLE","中"),
-    GENERAL("GENERAL","一般"),
-    LOW("LOW","低")
+public enum RegionalScaleEnum {
+    INTERPROVINCIAL("INTERPROVINCIAL","跨省"),
+    NOT_INTERPROVINCIAL("NOT_INTERPROVINCIAL","非跨省")
 
     ;
     private String code;
     private String desc;
 
-    RiskLevelEnum(String code, String desc) {
+    RegionalScaleEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -37,10 +35,10 @@ public enum RiskLevelEnum {
         this.desc = desc;
     }
 
-    public static RiskLevelEnum descOf(String desc){
-        RiskLevelEnum[] values = RiskLevelEnum.values();
-        for (RiskLevelEnum value : values) {
-            if (value.getDesc().equals(desc)){
+    private static RegionalScaleEnum descOf(String desc){
+        RegionalScaleEnum[] values = RegionalScaleEnum.values();
+        for (RegionalScaleEnum value : values) {
+            if (value.getDesc().equalsIgnoreCase(desc)){
                 return value;
             }
         }

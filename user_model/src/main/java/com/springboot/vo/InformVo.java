@@ -72,13 +72,14 @@ public class InformVo extends PageIn {
     /**
      * 核查单位
      */
-    private String checkUnit;
+    private Long checkUnit;
 
     /**
      * 核查时间
      */
     @NotNull(groups = CheckGroup.class,message = "核查时间必填")
-    private LocalDateTime checkTime;
+    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
+    private LocalDate checkTime;
 
     /**
      * 企业全称

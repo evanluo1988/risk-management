@@ -37,12 +37,14 @@
     </sql>
 
     <sql id="TaskPage">
+        tc.id,
         t.task_number,
         e.enterprise_name,
         tc.check_region,
         tc.related_clues,
         tc.check_status,
-        tc.enable
+        tc.enable,
+        tc.expire_time,
         e.disposal_stage,
         tc.overdue,
         tc.assignment

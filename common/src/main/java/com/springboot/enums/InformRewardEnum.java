@@ -1,6 +1,7 @@
 package com.springboot.enums;
 
 /**
+ * 奖励状态
  * @Author 刘宏飞
  * @Date 2020/12/4 17:36
  * @Version 1.0

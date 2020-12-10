@@ -9,7 +9,9 @@ import com.springboot.vo.TaskImportVo;
 import com.springboot.vo.TaskVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface TaskService extends IService<Task> {
 
@@ -34,4 +36,6 @@ public interface TaskService extends IService<Task> {
     void check(Long id, TaskVo taskVo);
 
     void recheck(Long id);
+
+    Collection<Task> listTaskByTaskNumbers(Set<String> taskNumbers);
 }

@@ -1,6 +1,7 @@
 package com.springboot.enums;
 
 /**
+ * 举报来源
  * @Author 刘宏飞
  * @Date 2020/12/4 17:42
  * @Version 1.0
@@ -9,7 +10,7 @@ public enum InformSourceEnum {
     WX("WX","微信举报"),
     PHONE("PHONE","电话举报"),
     MAIL("MAIL","信件举报"),
-    OTHER("MAIL","其他举报")
+    OTHER("OTHER","其他举报")
 
     ;
     private String code;

@@ -1,6 +1,7 @@
 package com.springboot.enums;
 
 /**
+ * 是否涉及互联网
  * @Author 刘宏飞
  * @Date 2020/12/7 11:01
  * @Version 1.0

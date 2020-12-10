@@ -1,22 +1,21 @@
 package com.springboot.enums;
 
 /**
- * 风险等级
+ * 处置措施
  * @Author 刘宏飞
- * @Date 2020/12/7 10:03
+ * @Date 2020/12/9 11:09
  * @Version 1.0
  */
-public enum RiskLevelEnum {
-    HIGH("HIGN","高"),
-    MIDDLE("HIDDLE","中"),
-    GENERAL("GENERAL","一般"),
-    LOW("LOW","低")
+public enum DisposalMeasuresEnum {
+    NOTHING("NOTHING","无"),
+    ADMINISTRATIVE_RESOLUTION("ADMINISTRATIVE_RESOLUTION","行政化解"),
+    JUDICIAL_CASE("JUDICIAL_CASE","司法立案")
 
     ;
     private String code;
     private String desc;
 
-    RiskLevelEnum(String code, String desc) {
+    DisposalMeasuresEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -37,10 +36,10 @@ public enum RiskLevelEnum {
         this.desc = desc;
     }
 
-    public static RiskLevelEnum descOf(String desc){
-        RiskLevelEnum[] values = RiskLevelEnum.values();
-        for (RiskLevelEnum value : values) {
-            if (value.getDesc().equals(desc)){
+    public static DisposalMeasuresEnum descOf(String desc){
+        DisposalMeasuresEnum[] values = DisposalMeasuresEnum.values();
+        for (DisposalMeasuresEnum value : values) {
+            if (value.getDesc().equalsIgnoreCase(desc)){
                 return value;
             }
         }

@@ -26,6 +26,7 @@ import com.springboot.vo.TaskDetailVo;
 import com.springboot.vo.TaskImportVo;
 import com.springboot.vo.TaskVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +87,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             log.debug("import doAfter");
             if (CollectionUtils.isEmpty(data)) {
                 return;
+            }
+            //校验编号不能重复
+            Set<String> taskNumbers = data.stream().map(TaskImportVo::getTaskNumber).collect(Collectors.toSet());
+            Collection<Task> tasks = taskService.listTaskByTaskNumbers(taskNumbers);
+            if (!CollectionUtils.isEmpty(tasks)){
+                throw new ServiceException("任务编号数据库已经存在！"+Arrays.toString(tasks.stream().map(Task::getTaskNumber).collect(Collectors.toSet()).toArray()));
             }
             taskService.importTasks0(data);
         }
@@ -224,11 +231,20 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("任务不存在");
         }
 
-        TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(taskVo, TaskDisposition.class);
-        taskDisposition.setTaskCheckId(id);
-        taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
-        taskDisposition.setCreateTime(new Date());
-        taskDispositionService.save(taskDisposition);
+        TaskDisposition dispositionByTaskCheckId = taskDispositionService.getDispositionByTaskCheckId(id);
+        if (Objects.isNull(dispositionByTaskCheckId)){
+            TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(taskVo, TaskDisposition.class);
+            taskDisposition.setTaskCheckId(id);
+            taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
+            taskDisposition.setCreateTime(new Date());
+            taskDispositionService.save(taskDisposition);
+        }else {
+            taskVo.setId(dispositionByTaskCheckId.getId());
+            BeanUtils.copyProperties(taskVo,dispositionByTaskCheckId);
+            dispositionByTaskCheckId.setUpdateBy(UserAuthInfoContext.getUserName());
+            dispositionByTaskCheckId.setUpdateTime(new Date());
+            taskDispositionService.updateById(dispositionByTaskCheckId);
+        }
 
         taskCheckById.setCheckStatus(taskVo.getCheckStatus());
         taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
@@ -247,6 +263,17 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
         taskCheckById.setUpdateTime(new Date());
         taskCheckService.updateById(taskCheckById);
+    }
+
+    @Override
+    public Collection<Task> listTaskByTaskNumbers(Set<String> taskNumbers) {
+        if (CollectionUtils.isEmpty(taskNumbers)){
+            return Collections.emptySet();
+        }
+
+        LambdaQueryWrapper<Task> queryWrapper = new LambdaQueryWrapper<Task>()
+                .in(Task::getTaskNumber, taskNumbers);
+        return this.list(queryWrapper);
     }
 
     private Task getTaskById(Long id) {
