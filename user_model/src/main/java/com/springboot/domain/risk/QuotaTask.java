@@ -3,6 +3,7 @@ package com.springboot.domain.risk;
 import com.springboot.config.SpringContextUtil;
 import com.springboot.exception.ServiceException;
 import com.springboot.utils.ServerCacheUtils;
+import lombok.Data;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+//todo 将来需要去掉Data，这个是为了测试
+@Data
 public class QuotaTask implements Callable<QuotaValue> {
 
     private String reqId;
@@ -24,9 +27,6 @@ public class QuotaTask implements Callable<QuotaValue> {
     public QuotaValue call() throws Exception {
         QuotaExecutor quotaExecutor = getQuotaExecutor();
         Map map = quotaExecutor.execQuota(reqId, quota);
-        if(ObjectUtils.isEmpty(map)){
-            throw new ServiceException("在标准表中找不到记录， reqId = " + reqId);
-        }
         QuotaValue quotaValue = getQuotaValue(map);
         return quotaValue;
     }
@@ -57,9 +57,9 @@ public class QuotaTask implements Callable<QuotaValue> {
         QuotaValue quotaValue = new QuotaValue();
         quotaValue.setQuotaId(quota.getId());
         quotaValue.setReqId(reqId);
-        quotaValue.setQuotaValue(map.get("keyvalue") != null ? map.get("keyvalue").toString() : null);
+        quotaValue.setQuotaValue((map != null && map.get("keyvalue") != null) ? map.get("keyvalue").toString() : null);
         //计算理想区间
-        if(quota.getQuotaCode() != null){
+        if(quota.getGrandCode() != null){
             QuotaGrand quotaGrand = getQuotaGrand(quotaValue.getQuotaValue());
             quotaValue.setIdealInterval(quotaGrand.getIdealInterval());
             quotaValue.setMinusPoints(quotaGrand.getMinusPoints());
@@ -73,7 +73,7 @@ public class QuotaTask implements Callable<QuotaValue> {
      */
     private QuotaGrand getQuotaGrand(String val) {
         //通过指标码得到分档列表
-        List<QuotaGrand> quotaGrandList = ServerCacheUtils.getQuotaGrandListByCode(quota.getQuotaCode());
+        List<QuotaGrand> quotaGrandList = ServerCacheUtils.getQuotaGrandListByCode(quota.getGrandCode());
         //通过指标值计算出属于那个分档并返回
 
         if(val == null) {
@@ -81,7 +81,7 @@ public class QuotaTask implements Callable<QuotaValue> {
                 return ObjectUtils.isEmpty(item.getGrandUpper()) && ObjectUtils.isEmpty(item.getGrandLower());
             }).findFirst().get();
             if(quotaGrand == null){
-                throw new ServiceException("没找到分档值，code = " + quota.getQuotaCode()+" value = " + val);
+                throw new ServiceException("没找到分档值，code = " + quota.getGrandCode()+" value = " + val);
             }
            return quotaGrand;
         }

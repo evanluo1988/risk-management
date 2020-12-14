@@ -254,8 +254,12 @@ public class DataHandleServiceImpl implements DataHandleService {
         //执行任务
         List<QuotaValue> quotaValueList = Lists.newArrayList();
         try {
-            QuotaValue quotaValue = quotaTaskList.get(0).call();
-            quotaValueList.add(quotaValue);
+            for(QuotaTask quotaTask : quotaTaskList){
+                if(quotaTask.getQuota().getId() == 100L
+                ){
+                    quotaValueList.add(quotaTask.call());
+                }
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
         }

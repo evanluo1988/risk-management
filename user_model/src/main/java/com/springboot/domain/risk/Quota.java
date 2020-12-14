@@ -14,15 +14,15 @@ public class Quota extends BaseDomain {
     @TableField(value = "quota_code")
     private String quotaCode;
     /**
+     * 分档码
+     */
+    @TableField(value = "grand_code")
+    private String grandCode;
+    /**
      * 指标名称
      */
     @TableField(value = "quota_name")
     private String quotaName;
-    /**
-     * 指标维度Id
-     */
-    @TableField(value = "quota_dimension_id")
-    private Long quotaDimensionId;
     /**
      * 指标计算规则
      */
@@ -43,4 +43,20 @@ public class Quota extends BaseDomain {
      */
     @TableField(value = "mark")
     private String mark;
+    /**
+     * 指标维度模块ID
+     */
+    @TableField(value = "model_id")
+    private Long modelId;
+    /**
+     * 指标一级维度ID
+     */
+    @TableField(value = "first_level_id")
+    private String firstLevelId;
+    /**
+     * 指标二级维度ID
+     */
+    @TableField(value = "second_level_id")
+    private String secondLevelId;
+
 }
