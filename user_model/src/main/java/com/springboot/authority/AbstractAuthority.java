@@ -23,7 +23,7 @@ public abstract class AbstractAuthority implements AuthorityService{
         }
         List accessPermissions = accessAuthorityList.stream().map(Authority::getPremission).collect(Collectors.toList());
         List permissions = authorityList.stream().map(Authority::getPremission).collect(Collectors.toList());
-        if(verify(permissions, accessPermissions)){
+        if(!verify(permissions, accessPermissions)){
             throw new ServiceException("没有权限！");
         }
         return true;
@@ -36,7 +36,7 @@ public abstract class AbstractAuthority implements AuthorityService{
      * @return
      */
     public boolean verify(List<Object> permissions, List<Object> accessPermissions){
-        return permissions.contains(accessPermissions);
+        return permissions.containsAll(accessPermissions);
     }
 
     /**

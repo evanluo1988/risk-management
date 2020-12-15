@@ -38,12 +38,17 @@ public class AuthorityServiceImpl extends AbstractAuthority {
 
         for (Menu menu : menuList) {
             if (requestUri.startsWith(menu.getMenuUrl()) && StringUtils.isNotBlank(menu.getMenuUrl())) {
-                authorityList.add(() -> {
-                    return menu.getPermissionList().stream().map(Permission::getPermName).collect(Collectors.toList());
-                });
+                List<String> permissionList = menu.getPermissionList().stream().map(Permission::getPermName).collect(Collectors.toList());
+                for(String permission : permissionList){
+                    authorityList.add(new Authority() {
+                        @Override
+                        public Object getPremission() {
+                            return permission;
+                        }
+                    });
+                }
             }
         }
-
         return authorityList;
     }
 
