@@ -40,6 +40,28 @@ public class DataHandleServiceTest extends ApplicationTest {
     private EntWyAlterMapper entWyAlterMapper;
     @Autowired
     private EntWyMortgagebasicMapper entWyMortgagebasicMapper;
+    @Autowired
+    private EntWyMortgageregMapper entWyMortgageregMapper;
+    @Autowired
+    private EntWyMortgagepawnMapper entWyMortgagepawnMapper;
+    @Autowired
+    private EntWyMortgagealtMapper entWyMortgagealtMapper;
+    @Autowired
+    private EntWyMortgagecanMapper entWyMortgagecanMapper;
+    @Autowired
+    private EntWyMortgagedebtMapper entWyMortgagedebtMapper;
+    @Autowired
+    private EntWyMortgageperMapper entWyMortgageperMapper;
+    @Autowired
+    private EntWyStockpawnMapper entWyStockpawnMapper;
+    @Autowired
+    private EntWyStockpawnaltMapper entWyStockpawnaltMapper;
+    @Autowired
+    private EntWyStockpawncanMapper entWyStockpawncanMapper;
+    @Autowired
+    private EntWyCaseinfoMapper entWyCaseinfoMapper;
+    @Autowired
+    private EntWyExceptionMapper entWyExceptionMapper;
 
     @Test
     public void testHandelData(){
@@ -50,7 +72,7 @@ public class DataHandleServiceTest extends ApplicationTest {
     public void testHandleDataCorrect() throws IOException {
         InputStream resourceAsStream = getClass().getResourceAsStream("/msg.txt");
         String msg = IOUtils.toString(resourceAsStream);
-        String reqId = "71183acb-7543-499e-aad7-cb862a2ab3ed";
+        String reqId = "8ef1351a-62b8-4213-810e-3ac0461cd68d";
         JSONObject jsonObject = JSONObject.parseObject(msg);
         JSONObject dataObject = jsonObject.getJSONObject("data");
         JSONArray gsDataJsonArray = (JSONArray)dataObject.getJSONObject("R11C53").get("data");
@@ -149,26 +171,103 @@ public class DataHandleServiceTest extends ApplicationTest {
         }
 
         //mortgageRegList
+        List<EntWyMortgagereg> mortgageRegList = data.getMortgageRegList();
+        List<EntWyMortgagereg> entWyMortgageregs = entWyMortgageregMapper.selectList(new LambdaQueryWrapper<EntWyMortgagereg>().eq(EntWyMortgagereg::getReqId, reqId));
+        if (!mortgageRegList.equals(entWyMortgageregs)){
+            log.error("EntWyMortgagereg 数据不匹配 mortgageRegList:{}，entWyMortgageregs:{}",mortgageRegList,entWyMortgageregs);
+        }else{
+            log.info("EntWyMortgagereg 数据匹配 mortgageRegList:{}，entWyMortgageregs:{}",mortgageRegList,entWyMortgageregs);
+        }
 
         //mortgagePawnList
+        List<EntWyMortgagepawn> mortgagePawnList = data.getMortgagePawnList();
+        List<EntWyMortgagepawn> entWyMortgagepawns = entWyMortgagepawnMapper.selectList(new LambdaQueryWrapper<EntWyMortgagepawn>().eq(EntWyMortgagepawn::getReqId, reqId));
+        if (!mortgagePawnList.equals(entWyMortgagepawns)){
+            log.error("EntWyMortgagepawn 数据不匹配 mortgagePawnList:{}，entWyMortgagepawns:{}",mortgagePawnList,entWyMortgagepawns);
+        }else{
+            log.info("EntWyMortgagepawn 数据匹配 mortgagePawnList:{}，entWyMortgagepawns:{}",mortgagePawnList,entWyMortgagepawns);
+        }
 
         //mortgageAltList
+        List<EntWyMortgagealt> mortgageAltList = data.getMortgageAltList();
+        List<EntWyMortgagealt> entWyMortgagealts = entWyMortgagealtMapper.selectList(new LambdaQueryWrapper<EntWyMortgagealt>().eq(EntWyMortgagealt::getReqId, reqId));
+        if (!mortgageAltList.equals(entWyMortgagealts)){
+            log.error("EntWyMortgagealt 数据不匹配 mortgageAltList:{}，entWyMortgagealts:{}",mortgageAltList,entWyMortgagealts);
+        }else{
+            log.info("EntWyMortgagealt 数据匹配 mortgageAltList:{}，entWyMortgagealts:{}",mortgageAltList,entWyMortgagealts);
+        }
 
         //mortgageCanList
+        List<EntWyMortgagecan> mortgageCanList = data.getMortgageCanList();
+        List<EntWyMortgagecan> entWyMortgagecans = entWyMortgagecanMapper.selectList(new LambdaQueryWrapper<EntWyMortgagecan>().eq(EntWyMortgagecan::getReqId, reqId));
+        if (!mortgageCanList.equals(entWyMortgagecans)){
+            log.error("EntWyMortgagecan 数据不匹配 mortgageCanList:{}，entWyMortgagecans:{}",mortgageCanList,entWyMortgagecans);
+        }else{
+            log.info("EntWyMortgagecan 数据匹配 mortgageCanList:{}，entWyMortgagecans:{}",mortgageCanList,entWyMortgagecans);
+        }
 
         //mortgageDebtList
+        List<EntWyMortgagedebt> mortgageDebtList = data.getMortgageDebtList();
+        List<EntWyMortgagedebt> entWyMortgagedebts = entWyMortgagedebtMapper.selectList(new LambdaQueryWrapper<EntWyMortgagedebt>().eq(EntWyMortgagedebt::getReqId, reqId));
+        if (!mortgageDebtList.equals(entWyMortgagedebts)){
+            log.error("EntWyMortgagedebt 数据不匹配 mortgageDebtList:{}，entWyMortgagedebts:{}",mortgageDebtList,entWyMortgagedebts);
+        }else{
+            log.info("EntWyMortgagedebt 数据匹配 mortgageDebtList:{}，entWyMortgagedebts:{}",mortgageDebtList,entWyMortgagedebts);
+        }
 
         //mortgagePerList
+        List<EntWyMortgageper> mortgagePerList = data.getMortgagePerList();
+        List<EntWyMortgageper> entWyMortgagepers = entWyMortgageperMapper.selectList(new LambdaQueryWrapper<EntWyMortgageper>().eq(EntWyMortgageper::getReqId, reqId));
+        if (!mortgagePerList.equals(entWyMortgagepers)){
+            log.error("EntWyMortgageper 数据不匹配 mortgagePerList:{}，entWyMortgagepers:{}",mortgagePerList,entWyMortgagepers);
+        }else{
+            log.info("EntWyMortgageper 数据匹配 mortgagePerList:{}，entWyMortgagepers:{}",mortgagePerList,entWyMortgagepers);
+        }
 
         //stockPawnList
+        List<EntWyStockpawn> stockPawnList = data.getStockPawnList();
+        List<EntWyStockpawn> entWyStockpawns = entWyStockpawnMapper.selectList(new LambdaQueryWrapper<EntWyStockpawn>().eq(EntWyStockpawn::getReqId, reqId));
+        if (!stockPawnList.equals(entWyStockpawns)){
+            log.error("EntWyStockpawn 数据不匹配 stockPawnList:{}，entWyStockpawns:{}",stockPawnList,entWyStockpawns);
+        }else{
+            log.info("EntWyStockpawn 数据匹配 stockPawnList:{}，entWyStockpawns:{}",stockPawnList,entWyStockpawns);
+        }
 
         //stockPawnAltList
+        List<EntWyStockpawnalt> stockPawnAltList = data.getStockPawnAltList();
+        List<EntWyStockpawnalt> entWyStockpawnalts = entWyStockpawnaltMapper.selectList(new LambdaQueryWrapper<EntWyStockpawnalt>().eq(EntWyStockpawnalt::getReqId, reqId));
+        if (!stockPawnAltList.equals(entWyStockpawnalts)){
+            log.error("EntWyStockpawnalt 数据不匹配 stockPawnAltList:{}，entWyStockpawnalts:{}",stockPawnAltList,entWyStockpawnalts);
+        }else{
+            log.info("EntWyStockpawnalt 数据匹配 stockPawnAltList:{}，entWyStockpawnalts:{}",stockPawnAltList,entWyStockpawnalts);
+        }
 
         //stockPawnCanList
+        List<EntWyStockpawncan> stockPawnCanList = data.getStockPawnCanList();
+        List<EntWyStockpawncan> entWyStockpawncans = entWyStockpawncanMapper.selectList(new LambdaQueryWrapper<EntWyStockpawncan>().eq(EntWyStockpawncan::getReqId, reqId));
+        if (!stockPawnCanList.equals(entWyStockpawncans)){
+            log.error("EntWyStockpawncan 数据不匹配 stockPawnCanList:{}，entWyStockpawncans:{}",stockPawnCanList,entWyStockpawncans);
+        }else{
+            log.info("EntWyStockpawncan 数据匹配 stockPawnCanList:{}，entWyStockpawncans:{}",stockPawnCanList,entWyStockpawncans);
+        }
 
         //caseInfoList
+        List<EntWyCaseinfo> caseInfoList = data.getCaseInfoList();
+        List<EntWyCaseinfo> entWyCaseinfos = entWyCaseinfoMapper.selectList(new LambdaQueryWrapper<EntWyCaseinfo>().eq(EntWyCaseinfo::getReqId, reqId));
+        if (!caseInfoList.equals(entWyCaseinfos)){
+            log.error("EntWyCaseinfo 数据不匹配 caseInfoList:{}，entWyCaseinfos:{}",caseInfoList,entWyCaseinfos);
+        }else{
+            log.info("EntWyCaseinfo 数据匹配 caseInfoList:{}，entWyCaseinfos:{}",caseInfoList,entWyCaseinfos);
+        }
 
         //exceptionList
+        List<EntWyException> exceptionList = data.getExceptionList();
+        List<EntWyException> entWyExceptions = entWyExceptionMapper.selectList(new LambdaQueryWrapper<EntWyException>().eq(EntWyException::getReqId, reqId));
+        if (!exceptionList.equals(entWyExceptions)){
+            log.error("EntWyException 数据不匹配 exceptionList:{}，entWyExceptions:{}",exceptionList,entWyExceptions);
+        }else{
+            log.info("EntWyException 数据匹配 exceptionList:{}，entWyExceptions:{}",exceptionList,entWyExceptions);
+        }
 
     }
 

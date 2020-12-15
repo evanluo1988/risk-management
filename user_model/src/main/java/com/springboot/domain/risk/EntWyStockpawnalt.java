@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * @Author 刘宏飞
@@ -12,6 +14,8 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@ToString
+@EqualsAndHashCode(exclude = {"id","createTime","createBy","updateTime","updateBy","reqId","businessId"})
 @TableName(value = "ent_wy_stockpawnaltlist")
 public class EntWyStockpawnalt extends BaseDomain {
 
