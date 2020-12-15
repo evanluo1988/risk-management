@@ -8,13 +8,13 @@ import java.util.List;
 @Data
 public class RemoteDataModelTest {
     List<EntWyBasic> basicList;
-    List<EdsGsQygdjczxx> shareholderList;
-    List<EdsGsQyzyglry> personList;
-    List<EdsGsQydwtzxx> entInvItemList;
-    List<EdsGsFddbrdwtzxx> frInvList;
-    List<EdsGsFddbrzqtqyrzxx> frPositionList;
-    List<EdsGsFzjgxx> filiationList;
-    List<EdsGsQylsbgxx> alterList;
+    List<EntWyShareholder> shareholderList;
+    List<EntWyPerson> personList;
+    List<EntWyEntinvitem> entInvItemList;
+    List<EntWyFrinv> frInvList;
+    List<EntWyFrposition> frPositionList;
+    List<EntWyFiliation> filiationList;
+    List<EntWyAlter> alterList;
     List<EdsGsGqdjlsxx> sharesFrostList;
     List<EdsGsDcdywxx> morguaInfoList;
 

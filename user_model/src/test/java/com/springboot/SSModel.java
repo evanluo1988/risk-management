@@ -1,6 +1,6 @@
 package com.springboot;
 
-import com.springboot.domain.risk.EdsSsSsjghsj;
+import com.springboot.domain.risk.LegalWySsjghsj;
 import lombok.Data;
 
 import java.util.List;
@@ -9,5 +9,5 @@ import java.util.List;
 public class SSModel {
     private String code;
     private String msg;
-    private List<EdsSsSsjghsj> data;
+    private List<LegalWySsjghsj> data;
 }

@@ -38,27 +38,52 @@ public class DataHandleServiceImpl implements DataHandleService {
     @Autowired
     private WYRemoteService wyRemoteService;
     @Autowired
-    private EntWyBasicMapper edsGsBasicMapper;
-//    @Autowired
-//    private EdsGsQygdjczxxMapper edsGsQygdjczxxMapper;
-//    @Autowired
-//    private EdsGsQyzyglryMapper edsGsQyzyglryMapper;
-//    @Autowired
-//    private EdsGsQydwtzxxMapper edsGsQydwtzxxMapper;
-//    @Autowired
-//    private EdsGsFddbrdwtzxxMapper edsGsFddbrdwtzxxMapper;
-//    @Autowired
-//    private EdsGsFddbrzqtqyrzxxMapper edsGsFddbrzqtqyrzxxMapper;
-//    @Autowired
-//    private EdsGsFzjgxxMapper edsGsFzjgxxMapper;
-//    @Autowired
-//    private EdsGsQylsbgxxMapper edsGsQylsbgxxMapper;
-//    @Autowired
-//    private EdsGsGqdjlsxxMapper edsGsGqdjlsxxMapper;
-//    @Autowired
-//    private LegalWyBzxrComMapper edsSsBzxrComMapper;
-//    @Autowired
-//    private EdsSsSsjghsjMapper edsSsSsjghsjMapper;
+    private EntWyBasicMapper entWyBasicMapper;
+    @Autowired
+    private EntWyShareholderMapper entWyShareholderMapper;
+    @Autowired
+    private EntWyPersonMapper entWyPersonMapper;
+    @Autowired
+    private EntWyEntinvitemMapper entWyEntinvitemMapper;
+    @Autowired
+    private EntWyFrinvMapper entWyFrinvMapper;
+    @Autowired
+    private EntWyFrpositionMapper entWyFrpositionMapper;
+    @Autowired
+    private EntWyFiliationMapper entWyFiliationMapper;
+    @Autowired
+    private EntWyLiquidationMapper entWyLiquidationMapper;
+    @Autowired
+    private EntWyAlterMapper entWyAlterMapper;
+    @Autowired
+    private EntWyMortgagebasicMapper entWyMortgagebasicMapper;
+    @Autowired
+    private EntWyMortgageregMapper entWyMortgageregMapper;
+    @Autowired
+    private EntWyMortgagepawnMapper entWyMortgagepawnMapper;
+    @Autowired
+    private EntWyMortgagealtMapper entWyMortgagealtMapper;
+    @Autowired
+    private EntWyMortgagecanMapper entWyMortgagecanMapper;
+    @Autowired
+    private EntWyMortgagedebtMapper entWyMortgagedebtMapper;
+    @Autowired
+    private EntWyMortgageperMapper entWyMortgageperMapper;
+    @Autowired
+    private EntWyStockpawnMapper entWyStockpawnMapper;
+    @Autowired
+    private EntWyStockpawnaltMapper entWyStockpawnaltMapper;
+    @Autowired
+    private EntWyStockpawncanMapper entWyStockpawncanMapper;
+    @Autowired
+    private EntWyCaseinfoMapper entWyCaseinfoMapper;
+    @Autowired
+    private EntWyExceptionMapper entWyExceptionMapper;
+
+
+    @Autowired
+    private LegalWySsjghsjMapper legalWySsjghsjMapper;
+
 //    @Autowired
 //    private LegalWySxbzxrComMapper edsSsSxbzxrComMapper;
     @Autowired
@@ -108,7 +133,6 @@ public class DataHandleServiceImpl implements DataHandleService {
      */
     private void createEdsData(String reqId, String response) {
 
-        //JSONObject jsonObject = JSONObject.parseObject(customerDataCollectionResponse.getData());
         JSONObject jsonObject = JSONObject.parseObject(response);
         JSONObject dataObject = jsonObject.getJSONObject("data");
         JSONArray gsDataJsonArray = (JSONArray)dataObject.getJSONObject("R11C53").get("data");
@@ -117,58 +141,119 @@ public class DataHandleServiceImpl implements DataHandleService {
         //insert EDS_GS_BASIC
         for(EntWyBasic edsGsBasic : data.getBasicList()){
             edsGsBasic.setReqId(reqId);
-            edsGsBasicMapper.insert(edsGsBasic);
+            entWyBasicMapper.insert(edsGsBasic);
         }
-        //insert ent_wy_basiclist
-//        for(EdsGsQygdjczxx edsGsQygdjczxx: data.getShareholderList()){
-//            edsGsQygdjczxx.setReqId(reqId);
-//            edsGsQygdjczxxMapper.insert(edsGsQygdjczxx);
-//        }
-//        //insert EDS_GS_QYZYGLRY
-//        for(EdsGsQyzyglry edsGsQyzyglry : data.getPersonList()){
-//            edsGsQyzyglry.setReqId(reqId);
-//            edsGsQyzyglryMapper.insert(edsGsQyzyglry);
-//        }
-//        //EDS_GS_QYDWTZXX
-//        for(EdsGsQydwtzxx edsGsQydwtzxx : data.getEntInvItemList()){
-//            edsGsQydwtzxx.setReqId(reqId);
-//            edsGsQydwtzxxMapper.insert(edsGsQydwtzxx);
-//        }
-//        //EDS_GS_FDDBRDWTZXX
-//        for(EdsGsFddbrdwtzxx edsGsFddbrdwtzxx : data.getFrInvList()) {
-//            edsGsFddbrdwtzxx.setReqId(reqId);
-//            edsGsFddbrdwtzxxMapper.insert(edsGsFddbrdwtzxx);
-//        }
-//        //EDS_GS_FDDBRZQTQYRZXX
-//        for(EdsGsFddbrzqtqyrzxx edsGsFddbrzqtqyrzxx : data.getFrPositionList()) {
-//            edsGsFddbrzqtqyrzxx.setReqId(reqId);
-//            edsGsFddbrzqtqyrzxxMapper.insert(edsGsFddbrzqtqyrzxx);
-//        }
-//        //EDS_GS_FZJGXX
-//        for(EdsGsFzjgxx edsGsFzjgxx : data.getFiliationList()){
-//            edsGsFzjgxx.setReqId(reqId);
-//            edsGsFzjgxxMapper.insert(edsGsFzjgxx);
-//        }
-//        //EDS_GS_QYLSBGXX
-//        for(EdsGsQylsbgxx edsGsQylsbgxx : data.getAlterList()) {
-//            edsGsQylsbgxx.setReqId(reqId);
-//            edsGsQylsbgxxMapper.insert(edsGsQylsbgxx);
-//        }
-//        //EDS_GS_GQDJLSXX
-//        for(EdsGsGqdjlsxx edsGsGqdjlsxx : data.getSharesFrostList()){
-//            edsGsGqdjlsxx.setReqId(reqId);
-//            edsGsGqdjlsxxMapper.insert(edsGsGqdjlsxx);
-//        }
-//
-//        //EDS_SS_SSJGHSJ
-//        JSONObject ssjghsjObject = (JSONObject)dataObject.getJSONArray("R227").get(0);
-//        JSONArray ssjghsjData  = ssjghsjObject.getJSONArray("data");
-//        List<EdsSsSsjghsj> edsSsSsjghsjList = JSON.parseArray(ssjghsjData.toJSONString(), EdsSsSsjghsj.class);
-//        for(EdsSsSsjghsj edsSsSsjghsj : edsSsSsjghsjList){
-//            edsSsSsjghsj.setReqId(reqId);
-//            edsSsSsjghsjMapper.insert(edsSsSsjghsj);
-//        }
-//
+        //insert ent_wy_shareholderlist
+        for(EntWyShareholder entWyShareholder : data.getShareholderList()) {
+            entWyShareholder.setReqId(reqId);
+            entWyShareholderMapper.insert(entWyShareholder);
+        }
+        //insert ent_wy_personlist
+        for(EntWyPerson entWyPerson : data.getPersonList()) {
+            entWyPerson.setReqId(reqId);
+            entWyPersonMapper.insert(entWyPerson);
+        }
+        //insert ent_wy_entinvitemlist
+        for(EntWyEntinvitem entWyEntinvitem : data.getEntInvItemList()) {
+            entWyEntinvitem.setReqId(reqId);
+            entWyEntinvitemMapper.insert(entWyEntinvitem);
+        }
+        //insert ent_wy_frinvlist
+        for(EntWyFrinv entWyFrinv : data.getFrInvList()) {
+            entWyFrinv.setReqId(reqId);
+            entWyFrinvMapper.insert(entWyFrinv);
+        }
+        //insert ent_wy_frpositionlist
+        for(EntWyFrposition entWyFrposition : data.getFrPositionList()) {
+            entWyFrposition.setReqId(reqId);
+            entWyFrpositionMapper.insert(entWyFrposition);
+        }
+        //insert ent_wy_filiationlist
+        for(EntWyFiliation entWyFiliation : data.getFiliationList()) {
+            entWyFiliation.setReqId(reqId);
+            entWyFiliationMapper.insert(entWyFiliation);
+        }
+        //insert ent_wy_liquidationlist
+        for(EntWyLiquidation entWyLiquidation : data.getLiquidationList()) {
+            entWyLiquidation.setReqId(reqId);
+            entWyLiquidationMapper.insert(entWyLiquidation);
+        }
+        //insert ent_wy_alterlist
+        for(EntWyAlter entWyAlter : data.getAlterList()) {
+            entWyAlter.setReqId(reqId);
+            entWyAlterMapper.insert(entWyAlter);
+        }
+        //insert ent_wy_mortgagebasiclist
+        for(EntWyMortgagebasic entWyMortgagebasic : data.getMortgageBasicList()) {
+            entWyMortgagebasic.setReqId(reqId);
+            entWyMortgagebasicMapper.insert(entWyMortgagebasic);
+        }
+        //insert ent_wy_mortgagereglist
+        for(EntWyMortgagereg entWyMortgagereg : data.getMortgageRegList()) {
+            entWyMortgagereg.setReqId(reqId);
+            entWyMortgageregMapper.insert(entWyMortgagereg);
+        }
+        //insert ent_wy_mortgagepawnlist
+        for(EntWyMortgagepawn entWyMortgagepawn : data.getMortgagePawnList()) {
+            entWyMortgagepawn.setReqId(reqId);
+            entWyMortgagepawnMapper.insert(entWyMortgagepawn);
+        }
+        //insert ent_wy_mortgagealtlist
+        for(EntWyMortgagealt entWyMortgagealt : data.getMortgageAltList()) {
+            entWyMortgagealt.setReqId(reqId);
+            entWyMortgagealtMapper.insert(entWyMortgagealt);
+        }
+        //insert ent_wy_mortgagecanlist
+        for(EntWyMortgagecan entWyMortgagecan : data.getMortgageCanList()) {
+            entWyMortgagecan.setReqId(reqId);
+            entWyMortgagecanMapper.insert(entWyMortgagecan);
+        }
+        //insert ent_wy_mortgagedebtlist
+        for(EntWyMortgagedebt entWyMortgagedebt : data.getMortgageDebtList()) {
+            entWyMortgagedebt.setReqId(reqId);
+            entWyMortgagedebtMapper.insert(entWyMortgagedebt);
+        }
+        //insert ent_wy_mortgageperlist
+        for(EntWyMortgageper entWyMortgageper : data.getMortgagePerList()) {
+            entWyMortgageper.setReqId(reqId);
+            entWyMortgageperMapper.insert(entWyMortgageper);
+        }
+        //insert ent_wy_stockpawnlist
+        for(EntWyStockpawn entWyStockpawn : data.getStockPawnList()) {
+            entWyStockpawn.setReqId(reqId);
+            entWyStockpawnMapper.insert(entWyStockpawn);
+        }
+        //insert ent_wy_stockpawnaltlist
+        for(EntWyStockpawnalt entWyStockpawnalt : data.getStockPawnAltList()) {
+            entWyStockpawnalt.setRelDetails(reqId);
+            entWyStockpawnaltMapper.insert(entWyStockpawnalt);
+        }
+        //insert ent_wy_stockpawncanlist
+        for(EntWyStockpawncan entWyStockpawncan : data.getStockPawnCanList()) {
+            entWyStockpawncan.setReqId(reqId);
+            entWyStockpawncanMapper.insert(entWyStockpawncan);
+        }
+        //insert ent_wy_caseinfolist
+        for(EntWyCaseinfo entWyCaseinfo : data.getCaseInfoList()) {
+            entWyCaseinfo.setReqId(reqId);
+            entWyCaseinfoMapper.insert(entWyCaseinfo);
+        }
+        //insert ent_wy_exceptionlist
+        for(EntWyException entWyException : data.getExceptionList()) {
+            entWyException.setReqId(reqId);
+            entWyExceptionMapper.insert(entWyException);
+        }
+
+
+        //legal_wy_ssjghsj
+        JSONObject ssjghsjObject = (JSONObject)dataObject.getJSONArray("R227").get(0);
+        JSONArray ssjghsjData  = ssjghsjObject.getJSONArray("data");
+        List<LegalWySsjghsj> legalWySsjghsjList = JSON.parseArray(ssjghsjData.toJSONString(), LegalWySsjghsj.class);
+        for(LegalWySsjghsj legalWySsjghsj : legalWySsjghsjList){
+            legalWySsjghsj.setReqId(reqId);
+            legalWySsjghsjMapper.insert(legalWySsjghsj);
+        }
+
 //        //EDS_SS_BZXR_COM
 //        JSONObject bzxrcomObject = (JSONObject)dataObject.getJSONArray("R228").get(0);
 //        JSONArray bzxrcomData  = bzxrcomObject.getJSONArray("data");

@@ -7,8 +7,8 @@ import com.springboot.domain.BaseDomain;
 import lombok.Data;
 
 @Data
-@TableName("eds_ss_ssjghsj")
-public class EdsSsSsjghsj extends BaseDomain {
+@TableName("legal_wy_ssjghsj")
+public class LegalWySsjghsj extends BaseDomain {
     /**
      * 申请编号ID 由我方生成
      */
@@ -50,7 +50,7 @@ public class EdsSsSsjghsj extends BaseDomain {
     @TableField(value = "pdesc")
     private String pdesc;
     /**
-     * 公告内容
+     * 发布时间
      */
     @JSONField(name = "PDATE")
     @TableField(value = "pdate")

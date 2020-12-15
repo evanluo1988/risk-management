@@ -8,16 +8,25 @@ import java.util.List;
 @Data
 public class RemoteDataModel {
     List<EntWyBasic> basicList;
-//    List<EdsGsQygdjczxx> shareholderList;
-//    List<EdsGsQyzyglry> personList;
-//    List<EdsGsQydwtzxx> entInvItemList;
-//    List<EdsGsFddbrdwtzxx> frInvList;
-//    List<EdsGsFddbrzqtqyrzxx> frPositionList;
-//    List<EdsGsFzjgxx> filiationList;
-//    List<EdsGsQsxx> liquidationList;
-//    List<EdsGsQylsbgxx> alterList;
-//    List<EdsGsGqdjlsxx> sharesFrostList;
-    //List<> caseInfoList
+    List<EntWyShareholder> shareholderList;
+    List<EntWyPerson> personList;
+    List<EntWyEntinvitem> entInvItemList;
+    List<EntWyFrinv> frInvList;
+    List<EntWyFrposition> frPositionList;
+    List<EntWyFiliation> filiationList;
+    List<EntWyLiquidation> liquidationList;
+    List<EntWyAlter> alterList;
+    List<EntWyMortgagebasic> mortgageBasicList;
+    List<EntWyMortgagereg> mortgageRegList;
+    List<EntWyMortgagepawn> mortgagePawnList;
+    List<EntWyMortgagealt> mortgageAltList;
+    List<EntWyMortgagecan> mortgageCanList;
+    List<EntWyMortgagedebt> mortgageDebtList;
+    List<EntWyMortgageper> mortgagePerList;
+    List<EntWyStockpawn> stockPawnList;
+    List<EntWyStockpawnalt> stockPawnAltList;
+    List<EntWyStockpawncan> stockPawnCanList;
+    List<EntWyCaseinfo> caseInfoList;
+    List<EntWyException> exceptionList;
 
-//    List<EdsGsDcdywxx> morguaInfoList;
 }
