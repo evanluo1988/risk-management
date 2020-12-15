@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.springboot.domain.risk.*;
+import com.springboot.domain.risk.executor.QuotaTask;
 import com.springboot.mapper.*;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.service.*;
@@ -37,29 +38,29 @@ public class DataHandleServiceImpl implements DataHandleService {
     @Autowired
     private WYRemoteService wyRemoteService;
     @Autowired
-    private EdsGsBasicMapper edsGsBasicMapper;
-    @Autowired
-    private EdsGsQygdjczxxMapper edsGsQygdjczxxMapper;
-    @Autowired
-    private EdsGsQyzyglryMapper edsGsQyzyglryMapper;
-    @Autowired
-    private EdsGsQydwtzxxMapper edsGsQydwtzxxMapper;
-    @Autowired
-    private EdsGsFddbrdwtzxxMapper edsGsFddbrdwtzxxMapper;
-    @Autowired
-    private EdsGsFddbrzqtqyrzxxMapper edsGsFddbrzqtqyrzxxMapper;
-    @Autowired
-    private EdsGsFzjgxxMapper edsGsFzjgxxMapper;
-    @Autowired
-    private EdsGsQylsbgxxMapper edsGsQylsbgxxMapper;
-    @Autowired
-    private EdsGsGqdjlsxxMapper edsGsGqdjlsxxMapper;
-    @Autowired
-    private EdsSsBzxrComMapper edsSsBzxrComMapper;
-    @Autowired
-    private EdsSsSsjghsjMapper edsSsSsjghsjMapper;
-    @Autowired
-    private EdsSsSxbzxrComMapper edsSsSxbzxrComMapper;
+    private EntWyBasicMapper edsGsBasicMapper;
+//    @Autowired
+//    private EdsGsQygdjczxxMapper edsGsQygdjczxxMapper;
+//    @Autowired
+//    private EdsGsQyzyglryMapper edsGsQyzyglryMapper;
+//    @Autowired
+//    private EdsGsQydwtzxxMapper edsGsQydwtzxxMapper;
+//    @Autowired
+//    private EdsGsFddbrdwtzxxMapper edsGsFddbrdwtzxxMapper;
+//    @Autowired
+//    private EdsGsFddbrzqtqyrzxxMapper edsGsFddbrzqtqyrzxxMapper;
+//    @Autowired
+//    private EdsGsFzjgxxMapper edsGsFzjgxxMapper;
+//    @Autowired
+//    private EdsGsQylsbgxxMapper edsGsQylsbgxxMapper;
+//    @Autowired
+//    private EdsGsGqdjlsxxMapper edsGsGqdjlsxxMapper;
+//    @Autowired
+//    private EdsSsBzxrComMapper edsSsBzxrComMapper;
+//    @Autowired
+//    private EdsSsSsjghsjMapper edsSsSsjghsjMapper;
+//    @Autowired
+//    private EdsSsSxbzxrComMapper edsSsSxbzxrComMapper;
     @Autowired
     private ExeSqlMapper exeSqlMapper;
 
@@ -114,77 +115,77 @@ public class DataHandleServiceImpl implements DataHandleService {
 
         RemoteDataModel data = JSON.parseObject(gsDataJsonArray.get(0).toString(), RemoteDataModel.class);
         //insert EDS_GS_BASIC
-        for(EdsGsBasic edsGsBasic : data.getBasicList()){
+        for(EntWyBasic edsGsBasic : data.getBasicList()){
             edsGsBasic.setReqId(reqId);
             edsGsBasicMapper.insert(edsGsBasic);
         }
-        //insert EDS_GS_QYGDJCZXX
-        for(EdsGsQygdjczxx edsGsQygdjczxx: data.getShareholderList()){
-            edsGsQygdjczxx.setReqId(reqId);
-            edsGsQygdjczxxMapper.insert(edsGsQygdjczxx);
-        }
-        //insert EDS_GS_QYZYGLRY
-        for(EdsGsQyzyglry edsGsQyzyglry : data.getPersonList()){
-            edsGsQyzyglry.setReqId(reqId);
-            edsGsQyzyglryMapper.insert(edsGsQyzyglry);
-        }
-        //EDS_GS_QYDWTZXX
-        for(EdsGsQydwtzxx edsGsQydwtzxx : data.getEntInvItemList()){
-            edsGsQydwtzxx.setReqId(reqId);
-            edsGsQydwtzxxMapper.insert(edsGsQydwtzxx);
-        }
-        //EDS_GS_FDDBRDWTZXX
-        for(EdsGsFddbrdwtzxx edsGsFddbrdwtzxx : data.getFrInvList()) {
-            edsGsFddbrdwtzxx.setReqId(reqId);
-            edsGsFddbrdwtzxxMapper.insert(edsGsFddbrdwtzxx);
-        }
-        //EDS_GS_FDDBRZQTQYRZXX
-        for(EdsGsFddbrzqtqyrzxx edsGsFddbrzqtqyrzxx : data.getFrPositionList()) {
-            edsGsFddbrzqtqyrzxx.setReqId(reqId);
-            edsGsFddbrzqtqyrzxxMapper.insert(edsGsFddbrzqtqyrzxx);
-        }
-        //EDS_GS_FZJGXX
-        for(EdsGsFzjgxx edsGsFzjgxx : data.getFiliationList()){
-            edsGsFzjgxx.setReqId(reqId);
-            edsGsFzjgxxMapper.insert(edsGsFzjgxx);
-        }
-        //EDS_GS_QYLSBGXX
-        for(EdsGsQylsbgxx edsGsQylsbgxx : data.getAlterList()) {
-            edsGsQylsbgxx.setReqId(reqId);
-            edsGsQylsbgxxMapper.insert(edsGsQylsbgxx);
-        }
-        //EDS_GS_GQDJLSXX
-        for(EdsGsGqdjlsxx edsGsGqdjlsxx : data.getSharesFrostList()){
-            edsGsGqdjlsxx.setReqId(reqId);
-            edsGsGqdjlsxxMapper.insert(edsGsGqdjlsxx);
-        }
-
-        //EDS_SS_SSJGHSJ
-        JSONObject ssjghsjObject = (JSONObject)dataObject.getJSONArray("R227").get(0);
-        JSONArray ssjghsjData  = ssjghsjObject.getJSONArray("data");
-        List<EdsSsSsjghsj> edsSsSsjghsjList = JSON.parseArray(ssjghsjData.toJSONString(), EdsSsSsjghsj.class);
-        for(EdsSsSsjghsj edsSsSsjghsj : edsSsSsjghsjList){
-            edsSsSsjghsj.setReqId(reqId);
-            edsSsSsjghsjMapper.insert(edsSsSsjghsj);
-        }
-
-        //EDS_SS_BZXR_COM
-        JSONObject bzxrcomObject = (JSONObject)dataObject.getJSONArray("R228").get(0);
-        JSONArray bzxrcomData  = bzxrcomObject.getJSONArray("data");
-        List<EdsSsBzxrCom> edsSsBzxrComListList = JSON.parseArray(bzxrcomData.toJSONString(), EdsSsBzxrCom.class);
-        for(EdsSsBzxrCom edsSsBzxrCom : edsSsBzxrComListList){
-            edsSsBzxrCom.setReqId(reqId);
-            edsSsBzxrComMapper.insert(edsSsBzxrCom);
-        }
-
-        //EDS_SS_SXBZXR_COM
-        JSONObject sxbzxrcomObject = (JSONObject)dataObject.getJSONArray("R230").get(0);
-        JSONArray sxbzxrcomData  = sxbzxrcomObject.getJSONArray("data");
-        List<EdsSsSxbzxrCom> edsSsSxbzxrComList = JSON.parseArray(sxbzxrcomData.toJSONString(), EdsSsSxbzxrCom.class);
-        for(EdsSsSxbzxrCom edsSsSxbzxrCom : edsSsSxbzxrComList){
-            edsSsSxbzxrCom.setReqId(reqId);
-            edsSsSxbzxrComMapper.insert(edsSsSxbzxrCom);
-        }
+        //insert ent_wy_basiclist
+//        for(EdsGsQygdjczxx edsGsQygdjczxx: data.getShareholderList()){
+//            edsGsQygdjczxx.setReqId(reqId);
+//            edsGsQygdjczxxMapper.insert(edsGsQygdjczxx);
+//        }
+//        //insert EDS_GS_QYZYGLRY
+//        for(EdsGsQyzyglry edsGsQyzyglry : data.getPersonList()){
+//            edsGsQyzyglry.setReqId(reqId);
+//            edsGsQyzyglryMapper.insert(edsGsQyzyglry);
+//        }
+//        //EDS_GS_QYDWTZXX
+//        for(EdsGsQydwtzxx edsGsQydwtzxx : data.getEntInvItemList()){
+//            edsGsQydwtzxx.setReqId(reqId);
+//            edsGsQydwtzxxMapper.insert(edsGsQydwtzxx);
+//        }
+//        //EDS_GS_FDDBRDWTZXX
+//        for(EdsGsFddbrdwtzxx edsGsFddbrdwtzxx : data.getFrInvList()) {
+//            edsGsFddbrdwtzxx.setReqId(reqId);
+//            edsGsFddbrdwtzxxMapper.insert(edsGsFddbrdwtzxx);
+//        }
+//        //EDS_GS_FDDBRZQTQYRZXX
+//        for(EdsGsFddbrzqtqyrzxx edsGsFddbrzqtqyrzxx : data.getFrPositionList()) {
+//            edsGsFddbrzqtqyrzxx.setReqId(reqId);
+//            edsGsFddbrzqtqyrzxxMapper.insert(edsGsFddbrzqtqyrzxx);
+//        }
+//        //EDS_GS_FZJGXX
+//        for(EdsGsFzjgxx edsGsFzjgxx : data.getFiliationList()){
+//            edsGsFzjgxx.setReqId(reqId);
+//            edsGsFzjgxxMapper.insert(edsGsFzjgxx);
+//        }
+//        //EDS_GS_QYLSBGXX
+//        for(EdsGsQylsbgxx edsGsQylsbgxx : data.getAlterList()) {
+//            edsGsQylsbgxx.setReqId(reqId);
+//            edsGsQylsbgxxMapper.insert(edsGsQylsbgxx);
+//        }
+//        //EDS_GS_GQDJLSXX
+//        for(EdsGsGqdjlsxx edsGsGqdjlsxx : data.getSharesFrostList()){
+//            edsGsGqdjlsxx.setReqId(reqId);
+//            edsGsGqdjlsxxMapper.insert(edsGsGqdjlsxx);
+//        }
+//
+//        //EDS_SS_SSJGHSJ
+//        JSONObject ssjghsjObject = (JSONObject)dataObject.getJSONArray("R227").get(0);
+//        JSONArray ssjghsjData  = ssjghsjObject.getJSONArray("data");
+//        List<EdsSsSsjghsj> edsSsSsjghsjList = JSON.parseArray(ssjghsjData.toJSONString(), EdsSsSsjghsj.class);
+//        for(EdsSsSsjghsj edsSsSsjghsj : edsSsSsjghsjList){
+//            edsSsSsjghsj.setReqId(reqId);
+//            edsSsSsjghsjMapper.insert(edsSsSsjghsj);
+//        }
+//
+//        //EDS_SS_BZXR_COM
+//        JSONObject bzxrcomObject = (JSONObject)dataObject.getJSONArray("R228").get(0);
+//        JSONArray bzxrcomData  = bzxrcomObject.getJSONArray("data");
+//        List<EdsSsBzxrCom> edsSsBzxrComListList = JSON.parseArray(bzxrcomData.toJSONString(), EdsSsBzxrCom.class);
+//        for(EdsSsBzxrCom edsSsBzxrCom : edsSsBzxrComListList){
+//            edsSsBzxrCom.setReqId(reqId);
+//            edsSsBzxrComMapper.insert(edsSsBzxrCom);
+//        }
+//
+//        //EDS_SS_SXBZXR_COM
+//        JSONObject sxbzxrcomObject = (JSONObject)dataObject.getJSONArray("R230").get(0);
+//        JSONArray sxbzxrcomData  = sxbzxrcomObject.getJSONArray("data");
+//        List<EdsSsSxbzxrCom> edsSsSxbzxrComList = JSON.parseArray(sxbzxrcomData.toJSONString(), EdsSsSxbzxrCom.class);
+//        for(EdsSsSxbzxrCom edsSsSxbzxrCom : edsSsSxbzxrComList){
+//            edsSsSxbzxrCom.setReqId(reqId);
+//            edsSsSxbzxrComMapper.insert(edsSsSxbzxrCom);
+//        }
 
     }
 

@@ -1,5 +1,7 @@
-package com.springboot.domain.risk;
+package com.springboot.domain.risk.executor;
 
+import com.springboot.domain.risk.Quota;
+import com.springboot.domain.risk.executor.QuotaExecutor;
 import com.springboot.mapper.ExeSqlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

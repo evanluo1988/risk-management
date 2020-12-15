@@ -1,7 +1,7 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.EdsGsBasic;
+import com.springboot.domain.risk.EntWyBasic;
 
 public interface EdsGsBasicService {
-    public EdsGsBasic getEdsGsBasicByReqId(String reqId);
+    public EntWyBasic getEdsGsBasicByReqId(String reqId);
 }

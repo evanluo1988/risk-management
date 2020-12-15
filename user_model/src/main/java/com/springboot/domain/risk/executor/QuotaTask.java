@@ -1,6 +1,10 @@
-package com.springboot.domain.risk;
+package com.springboot.domain.risk.executor;
 
 import com.springboot.config.SpringContextUtil;
+import com.springboot.domain.risk.Quota;
+import com.springboot.domain.risk.QuotaGrand;
+import com.springboot.domain.risk.QuotaValue;
+import com.springboot.domain.risk.executor.QuotaExecutor;
 import com.springboot.exception.ServiceException;
 import com.springboot.utils.ServerCacheUtils;
 import lombok.Data;

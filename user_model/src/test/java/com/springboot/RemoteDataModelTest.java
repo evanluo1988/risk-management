@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class RemoteDataModelTest {
-    List<EdsGsBasic> basicList;
+    List<EntWyBasic> basicList;
     List<EdsGsQygdjczxx> shareholderList;
     List<EdsGsQyzyglry> personList;
     List<EdsGsQydwtzxx> entInvItemList;

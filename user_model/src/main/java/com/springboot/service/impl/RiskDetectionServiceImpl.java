@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.springboot.domain.risk.CloudInfoTimeliness;
-import com.springboot.domain.risk.EdsGsBasic;
+import com.springboot.domain.risk.EntWyBasic;
 import com.springboot.service.CloudInfoTimelinessService;
 import com.springboot.service.DataHandleService;
 import com.springboot.service.EdsGsBasicService;
@@ -43,7 +43,7 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
         }
 
         //查询数据库记录得到address后返回
-        EdsGsBasic edsGsBasic = edsGsBasicService.getEdsGsBasicByReqId(reqId);
+        EntWyBasic edsGsBasic = edsGsBasicService.getEdsGsBasicByReqId(reqId);
         return edsGsBasic.getAddress();
     }
 }
