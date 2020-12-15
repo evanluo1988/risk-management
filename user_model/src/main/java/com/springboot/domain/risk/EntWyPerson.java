@@ -35,16 +35,16 @@ public class EntWyPerson extends BaseDomain {
     @TableField(value = "enterprisename")
     @JSONField(name = "enterpriseName")
     private String enterpriseName;
-
+    /**
+     * 人员总数量
+     */
+    @TableField(value = "personamount")
+    @JSONField(name = "personAmount")
+    private String personAmount;
     /**
      * 姓名
      */
     @TableField(value = "name")
+    @JSONField(name = "name")
     private String name;
-
-    /**
-     * 性别
-     */
-    @TableField(value = "sex")
-    private String sex;
 }
