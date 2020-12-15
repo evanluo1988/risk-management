@@ -7,8 +7,8 @@ import com.springboot.domain.BaseDomain;
 import lombok.Data;
 
 @Data
-@TableName("eds_ss_sxbzxr_com")
-public class EdsSsSxbzxrCom extends BaseDomain {
+@TableName("legal_wy_sxbzxr_com")
+public class LegalWySxbzxrCom extends BaseDomain {
     /**
      * 申请编号ID 由我方生成
      */

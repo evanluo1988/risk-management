@@ -56,11 +56,11 @@ public class DataHandleServiceImpl implements DataHandleService {
 //    @Autowired
 //    private EdsGsGqdjlsxxMapper edsGsGqdjlsxxMapper;
 //    @Autowired
-//    private EdsSsBzxrComMapper edsSsBzxrComMapper;
+//    private LegalWyBzxrComMapper edsSsBzxrComMapper;
 //    @Autowired
 //    private EdsSsSsjghsjMapper edsSsSsjghsjMapper;
 //    @Autowired
-//    private EdsSsSxbzxrComMapper edsSsSxbzxrComMapper;
+//    private LegalWySxbzxrComMapper edsSsSxbzxrComMapper;
     @Autowired
     private ExeSqlMapper exeSqlMapper;
 
@@ -172,8 +172,8 @@ public class DataHandleServiceImpl implements DataHandleService {
 //        //EDS_SS_BZXR_COM
 //        JSONObject bzxrcomObject = (JSONObject)dataObject.getJSONArray("R228").get(0);
 //        JSONArray bzxrcomData  = bzxrcomObject.getJSONArray("data");
-//        List<EdsSsBzxrCom> edsSsBzxrComListList = JSON.parseArray(bzxrcomData.toJSONString(), EdsSsBzxrCom.class);
-//        for(EdsSsBzxrCom edsSsBzxrCom : edsSsBzxrComListList){
+//        List<LegalWyBzxrCom> edsSsBzxrComListList = JSON.parseArray(bzxrcomData.toJSONString(), LegalWyBzxrCom.class);
+//        for(LegalWyBzxrCom edsSsBzxrCom : edsSsBzxrComListList){
 //            edsSsBzxrCom.setReqId(reqId);
 //            edsSsBzxrComMapper.insert(edsSsBzxrCom);
 //        }
@@ -181,8 +181,8 @@ public class DataHandleServiceImpl implements DataHandleService {
 //        //EDS_SS_SXBZXR_COM
 //        JSONObject sxbzxrcomObject = (JSONObject)dataObject.getJSONArray("R230").get(0);
 //        JSONArray sxbzxrcomData  = sxbzxrcomObject.getJSONArray("data");
-//        List<EdsSsSxbzxrCom> edsSsSxbzxrComList = JSON.parseArray(sxbzxrcomData.toJSONString(), EdsSsSxbzxrCom.class);
-//        for(EdsSsSxbzxrCom edsSsSxbzxrCom : edsSsSxbzxrComList){
+//        List<LegalWySxbzxrCom> edsSsSxbzxrComList = JSON.parseArray(sxbzxrcomData.toJSONString(), LegalWySxbzxrCom.class);
+//        for(LegalWySxbzxrCom edsSsSxbzxrCom : edsSsSxbzxrComList){
 //            edsSsSxbzxrCom.setReqId(reqId);
 //            edsSsSxbzxrComMapper.insert(edsSsSxbzxrCom);
 //        }

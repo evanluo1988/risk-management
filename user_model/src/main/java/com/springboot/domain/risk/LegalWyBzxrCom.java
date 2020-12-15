@@ -7,8 +7,8 @@ import com.springboot.domain.BaseDomain;
 import lombok.Data;
 
 @Data
-@TableName("eds_ss_bzxr_com")
-public class EdsSsBzxrCom extends BaseDomain {
+@TableName("legal_wy_bzxr_com")
+public class LegalWyBzxrCom extends BaseDomain {
     /**
      * 申请编号ID 由我方生成
      */
@@ -71,6 +71,6 @@ public class EdsSsBzxrCom extends BaseDomain {
      * 最新更新日期
      */
     @JSONField(name = "UPDATETIME")
-    @TableField(value = "updatetime")
+    @TableField(value = "updacreatetimetetime")
     private String thirdUpdateTime;
 }
