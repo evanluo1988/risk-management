@@ -80,12 +80,14 @@ public class DataHandleServiceImpl implements DataHandleService {
     @Autowired
     private EntWyExceptionMapper entWyExceptionMapper;
 
-
     @Autowired
     private LegalWySsjghsjMapper legalWySsjghsjMapper;
+    @Autowired
+    private LegalWyBzxrComMapper legalWyBzxrComMapper;
+    @Autowired
+    private LegalWySxbzxrComMapper legalWySxbzxrComMapper;
 
-//    @Autowired
-//    private LegalWySxbzxrComMapper edsSsSxbzxrComMapper;
+
     @Autowired
     private ExeSqlMapper exeSqlMapper;
 
@@ -254,23 +256,23 @@ public class DataHandleServiceImpl implements DataHandleService {
             legalWySsjghsjMapper.insert(legalWySsjghsj);
         }
 
-//        //EDS_SS_BZXR_COM
-//        JSONObject bzxrcomObject = (JSONObject)dataObject.getJSONArray("R228").get(0);
-//        JSONArray bzxrcomData  = bzxrcomObject.getJSONArray("data");
-//        List<LegalWyBzxrCom> edsSsBzxrComListList = JSON.parseArray(bzxrcomData.toJSONString(), LegalWyBzxrCom.class);
-//        for(LegalWyBzxrCom edsSsBzxrCom : edsSsBzxrComListList){
-//            edsSsBzxrCom.setReqId(reqId);
-//            edsSsBzxrComMapper.insert(edsSsBzxrCom);
-//        }
-//
-//        //EDS_SS_SXBZXR_COM
-//        JSONObject sxbzxrcomObject = (JSONObject)dataObject.getJSONArray("R230").get(0);
-//        JSONArray sxbzxrcomData  = sxbzxrcomObject.getJSONArray("data");
-//        List<LegalWySxbzxrCom> edsSsSxbzxrComList = JSON.parseArray(sxbzxrcomData.toJSONString(), LegalWySxbzxrCom.class);
-//        for(LegalWySxbzxrCom edsSsSxbzxrCom : edsSsSxbzxrComList){
-//            edsSsSxbzxrCom.setReqId(reqId);
-//            edsSsSxbzxrComMapper.insert(edsSsSxbzxrCom);
-//        }
+        //legal_wy_bzxr_com
+        JSONObject bzxrcomObject = (JSONObject)dataObject.getJSONArray("R228").get(0);
+        JSONArray bzxrcomData  = bzxrcomObject.getJSONArray("data");
+        List<LegalWyBzxrCom> legalWyBzxrComList = JSON.parseArray(bzxrcomData.toJSONString(), LegalWyBzxrCom.class);
+        for(LegalWyBzxrCom legalWyBzxrCom : legalWyBzxrComList){
+            legalWyBzxrCom.setReqId(reqId);
+            legalWyBzxrComMapper.insert(legalWyBzxrCom);
+        }
+
+        //legal_wy_sxbzxr_com
+        JSONObject sxbzxrcomObject = (JSONObject)dataObject.getJSONArray("R230").get(0);
+        JSONArray sxbzxrcomData  = sxbzxrcomObject.getJSONArray("data");
+        List<LegalWySxbzxrCom> legalWySxbzxrComList = JSON.parseArray(sxbzxrcomData.toJSONString(), LegalWySxbzxrCom.class);
+        for(LegalWySxbzxrCom legalWySxbzxrCom : legalWySxbzxrComList){
+            legalWySxbzxrCom.setReqId(reqId);
+            legalWySxbzxrComMapper.insert(legalWySxbzxrCom);
+        }
 
     }
 
