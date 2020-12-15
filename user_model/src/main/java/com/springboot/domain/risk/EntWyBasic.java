@@ -5,8 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.util.Objects;
 
 @Data
+@ToString
+@EqualsAndHashCode(exclude = {"id","createTime","createBy","updateTime","updateBy","reqId","businessId"})
 @TableName("ent_wy_basiclist")
 public class EntWyBasic extends BaseDomain {
     /**
@@ -235,5 +241,4 @@ public class EntWyBasic extends BaseDomain {
     @TableField(value = "enterpriseengname")
     @JSONField(name = "enterpriseEngName")
     private String enterpriseEngName;
-
 }
