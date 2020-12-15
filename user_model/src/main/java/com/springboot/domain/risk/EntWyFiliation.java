@@ -40,7 +40,7 @@ public class EntWyFiliation extends BaseDomain {
     /**
      * 分支机构登记机关
      */
-    @TableField(value = "brregno")
+    @TableField(value = "brregorg")
     @JSONField(name = "brRegOrg")
     private String brRegOrg;
 }

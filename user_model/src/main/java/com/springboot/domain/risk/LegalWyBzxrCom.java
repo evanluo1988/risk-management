@@ -71,6 +71,6 @@ public class LegalWyBzxrCom extends BaseDomain {
      * 最新更新日期
      */
     @JSONField(name = "UPDATETIME")
-    @TableField(value = "updacreatetimetetime")
+    @TableField(value = "updatetime")
     private String thirdUpdateTime;
 }

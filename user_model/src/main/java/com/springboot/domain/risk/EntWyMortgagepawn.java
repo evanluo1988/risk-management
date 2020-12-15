@@ -2,10 +2,12 @@ package com.springboot.domain.risk;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
 
 @Data
+@TableName("ent_wy_mortgagepawnlist")
 public class EntWyMortgagepawn extends BaseDomain {
     /**
      * 申请编号ID 由我方生成

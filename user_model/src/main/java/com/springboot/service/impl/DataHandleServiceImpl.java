@@ -227,7 +227,7 @@ public class DataHandleServiceImpl implements DataHandleService {
         }
         //insert ent_wy_stockpawnaltlist
         for(EntWyStockpawnalt entWyStockpawnalt : data.getStockPawnAltList()) {
-            entWyStockpawnalt.setRelDetails(reqId);
+            entWyStockpawnalt.setReqId(reqId);
             entWyStockpawnaltMapper.insert(entWyStockpawnalt);
         }
         //insert ent_wy_stockpawncanlist
