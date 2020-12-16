@@ -1,4 +1,4 @@
-package com.ycyl.repository.conf;
+package com.springboot.config;
 
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;

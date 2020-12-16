@@ -44,7 +44,7 @@ public class DBConfiguration {
         bean.setDataSource(dataSource);
         bean.setPlugins(new PaginationInterceptor());
         //bean.setTypeHandlersPackage("com.springboot.mybatis.typehandle");
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/*.xml"));
         bean.setGlobalConfig(new GlobalConfig().setMetaObjectHandler(new MyMetaObjectHandler()));
         return bean.getObject();
     }

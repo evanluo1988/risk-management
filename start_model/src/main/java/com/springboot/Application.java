@@ -1,8 +1,5 @@
 package com.springboot;
 
-import com.springboot.authority.AuthorityManagement;
-import com.springboot.authority.AuthorityServiceImpl;
-import com.springboot.config.JerseyConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.boot.SpringApplication;
@@ -37,17 +34,17 @@ public class Application {
         return registrationBean;
     }
 
-    /**
-     * 注册jersey Servlet
-     * @return
-     */
-    @Bean
-    public ServletRegistrationBean jersetServlet(){
-        ServletRegistrationBean registration = new ServletRegistrationBean(new ServletContainer(), "/restful/jersey/*");
-        registration.addInitParameter(
-                ServletProperties.JAXRS_APPLICATION_CLASS,
-                JerseyConfig.class.getName());
-        return registration;
-    }
+//    /**
+//     * 注册jersey Servlet
+//     * @return
+//     */
+//    @Bean
+//    public ServletRegistrationBean jersetServlet(){
+//        ServletRegistrationBean registration = new ServletRegistrationBean(new ServletContainer(), "/restful/jersey/*");
+//        registration.addInitParameter(
+//                ServletProperties.JAXRS_APPLICATION_CLASS,
+//                JerseyConfig.class.getName());
+//        return registration;
+//    }
 
 }

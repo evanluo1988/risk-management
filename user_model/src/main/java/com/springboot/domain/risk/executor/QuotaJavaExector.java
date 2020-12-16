@@ -2,9 +2,8 @@ package com.springboot.domain.risk.executor;
 
 import com.google.common.collect.Maps;
 import com.springboot.component.QuotaComponent;
-import com.springboot.config.SpringContextUtil;
 import com.springboot.domain.risk.Quota;
-import com.springboot.domain.risk.executor.QuotaExecutor;
+import com.springboot.utils.SpringContextUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

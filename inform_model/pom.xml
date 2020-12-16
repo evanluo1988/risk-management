@@ -11,5 +11,18 @@
 
     <artifactId>inform_model</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.springboot</groupId>
+            <artifactId>common</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.springboot</groupId>
+            <artifactId>user_model</artifactId>
+            <version>${version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
