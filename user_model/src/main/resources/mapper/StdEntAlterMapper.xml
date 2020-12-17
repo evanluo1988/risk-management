@@ -19,7 +19,7 @@
     <select id="findInvestorWithdrawList" resultMap="BaseResultMap" parameterType="String">
         select distinct altbe,altaf,altdate
         from std_ent_alter_list
-        where timestampdiff(month,altdate ,curdate()) &lt;= 120
+        where timestampdiff(month,altdate ,curdate()) &lt;= 12
         and (altitem like '%股东%' or altitem like '%出资人%' or altitem like '%股权%' or
         altitem like '%投资人%' or altitem like '%认缴资本%' or altitem like '%出资额%')
         and req_id = #{reqId}
