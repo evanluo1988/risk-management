@@ -343,7 +343,7 @@ public class DataHandleServiceImpl implements DataHandleService {
         List<QuotaValue> quotaValueList = Lists.newArrayList();
         try {
             for(QuotaTask quotaTask : quotaTaskList){
-                if(quotaTask.getQuota().getId() == 19L){
+                if(quotaTask.getQuota().getId() == 58L){
                     quotaValueList.add(quotaTask.call());
                 }
             }
