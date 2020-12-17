@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface StdEntAlterMapper extends BaseMapper<StdEntAlter> {
     public List<StdEntAlter> findInvestorWithdrawList(String reqId);
+
+    List<StdEntAlter> findReduRatioRegcapList(String reqId);
 }

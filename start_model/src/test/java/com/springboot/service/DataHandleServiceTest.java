@@ -273,7 +273,7 @@ public class DataHandleServiceTest extends ApplicationTest {
 
   @Test
     public void testCulQuotas() {
-        String reqId = "345aa469-1574-45c2-84cc-9e80b1346fd6";
+        String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
         dataHandleService.culQuotas(reqId);
     }
 

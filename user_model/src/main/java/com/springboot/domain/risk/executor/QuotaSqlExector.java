@@ -16,7 +16,8 @@ public class QuotaSqlExector implements QuotaExecutor {
     @Override
     public Map execQuota(String reqId, Quota quota) {
         String quotaRule = quota.getQuotaRule();
-        String exeQuotaRule = quotaRule + " and req_id = '" + reqId + "'";
-        return exeSqlMapper.exeQuotaSql(exeQuotaRule);
+        String exeQuotaSql = quotaRule.replace("?", "'" +reqId + "'");
+        //String exeQuotaRule = quotaRule + " and req_id = '" + reqId + "'";
+        return exeSqlMapper.exeQuotaSql(exeQuotaSql);
     }
 }

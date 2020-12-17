@@ -8,4 +8,5 @@ package com.springboot.constant;
 public class GlobalConstants {
     public static final String USER_ID = "userId";
     public static final String DEFAULT_PASSWORD = "123456";
+    public static final String INF = "999999999999999";
 }
