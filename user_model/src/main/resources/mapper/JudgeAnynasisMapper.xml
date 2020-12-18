@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.mapper.JudgeAnynasisMapper">
+
+    <!-- 案由分类获取取值代码和取值描述 -->
+    <select id="caseReason" parameterType="java.lang.String" resultType="java.util.Map" flushCache="true" useCache="true">
+        SELECT trim(CODE) CODE,trim(DESCRIPTION) DESCRIPTION FROM
+        (SELECT
+        a.*
+        FROM
+        EDS_SS_ADD_AYFL_A a
+        LEFT JOIN EDS_SS_ADD_AYFL_MAPPING m ON m.CODE=a.CODE
+        WHERE
+        INSTR(#{caseInfo},a.CONTAINS_KEY) >= 1
+        AND NOT EXISTS (SELECT 1 FROM EDS_SS_ADD_AYFL_B b WHERE INSTR(#{caseInfo}, b.NOT_CONTAINS_KEY) >= 1 AND a.CODE=b.CODE)
+        AND "ENABLE"='Y'
+        ORDER BY m."RANK"
+        )  WHERE ROWNUM = 1
+    </select>
+
+    <!-- 案由分类A表 -->
+    <select id="getAYFLTabA" resultType="java.util.Map"><!-- 由于是基础数据，不发生变化，允许缓存 -->
+        SELECT trim(CODE) CODE,trim(DESCRIPTION) DESCRIPTION,trim(CONTAINS_KEY) key FROM EDS_SS_ADD_AYFL_A WHERE ENABLED = 'Y'
+    </select>
+
+    <!-- 案由分类B表 -->
+    <select id="getAYFLTabB" resultType="java.util.Map"><!-- 由于是基础数据，不发生变化，允许缓存 -->
+        SELECT trim(CODE) CODE,trim(DESCRIPTION) DESCRIPTION,trim(NOT_CONTAINS_KEY) key FROM EDS_SS_ADD_AYFL_A WHERE ENABLED = 'Y'
+    </select>
+
+    <!-- 案件结果对客户的影响，通过客户角色和审理结果获取对应的取值和对应的文字描述 -->
+    <select id="resultImpact" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT trim(CODE) CODE,trim("IMPACT") "IMPACT" FROM EDS_SS_ADD_AJJGDKHYX_RULE WHERE "ROLE"=#{role} AND RESULT_CODE = #{resultCode} AND "ENABLE"='Y'
+    </select>
+
+    <!-- 获取涉案金额，正则基础配置表 -->
+    <select id="CaseMoneyBasic" resultType="java.util.Map">
+        SELECT trim("ID") "ID",trim(PARAM_NAME) PARAM_NAME,trim(DESCRIPTION) DESCRIPTION,trim("VALUE") "VALUE" FROM EDS_SS_ADD_SAJE_BASIC WHERE "ENABLE"='Y'
+    </select>
+
+    <!-- 获取涉案金额，正则式 -->
+    <select id="CaseMoneyRegex" resultType="java.util.Map">
+        SELECT trim("NAME") "NAME",trim("ID") "ID",trim("VALUE") "VALUE" FROM EDS_SS_ADD_SAJE_REGEX WHERE "ENABLE"='Y'
+    </select>
+
+    <!-- 根据优先级获取优先级最高的审理结果 -->
+    <select id="judgeResultFinalMap" parameterType="java.util.List" resultType="java.util.Map" flushCache="true" useCache="true">
+
+        SELECT
+        DISTINCT trim(v.CODE) CODE,trim(v.DESCRIPTION) DESCRIPTION,trim(v."RANK") RANK
+        FROM
+        EDS_SS_ADD_RESULT_REGEX r
+        JOIN EDS_SS_ADD_RESULT_VALUES v ON v.DESCRIPTION=r.RESULT
+        WHERE
+        r."ENABLE"='Y'
+        AND r."NAME" IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND v."RANK" =(
+        select t."RANK" from
+        (
+        SELECT
+        v1."RANK"
+        FROM
+        EDS_SS_ADD_RESULT_REGEX r2
+        LEFT JOIN EDS_SS_ADD_RESULT_VALUES v1 ON v1.DESCRIPTION=r2.RESULT
+        WHERE
+        r2."ENABLE"='Y'
+        AND r2."NAME" IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY v1."RANK"
+        ORDER BY v1."RANK"
+        ) t
+
+        where ROWNUM=1
+        )
+
+    </select>
+
+
+    <!-- EDS配置参数表：根据属性名获取对应的属性值 -->
+    <select id="getEDSParamByName" parameterType="java.lang.String"
+            resultType="java.lang.String" flushCache="true" useCache="true">
+        SELECT
+        trim(p.PARAM_VALUE) FROM EDS_PARAM p WHERE p.PARAM_NAME = #{name}
+    </select>
+
+    <!-- 审理结果正则匹配基础表 -->
+    <select id="JudgeResultBasic" resultType="java.util.Map">
+        SELECT trim("VALUE") "VALUE",trim(DESCRIPTION) DESCRIPTION FROM EDS_SS_ADD_RESULT_BASIC WHERE "ENABLE"='Y'
+    </select>
+
+    <!-- 审理结果正则式列表 -->
+    <select id="JudgeResultRegex" resultType="java.util.Map">
+        SELECT trim("NAME") "NAME",trim("VALUE") "VALUE" FROM EDS_SS_ADD_RESULT_REGEX WHERE "ENABLE"='Y'
+    </select>
+
+    <!-- 客户角色准确性校验  正则匹配式 -->
+    <select id="JudgeRoleCheckRegex" resultType="java.util.Map">
+        SELECT trim("NAME") "NAME",trim(REGEX) REGEX FROM EDS_SS_ADD_ROLECHECK_REGEX t WHERE t."ENABLE" = 'Y'
+    </select>
+
+    <!-- 客户角色准确性校验   正则基础表 -->
+    <select id="JudgeRoleCheckBasic" resultType="java.util.Map">
+        SELECT trim(DESCRIPTION) DESCRIPTION,trim("VALUE") "VALUE" FROM EDS_SS_ADD_ROLECHECK_BASIC T WHERE T."ENABLE"='Y'
+    </select>
+
+    <!-- 客户角色准确性校验  结果映射表 -->
+    <select id="JudgeRoleCheckMapping" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT trim(DESCRIPTION) DESCRIPTION FROM EDS_SS_ADD_ROLECHECK_MAPPING T WHERE T."ENABLE"='Y' AND trim(t."VALUE")=#{value}
+    </select>
+
+</mapper>

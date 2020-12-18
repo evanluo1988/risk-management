@@ -38,6 +38,8 @@ public class StdLegalDataStructured extends BaseDomain {
     private String pdesc;
     @TableField(value = "plaintiff")
     private String plaintiff;
+    @TableField(value = "party")
+    private String party;
     @TableField(value = "judgementresult")
     private String judgementResult;
     @TableField(value = "pdate")
