@@ -27,6 +27,14 @@ public class DateUtils {
         return Date.from(zdt.toInstant());
     }
 
+    public static Date localDateToDate(LocalDate localDate) {
+        if(null == localDate) {
+            return null;
+        }
+        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+        return Date.from(zonedDateTime.toInstant());
+    }
+
     public static String convertDateStr(LocalDateTime localDateTime){
         return convertDateStr(localDateTimeToDate(localDateTime));
     }
