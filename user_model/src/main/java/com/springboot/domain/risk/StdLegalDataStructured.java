@@ -88,10 +88,4 @@ public class StdLegalDataStructured extends BaseDomain {
     private String dataSource;
     @TableField(value = "collectiondate")
     private LocalDate collectionDate;
-    @TableField(value = "party")
-    private String party;
-    @TableField(value = "isreview")
-    private Char isreview;
-    @TableField(value = "isreview_result")
-    private String isreviewResult;
 }

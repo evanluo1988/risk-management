@@ -42,9 +42,6 @@
         <result column="lawstatus" property="lawstatus" />
         <result column="datasource" property="dataSource" />
         <result column="collectiondate" property="collectionDate" />
-        <result column="party" property="party" />
-        <result column="isreview" property="isreview" />
-        <result column="isreview_result" property="isreviewResult" />
 
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -55,8 +52,8 @@
     <!-- 获取诉讼结构数据新增字段表 -->
     <select id="getvarname"  resultType="map"  parameterType="map">
         select distinct a.LEGALVALUE from std_legal_data_added a ,std_legal_data_structured b
-        where a.REQ_ID =b.REQ_ID and a.VARNAME =#{VARNAME,jdbcType=VARCHAR} and a.SERIALNO =#{SERIALNO,jdbcType=VARCHAR} and  a.REQ_ID =#{reqID,jdbcType=VARCHAR}
-        and rownum = 1
+        where a.REQ_ID =b.REQ_ID and a.VARNAME =#{VARNAME,jdbcType=VARCHAR} and a.SERIALNO =#{SERIALNO,jdbcType=VARCHAR} and a.REQ_ID =#{reqID,jdbcType=VARCHAR}
+        limit 1
     </select>
 
 </mapper>

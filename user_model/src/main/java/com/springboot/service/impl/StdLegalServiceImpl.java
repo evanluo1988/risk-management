@@ -28,6 +28,9 @@ public class StdLegalServiceImpl implements StdLegalService {
     @Autowired
     private StdLegalDataStructuredMapper stdLegalDataStructuredMapper;
 
+    @Autowired
+    private StdLegalCasemedianServiceImpl stdLegalCasemedianService;
+
     //案件风险等级判断
     private static final String CASERISKLEVEL_N = "N";
     private static final String CASERISKLEVEL_L = "L";
@@ -89,6 +92,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         for(StdLegalDataStructured stdLegalDataStructured : stdLegalDataStructuredList) {
             StdLegalCasemedian stdLegalCasemedian = new StdLegalCasemedian();
 
+            BigDecimal referMoney = null;// 以人民币为单位的涉案金额
             String caseReason = stdLegalDataStructured.getCaseReason();// 案由
             String serialNo = stdLegalDataStructured.getSerialno(); // 序列号
             String pDesc = stdLegalDataStructured.getPdesc();// 公告内容
@@ -230,6 +234,9 @@ public class StdLegalServiceImpl implements StdLegalService {
             if (mappayment != null) {
                 payment = (String) mappayment.get("legalvalue");
             }
+            if (CalculatUtil.hasChar(payment)) {
+                referMoney = new BigDecimal(payment);
+            }
 
             // 案件结果对客户的影响
             paraMap.put("serialno", serialNo);
@@ -293,11 +300,11 @@ public class StdLegalServiceImpl implements StdLegalService {
 
                 // Pytpe = 16（裁判文书）或空
                 //todo referMoney and paymentScale can not get
-//                if ("16".equals(pType) || StringUtils.isEmpty(pType)) {
-//                    caseriskLevel = getCaseriskLevelByPtype16orNull(caseriskLevel, stdLegalDataStructured, intervalYear,
-//                            caseResult, caseLevel, lawStatus, pDesc, sentenceBrief,
-//                            phase, addSentenceEffects, sentenceEffect, referMoney, paymentScale);
-//                }
+                if ("16".equals(pType) || StringUtils.isEmpty(pType)) {
+                    caseriskLevel = getCaseriskLevelByPtype16orNull(caseriskLevel, stdLegalDataStructured, intervalYear,
+                            caseResult, caseLevel, lawStatus, pDesc, sentenceBrief,
+                            phase, addSentenceEffects, sentenceEffect, referMoney);
+                }
             }
 
             stdLegalCasemedian.setCaseClass(caseClass);
@@ -319,6 +326,7 @@ public class StdLegalServiceImpl implements StdLegalService {
 
             stdLegalCasemedianList.add(stdLegalCasemedian);
         }
+        stdLegalCasemedianService.saveBatch(stdLegalCasemedianList);
     }
 
     /**
@@ -499,12 +507,11 @@ public class StdLegalServiceImpl implements StdLegalService {
      * @param addSentenceEffects
      * @param sentenceEffect
      * @param referMoney
-     * @param paymentScale
      * @return
      */
     private String getCaseriskLevelByPtype16orNull(String caseriskLevel, StdLegalDataStructured legalData, Double intervalYear,
                                                    String caseResult, String caseLevel, String lawStatus, String pDesc, String sentenceBrief,
-                                                   String phase, String[] addSentenceEffects, String sentenceEffect, BigDecimal referMoney, BigDecimal paymentScale) {
+                                                   String phase, String[] addSentenceEffects, String sentenceEffect, BigDecimal referMoney) {
         // ①一级判断规则
         if (CalculatUtil.myEquals("已撤诉", caseResult)) {
             caseriskLevel = CASERISKLEVEL_L;
@@ -519,7 +526,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         } else {
             // ③ 三级判断规则
             caseriskLevel = getPtype16orNullThreeLevel(caseriskLevel, intervalYear, caseLevel, lawStatus,
-                    sentenceEffect, referMoney, paymentScale);
+                    sentenceEffect, referMoney);
         }
         return caseriskLevel;
     }
@@ -627,14 +634,11 @@ public class StdLegalServiceImpl implements StdLegalService {
      * @param lawStatus
      * @param sentenceEffect
      * @param referMoney
-     * @param paymentScale
      * @return
      */
-    private String getPtype16orNullThreeLevel(String caseriskLevel, Double intervalYear, String caseLevel, String lawStatus, String sentenceEffect, BigDecimal referMoney, BigDecimal paymentScale) {
+    private String getPtype16orNullThreeLevel(String caseriskLevel, Double intervalYear, String caseLevel, String lawStatus, String sentenceEffect, BigDecimal referMoney) {
         if (CalculatUtil.myEquals("0", sentenceEffect)) {
-            if (referMoney != null && paymentScale != null
-                    && ((0 <= referMoney.doubleValue() && referMoney.doubleValue() < 500000)
-                    || (0 <= paymentScale.doubleValue() && paymentScale.doubleValue() < 0.05))) {
+            if (referMoney != null && ((0 <= referMoney.doubleValue() && referMoney.doubleValue() < 500000))) {
                 caseriskLevel = CASERISKLEVEL_L;
             } else {
                 if (intervalYear != null && (intervalYear >= 0 && intervalYear < 0.25)) {
@@ -650,9 +654,7 @@ public class StdLegalServiceImpl implements StdLegalService {
                 }
             }
         } else if (StringUtils.isEmpty(sentenceEffect)|| CalculatUtil.myEquals("1", sentenceEffect) || CalculatUtil.myEquals("99", sentenceEffect)) {
-            if (referMoney != null && paymentScale != null
-                    && ((0 <= referMoney.doubleValue() && referMoney.doubleValue() < 300000)
-                    || (0 <= paymentScale.doubleValue() && paymentScale.doubleValue() < 0.03))) {
+            if (referMoney != null && 0 <= referMoney.doubleValue() && referMoney.doubleValue() < 300000) {
                 //条件1
                 if (intervalYear != null && (intervalYear >= 0 && intervalYear < 0.25)) {
                     caseriskLevel = CASERISKLEVEL_M1;
@@ -665,8 +667,7 @@ public class StdLegalServiceImpl implements StdLegalService {
                 } else {
                     caseriskLevel = CASERISKLEVEL_L;
                 }
-            } else if (referMoney != null && paymentScale != null
-                    && (referMoney.doubleValue() <= 500000 || paymentScale.doubleValue() < 0.05)) {
+            } else if (referMoney != null && referMoney.doubleValue() <= 500000) {
                 //条件2
                 if (intervalYear != null && (intervalYear >= 0 && intervalYear < 0.25)) {
                     caseriskLevel = CASERISKLEVEL_M4;
@@ -679,8 +680,7 @@ public class StdLegalServiceImpl implements StdLegalService {
                 } else {
                     caseriskLevel = CASERISKLEVEL_L;
                 }
-            } else if (referMoney != null && paymentScale != null
-                    && (referMoney.doubleValue() <= 800000 || paymentScale.doubleValue() < 0.08)) {
+            } else if (referMoney != null && referMoney.doubleValue() <= 800000) {
                 //条件3
                 if (intervalYear != null && (intervalYear >= 0 && intervalYear < 0.25)) {
                     caseriskLevel = CASERISKLEVEL_M5;
@@ -693,8 +693,7 @@ public class StdLegalServiceImpl implements StdLegalService {
                 } else {
                     caseriskLevel = CASERISKLEVEL_L;
                 }
-            } else if (referMoney != null && paymentScale != null
-                    && (referMoney.doubleValue() > 800000 && paymentScale.doubleValue() >= 0.08)) {
+            } else if (referMoney != null && referMoney.doubleValue() > 800000) {
                 //条件4
                 if (intervalYear != null && (intervalYear >= 0 && intervalYear < 0.25)) {
                     caseriskLevel = CASERISKLEVEL_M6;

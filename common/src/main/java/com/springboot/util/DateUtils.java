@@ -18,6 +18,9 @@ public class DateUtils {
     }
 
     public static String convertDateStr(Date date){
+        if(date == null){
+            return null;
+        }
         return convertStr(DATE_FORMAT, date);
     }
 
