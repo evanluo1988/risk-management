@@ -1,5 +1,6 @@
 package com.springboot.utils;
 
+import com.google.common.collect.Maps;
 import com.springboot.domain.Area;
 import com.springboot.domain.Menu;
 import com.springboot.domain.risk.EtlTranRule;
@@ -49,6 +50,39 @@ public class ServerCacheUtils {
      */
     private static Map<String, List<QuotaGrand>> quotaGrandMap;
 
+    /**
+     * 司法解析数据
+     */
+//    private static Map<String, Object> judicialAnalysisMap = Maps.newHashMap();
+//
+//    public static String getSAJE_UNIT() {
+//        return (String)ServerCacheUtils.judicialAnalysisMap.get("SAJE_UNIT");
+//    }
+//
+//    public static String getSAJE_TARGET() {
+//        return (String)ServerCacheUtils.judicialAnalysisMap.get("SAJE_TARGET");
+//    }
+//
+//    public static Map<String, String> getREGEXMAP_ROLE() {
+//        return (Map<String, String>)ServerCacheUtils.judicialAnalysisMap.get("REGEXMAP_ROLE");
+//    }
+//
+//    public static Map<String, String> getREGEXMAP_SLJG() {
+//        return (Map<String, String>)ServerCacheUtils.judicialAnalysisMap.get("REGEXMAP_SLJG");
+//    }
+//
+//    public static Map<String, String> getREGEXMAP_SAJE() {
+//        return (Map<String, String>)ServerCacheUtils.judicialAnalysisMap.get("REGEXMAP_SAJE");
+//    }
+//
+//    public static void setJudicialAnalysisData(Map<String,Object> map) {
+//        ServerCacheUtils.judicialAnalysisMap = map;
+//    }
+
+    /**
+     *
+     * @param quotaGrandList
+     */
     public static void setQuotaGrandList(List<QuotaGrand> quotaGrandList){
         ServerCacheUtils.quotaGrandMap = quotaGrandList.stream().collect(Collectors.groupingBy(QuotaGrand::getGrandCode));
     }
