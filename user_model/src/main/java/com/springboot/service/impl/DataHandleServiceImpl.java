@@ -376,7 +376,6 @@ public class DataHandleServiceImpl implements DataHandleService {
     @Override
     public void analysisJustice(String reqId) throws Exception {
         //解析司法引擎
-        //legalDataAddColumnService.initAnalysisJudicialEngine();
         List<StdLegalDataStructured> stdLegalDataStructuredList = stdLegalDataStructuredService.findStdLegalDataStructuredByReqId(reqId);
         List<StdLegalDataAdded> stdLegalDataAddedList = Lists.newArrayList();
         for(StdLegalDataStructured legalDataStructured : stdLegalDataStructuredList) {

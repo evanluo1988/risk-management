@@ -212,7 +212,8 @@ public class StdLegalServiceImpl implements StdLegalService {
             Date caseDate = DateUtils.localDateToDate(stdLegalDataStructured.getCaseDate()); // 审判时间/开庭时间/立案时间
             Date publishDate = DateUtils.localDateToDate(stdLegalDataStructured.getPdate()); // 发布时间
 
-            String createTime = DateUtils.convertDateStr(stdLegalDataStructured.getCreateTime());
+            //和刘林确认，用当前时间减，因为获取不到用户申请网贷时间
+            String createTime = DateUtils.convertDateStr(new Date());
             // 用公共方法计算日期
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
