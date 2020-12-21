@@ -65,7 +65,11 @@ public class DataHandleServiceTest extends ApplicationTest {
 
     @Test
     public void testHandelData(){
-        dataHandleService.handelData("广西南宁卓信商贸有限公司");
+        try {
+            dataHandleService.handelData("广西南宁卓信商贸有限公司");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Test
@@ -275,6 +279,12 @@ public class DataHandleServiceTest extends ApplicationTest {
     public void testCulQuotas() {
         String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
         dataHandleService.culQuotas(reqId);
+    }
+
+    @Test
+    public void testAnalysisJustice() throws Exception {
+        String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
+        dataHandleService.analysisJustice(reqId);
     }
 
 }

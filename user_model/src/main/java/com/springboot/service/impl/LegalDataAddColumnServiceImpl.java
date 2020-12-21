@@ -54,21 +54,21 @@ public class LegalDataAddColumnServiceImpl {
         String name = "";
         String value = "";
         for (Map<String, Object> singleMap : regexList_saje) {
-            name = (String) singleMap.get("NAME");
-            value = (String) singleMap.get("VALUE");
+            name = (String) singleMap.get("name");
+            value = (String) singleMap.get("value");
             REGEXMAP_SAJE.put(name, initRegex(value, basicList_saje));
         }
 
         for (Map<String, Object> map : basicList_saje) {
-            if (map.get("PARAM_NAME") != null) {
-                if ("target".equals((String) map.get("PARAM_NAME"))) {
-                    SAJE_TARGET = (String) map.get("VALUE");// (?:\d*[,，]*)*\d*\.?\d*[零一二三四五六七八九十百千万亿]*
+            if (map.get("param_name") != null) {
+                if ("target".equals((String) map.get("param_name"))) {
+                    SAJE_TARGET = (String) map.get("value");// (?:\d*[,，]*)*\d*\.?\d*[零一二三四五六七八九十百千万亿]*
                     continue;
                 }
             }
-            if (map.get("PARAM_NAME") != null) {
-                if ("unit".equals((String) map.get("PARAM_NAME"))) {
-                    SAJE_UNIT = (String) map.get("VALUE");
+            if (map.get("param_name") != null) {
+                if ("unit".equals((String) map.get("param_name"))) {
+                    SAJE_UNIT = (String) map.get("value");
                 }
             }
         }
@@ -77,8 +77,8 @@ public class LegalDataAddColumnServiceImpl {
         List<Map<String, Object>> basicList_sljg = judgeMapper.JudgeResultBasic();// 正则基础表
         List<Map<String, Object>> regexList_sljg = judgeMapper.JudgeResultRegex();// 正则式表
         for (Map<String, Object> singleMap : regexList_sljg) {
-            name = (String) singleMap.get("NAME");
-            value = (String) singleMap.get("VALUE");
+            name = (String) singleMap.get("name");
+            value = (String) singleMap.get("value");
             REGEXMAP_SLJG.put(name, initRegex(value, basicList_sljg));
         }
 
@@ -86,8 +86,8 @@ public class LegalDataAddColumnServiceImpl {
         List<Map<String, Object>> listRoleBasic = judgeMapper.JudgeRoleCheckBasic();
         List<Map<String, String>> listRoleRegex = judgeMapper.JudgeRoleCheckRegex();
         for (Map<String, String> singleMap : listRoleRegex) {
-            name = singleMap.get("NAME");
-            value = singleMap.get("REGEX");
+            name = singleMap.get("name");
+            value = singleMap.get("regex");
             REGEXMAP_ROLE.put(name, initRegex(value, listRoleBasic));
         }
     }
@@ -108,11 +108,11 @@ public class LegalDataAddColumnServiceImpl {
         String beReplace = "";
         String toReplace = "";
         for (Map<String, Object> map : basicList) {
-            if (map.get("DESCRIPTION") != null) {
-                beReplace = "【" + (String) map.get("DESCRIPTION") + "】";
+            if (map.get("description") != null) {
+                beReplace = "【" + (String) map.get("description") + "】";
                 if (regex.contains(beReplace)) {
-                    if (map.get("VALUE") != null) {
-                        toReplace = (String) map.get("VALUE");
+                    if (map.get("value") != null) {
+                        toReplace = (String) map.get("value");
                         regex = regex.replace(beReplace, "(?:" + toReplace + ")");// 非获取捕获
                     }
                 }
@@ -212,14 +212,14 @@ public class LegalDataAddColumnServiceImpl {
                     }
                 }
                 if (!CommonUtil.mapIsEmptyOrNull(result)) {
-                    caseReason.setLegalValue((String) result.get("CODE"));
-                    caseReason.setValueLabel((String) result.get("DESCRIPTION"));
+                    caseReason.setLegalValue((String) result.get("code"));
+                    caseReason.setValueLabel((String) result.get("description"));
                 }
             } else {
                 caseReason.setLegalValue(ANYNASIS_BLANK);
                 caseReason.setValueLabel(ANYNASIS_BLANK);
             }
-            caseReason.setFlag(ANYNASIS_BLANK);//是否需要人工审核
+            caseReason.setNeedingVerify(ANYNASIS_BLANK);//是否需要人工审核
             return caseReason;
         } catch (Exception e) {
             e.printStackTrace();
@@ -838,32 +838,32 @@ public class LegalDataAddColumnServiceImpl {
                 if (CommonUtil.hasChar(Caseno)) {
                     if (Caseno.contains("初")) {
                         J5_SLCX.setLegalValue("一审");
-                        J5_SLCX.setFlag("0");
+                        J5_SLCX.setNeedingVerify("0");
                         J5_SLCX.setValueLabel("一审");
                     } else if (Caseno.contains("终")) {
                         J5_SLCX.setLegalValue("二审");
-                        J5_SLCX.setFlag("0");
+                        J5_SLCX.setNeedingVerify("0");
                         J5_SLCX.setValueLabel("二审");
                     } else if (CommonUtil.contains(new String[] { "监", "再", "申", "提", "抗" }, Caseno)) {
                         J5_SLCX.setLegalValue("再审");
-                        J5_SLCX.setFlag("0");
+                        J5_SLCX.setNeedingVerify("0");
                         J5_SLCX.setValueLabel("再审");
                     } else {
                         J5_SLCX.setLegalValue("其他");
-                        J5_SLCX.setFlag("1");
+                        J5_SLCX.setNeedingVerify("1");
                         J5_SLCX.setValueLabel("其他");
                     }
 
                 } else {
                     J5_SLCX.setLegalValue(ANYNASIS_BLANK);
                     J5_SLCX.setValueLabel(ANYNASIS_BLANK);
-                    J5_SLCX.setFlag("0");
+                    J5_SLCX.setNeedingVerify("0");
                 }
 
             } else {
                 J5_SLCX.setLegalValue(ANYNASIS_BLANK);
                 J5_SLCX.setValueLabel(ANYNASIS_BLANK);
-                J5_SLCX.setFlag(ANYNASIS_BLANK);
+                J5_SLCX.setNeedingVerify(ANYNASIS_BLANK);
             }
         } catch (Exception e) {
             logger.error("处理审理程序异常", e);
@@ -891,33 +891,33 @@ public class LegalDataAddColumnServiceImpl {
                 if (!CommonUtil.hasChar(Court)) {
                     J6_FYDJ.setLegalValue(ANYNASIS_BLANK);
                     J6_FYDJ.setValueLabel(ANYNASIS_BLANK);
-                    J6_FYDJ.setFlag("0");
+                    J6_FYDJ.setNeedingVerify("0");
                 } else if (Court.contains("最高")) {
                     J6_FYDJ.setLegalValue("4");
                     J6_FYDJ.setValueLabel("最高");
-                    J6_FYDJ.setFlag("0");
+                    J6_FYDJ.setNeedingVerify("0");
                 } else if (Court.contains("高级")) {
                     J6_FYDJ.setLegalValue("3");
                     J6_FYDJ.setValueLabel("高级");
-                    J6_FYDJ.setFlag("0");
+                    J6_FYDJ.setNeedingVerify("0");
                 } else if (Court.contains("中级")) {
                     J6_FYDJ.setLegalValue("2");
                     J6_FYDJ.setValueLabel("中级");
-                    J6_FYDJ.setFlag("0");
+                    J6_FYDJ.setNeedingVerify("0");
                 } else if (CommonUtil.contains(new String[] { "区", "县", "市" }, Court)) {
                     J6_FYDJ.setLegalValue("1");
                     J6_FYDJ.setValueLabel("基层");
-                    J6_FYDJ.setFlag("0");
+                    J6_FYDJ.setNeedingVerify("0");
                 } else {
                     J6_FYDJ.setLegalValue("99");
                     J6_FYDJ.setValueLabel("其他");
-                    J6_FYDJ.setFlag("1");
+                    J6_FYDJ.setNeedingVerify("1");
                 }
 
             } else {
                 J6_FYDJ.setLegalValue(ANYNASIS_BLANK);
                 J6_FYDJ.setValueLabel(ANYNASIS_BLANK);
-                J6_FYDJ.setFlag(ANYNASIS_BLANK);
+                J6_FYDJ.setNeedingVerify(ANYNASIS_BLANK);
 
             }
 
@@ -952,34 +952,34 @@ public class LegalDataAddColumnServiceImpl {
                 if (CourtLevel == ANYNASIS_BLANK || Phase == ANYNASIS_BLANK) {
                     J7_AJYXL.setLegalValue(ANYNASIS_BLANK);
                     J7_AJYXL.setValueLabel(ANYNASIS_BLANK);
-                    J7_AJYXL.setFlag("1");
+                    J7_AJYXL.setNeedingVerify("1");
                 } else {
                     if (CourtLevel.equals("4") && Phase.equals("一审")) {
                         J7_AJYXL.setLegalValue("4");
                         J7_AJYXL.setValueLabel("4");
-                        J7_AJYXL.setFlag("0");
+                        J7_AJYXL.setNeedingVerify("0");
                     } else if (CourtLevel.equals("3") && Phase.equals("一审")) {
                         J7_AJYXL.setLegalValue("3");
                         J7_AJYXL.setValueLabel("3");
-                        J7_AJYXL.setFlag("0");
+                        J7_AJYXL.setNeedingVerify("0");
                     } else if (CourtLevel.equals("2") && Phase.equals("一审")) {
                         J7_AJYXL.setLegalValue("2");
                         J7_AJYXL.setValueLabel("2");
-                        J7_AJYXL.setFlag("0");
+                        J7_AJYXL.setNeedingVerify("0");
                     } else if (CourtLevel.equals("1") && Phase.equals("一审")) {
                         J7_AJYXL.setLegalValue("1");
                         J7_AJYXL.setValueLabel("1");
-                        J7_AJYXL.setFlag("0");
+                        J7_AJYXL.setNeedingVerify("0");
                     } else {
                         J7_AJYXL.setLegalValue("0");
                         J7_AJYXL.setValueLabel("0");
-                        J7_AJYXL.setFlag("1");
+                        J7_AJYXL.setNeedingVerify("1");
                     }
                 }
             } else {
                 J7_AJYXL.setLegalValue(ANYNASIS_BLANK);
                 J7_AJYXL.setValueLabel(ANYNASIS_BLANK);
-                J7_AJYXL.setFlag(ANYNASIS_BLANK);
+                J7_AJYXL.setNeedingVerify(ANYNASIS_BLANK);
             }
         } catch (Exception e) {
             logger.error("处理案件影响力异常", e);
@@ -1012,7 +1012,7 @@ public class LegalDataAddColumnServiceImpl {
                 if (SentenceBrief == ANYNASIS_BLANK) {
                     J8_AJJGDKHYX.setLegalValue(ANYNASIS_BLANK);
                     J8_AJJGDKHYX.setValueLabel(ANYNASIS_BLANK);
-                    J8_AJJGDKHYX.setFlag("0");
+                    J8_AJJGDKHYX.setNeedingVerify("0");
 
                 } else if (SentenceBrief != null && !SentenceBrief.contains("、")) {
                     Map<String, Object> paramMap = new HashMap<>();
@@ -1030,27 +1030,27 @@ public class LegalDataAddColumnServiceImpl {
                         String code = (String) resultMap.get("CODE");
                         J8_AJJGDKHYX.setLegalValue(code);
                         if ("99".equals(code)) {
-                            J8_AJJGDKHYX.setFlag("1");
+                            J8_AJJGDKHYX.setNeedingVerify("1");
                             J8_AJJGDKHYX.setValueLabel("无法确定");
                         } else {
-                            J8_AJJGDKHYX.setFlag("0");
+                            J8_AJJGDKHYX.setNeedingVerify("0");
                         }
                     } else {
                         logger.info("***************“EXCEPTION：数据库没有对应的”案件结果对客户的影响“**************");
                         J8_AJJGDKHYX.setLegalValue(ANYNASIS_BLANK);
                         J8_AJJGDKHYX.setValueLabel(ANYNASIS_BLANK);
-                        J8_AJJGDKHYX.setFlag(ANYNASIS_BLANK);
+                        J8_AJJGDKHYX.setNeedingVerify(ANYNASIS_BLANK);
                     }
                 } else {
                     J8_AJJGDKHYX.setLegalValue("99");
                     J8_AJJGDKHYX.setValueLabel("无法确定");
-                    J8_AJJGDKHYX.setFlag("1");
+                    J8_AJJGDKHYX.setNeedingVerify("1");
                 }
 
             } else {
                 J8_AJJGDKHYX.setLegalValue(ANYNASIS_BLANK);
                 J8_AJJGDKHYX.setValueLabel(ANYNASIS_BLANK);
-                J8_AJJGDKHYX.setFlag(ANYNASIS_BLANK);
+                J8_AJJGDKHYX.setNeedingVerify(ANYNASIS_BLANK);
             }
 
         } catch (Exception e) {
@@ -1153,9 +1153,9 @@ public class LegalDataAddColumnServiceImpl {
 
                     J9_KHSSJSZQXJY.setValueLabel(valueLabel);
                     if ("0".equals(value)) {
-                        J9_KHSSJSZQXJY.setFlag("0");
+                        J9_KHSSJSZQXJY.setNeedingVerify("0");
                     } else {
-                        J9_KHSSJSZQXJY.setFlag("1");
+                        J9_KHSSJSZQXJY.setNeedingVerify("1");
                     }
 
                 } else {
@@ -1164,7 +1164,7 @@ public class LegalDataAddColumnServiceImpl {
             } else {
                 J9_KHSSJSZQXJY.setLegalValue(ANYNASIS_BLANK);
                 J9_KHSSJSZQXJY.setValueLabel(ANYNASIS_BLANK);
-                J9_KHSSJSZQXJY.setFlag(ANYNASIS_BLANK);
+                J9_KHSSJSZQXJY.setNeedingVerify(ANYNASIS_BLANK);
             }
         } catch (Exception e) {
             logger.error("客户诉讼角色准确性校验", e);
@@ -1309,7 +1309,7 @@ public class LegalDataAddColumnServiceImpl {
     public void SetParamSpecial(StdLegalDataAdded legalDataAdded, String value, String valuelabel, String flag) {
         legalDataAdded.setLegalValue(value);
         legalDataAdded.setValueLabel(valuelabel);
-        legalDataAdded.setFlag(flag);
+        legalDataAdded.setNeedingVerify(flag);
     }
 
     /**

@@ -27,7 +27,11 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
             //todo
         } else {
             //调用远程接口查询，入库，计算，后返回
-            reqId = dataHandleService.handelData(entName);
+            try {
+                reqId = dataHandleService.handelData(entName);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
         //通过本地标准表计算指标值
         //todo
@@ -39,7 +43,11 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
         String reqId = cloudInfoTimeliness.getReqId();
         if(!cloudInfoTimelinessService.checkTimeliness(cloudInfoTimeliness)) {
             //调用远程接口查询，入库，计算，后返回
-            reqId = dataHandleService.handelData(entName);
+            try {
+                reqId = dataHandleService.handelData(entName);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
 
         //查询数据库记录得到address后返回

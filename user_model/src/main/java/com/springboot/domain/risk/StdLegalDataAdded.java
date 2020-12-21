@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
+import org.springframework.transaction.annotation.Transactional;
 
 @Data
 @TableName("std_legal_data_added")
@@ -24,6 +25,4 @@ public class StdLegalDataAdded extends BaseDomain {
     private String valueLabel;
     @TableField(value = "needingverify")
     private String needingVerify;
-
-    private String flag;
 }
