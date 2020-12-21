@@ -8,7 +8,7 @@ public interface DataHandleService {
      * @param entName
      * @return  reqId
      */
-    public String handelData(String entName);
+    public String handelData(String entName) throws Exception;
 
     /**
      * 通过企业名称计算指标值
@@ -16,4 +16,10 @@ public interface DataHandleService {
      * @return
      */
     public void culQuotas(String reqId);
+
+    /**
+     * 解析司法
+     * @param reqId
+     */
+    public void analysisJustice(String reqId) throws Exception;
 }

@@ -6,27 +6,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.springboot.domain.risk.*;
 import com.springboot.domain.risk.executor.QuotaTask;
-import com.springboot.exception.ServiceException;
 import com.springboot.mapper.*;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.service.*;
 import com.springboot.service.remote.WYRemoteService;
-import com.springboot.util.DateUtils;
 import com.springboot.util.StrUtils;
-import com.springboot.utils.CalculatUtil;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.SqlSplicingUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Service
 public class DataHandleServiceImpl implements DataHandleService {
@@ -115,6 +108,15 @@ public class DataHandleServiceImpl implements DataHandleService {
     private StdLegalEnterpriseExecutedService stdLegalEnterpriseExecutedService;
     @Autowired
     private StdLegalEntUnexecutedService stdLegalEntUnexecutedService;
+
+    @Autowired
+    private JudgeAnynasisMapper judgeAnynasisMapper;
+    @Autowired
+    private LegalDataAddColumnServiceImpl legalDataAddColumnService;
+    @Autowired
+    private StdLegalDataStructuredService stdLegalDataStructuredService;
+    @Autowired
+    private StdLegalDataAddedService stdLegalDataAddedService;
 
     private String grabData(String entName) {
         WYRemoteService.CustomerDataCollectionRequest customerDataCollectionRequest = new WYRemoteService.CustomerDataCollectionRequest();
@@ -319,12 +321,13 @@ public class DataHandleServiceImpl implements DataHandleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String handelData(String entName) {
+    public String handelData(String entName) throws Exception {
         String response = grabData(entName);
         String reqId = UUID.randomUUID().toString();
         createEdsData(reqId, response);
         createStdData(reqId);
-        stdLegalService.createStdLegalMidTable(reqId);
+        analysisJustice(reqId);
+
 
         //设置时效性，并记录日志
         cloudInfoTimelinessService.updateTimeLiness(entName, reqId);
@@ -368,5 +371,19 @@ public class DataHandleServiceImpl implements DataHandleService {
 
         //save all quota values
         quotaValueService.saveQuotaValues(quotaValueList);
+    }
+
+    @Override
+    public void analysisJustice(String reqId) throws Exception {
+        //解析司法引擎
+        LegalDataAddColumnServiceImpl.init_regex(judgeAnynasisMapper);
+        List<StdLegalDataStructured> stdLegalDataStructuredList = stdLegalDataStructuredService.findStdLegalDataStructuredByReqId(reqId);
+        List<StdLegalDataAdded> stdLegalDataAddedList = Lists.newArrayList();
+        for(StdLegalDataStructured legalDataStructured : stdLegalDataStructuredList) {
+            stdLegalDataAddedList.addAll(legalDataAddColumnService.anynasisAndInsert(legalDataStructured ,reqId, null));
+        }
+        stdLegalDataAddedService.saveStdLegalDataAddedValues(stdLegalDataAddedList);
+        //生成中间表
+        stdLegalService.createStdLegalMidTable(reqId);
     }
 }
