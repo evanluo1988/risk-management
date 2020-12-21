@@ -20,12 +20,12 @@
 
     <!-- 案由分类A表 -->
     <select id="getAYFLTabA" resultType="java.util.Map"><!-- 由于是基础数据，不发生变化，允许缓存 -->
-        SELECT trim(CODE) CODE,trim(DESCRIPTION) DESCRIPTION,trim(CONTAINS_KEY) key FROM EDS_SS_ADD_AYFL_A WHERE ENABLED = 'Y'
+        select trim(code) code,trim(description) description, trim(contains_key) `key` from EDS_SS_ADD_AYFL_A WHERE enabled = 'Y'
     </select>
 
     <!-- 案由分类B表 -->
     <select id="getAYFLTabB" resultType="java.util.Map"><!-- 由于是基础数据，不发生变化，允许缓存 -->
-        SELECT trim(CODE) CODE,trim(DESCRIPTION) DESCRIPTION,trim(NOT_CONTAINS_KEY) key FROM EDS_SS_ADD_AYFL_A WHERE ENABLED = 'Y'
+        SELECT trim(code) code,trim(description) description,trim(not_contains_key) `key` FROM eds_ss_add_ayfl_b WHERE enabled = 'Y'
     </select>
 
     <!-- 案件结果对客户的影响，通过客户角色和审理结果获取对应的取值和对应的文字描述 -->
@@ -82,11 +82,13 @@
 
 
     <!-- EDS配置参数表：根据属性名获取对应的属性值 -->
+    <!--
     <select id="getEDSParamByName" parameterType="java.lang.String"
             resultType="java.lang.String" flushCache="true" useCache="true">
         SELECT
         trim(p.PARAM_VALUE) FROM EDS_PARAM p WHERE p.PARAM_NAME = #{name}
     </select>
+    -->
 
     <!-- 审理结果正则匹配基础表 -->
     <select id="JudgeResultBasic" resultType="java.util.Map">
