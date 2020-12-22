@@ -1,9 +1,11 @@
 package com.springboot.service.impl;
 
+import com.google.common.collect.Maps;
 import com.springboot.domain.risk.StdLegalDataAdded;
 import com.springboot.domain.risk.StdLegalDataStructured;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.JudgeAnynasisMapper;
+import com.springboot.service.LegalDataAddColumnService;
 import com.springboot.utils.CNNMFilter;
 import com.springboot.utils.CommonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +29,7 @@ import java.util.regex.Pattern;
  * @fileName:com.v.util.AnalysisJudgeAddColumnServiceImpl.java
  */
 @Service
-public class LegalDataAddColumnServiceImpl {
+public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService {
     @Autowired
     private JudgeAnynasisMapper jaMapper;
 
@@ -47,10 +49,12 @@ public class LegalDataAddColumnServiceImpl {
      * @Autor: ZZX
      * @time:2017-11-1 下午11:54:07
      */
-    public static void init_regex(JudgeAnynasisMapper judgeMapper) {
+    @Override
+    public void initAnalysisJudicialEngine() {
+        Map<String, Object> dataMap = Maps.newHashMap();
         // 1,REGEXMAP_SAJE 涉案金额
-        List<Map<String, Object>> basicList_saje = judgeMapper.CaseMoneyBasic();// 正则基础表
-        List<Map<String, Object>> regexList_saje = judgeMapper.CaseMoneyRegex();// 正则式表
+        List<Map<String, Object>> basicList_saje = jaMapper.CaseMoneyBasic();// 正则基础表
+        List<Map<String, Object>> regexList_saje = jaMapper.CaseMoneyRegex();// 正则式表
         String name = "";
         String value = "";
         for (Map<String, Object> singleMap : regexList_saje) {
@@ -74,8 +78,8 @@ public class LegalDataAddColumnServiceImpl {
         }
 
         // 2,审理结果
-        List<Map<String, Object>> basicList_sljg = judgeMapper.JudgeResultBasic();// 正则基础表
-        List<Map<String, Object>> regexList_sljg = judgeMapper.JudgeResultRegex();// 正则式表
+        List<Map<String, Object>> basicList_sljg = jaMapper.JudgeResultBasic();// 正则基础表
+        List<Map<String, Object>> regexList_sljg = jaMapper.JudgeResultRegex();// 正则式表
         for (Map<String, Object> singleMap : regexList_sljg) {
             name = (String) singleMap.get("name");
             value = (String) singleMap.get("value");
@@ -83,8 +87,8 @@ public class LegalDataAddColumnServiceImpl {
         }
 
         // 3,客户角色准确性校验
-        List<Map<String, Object>> listRoleBasic = judgeMapper.JudgeRoleCheckBasic();
-        List<Map<String, String>> listRoleRegex = judgeMapper.JudgeRoleCheckRegex();
+        List<Map<String, Object>> listRoleBasic = jaMapper.JudgeRoleCheckBasic();
+        List<Map<String, String>> listRoleRegex = jaMapper.JudgeRoleCheckRegex();
         for (Map<String, String> singleMap : listRoleRegex) {
             name = singleMap.get("name");
             value = singleMap.get("regex");

@@ -51,8 +51,8 @@
 
     <!-- 获取诉讼结构数据新增字段表 -->
     <select id="getvarname"  resultType="map"  parameterType="map">
-        select distinct a.LEGALVALUE from std_legal_data_added a ,std_legal_data_structured b
-        where a.REQ_ID =b.REQ_ID and a.VARNAME =#{VARNAME,jdbcType=VARCHAR} and a.SERIALNO =#{SERIALNO,jdbcType=VARCHAR} and a.REQ_ID =#{reqID,jdbcType=VARCHAR}
+        select distinct a.legalvalue from std_legal_data_added a ,std_legal_data_structured b
+        where a.REQ_ID =b.REQ_ID and a.VARNAME =#{varname,jdbcType=VARCHAR} and a.SERIALNO =#{serialno,jdbcType=VARCHAR} and a.REQ_ID =#{reqID,jdbcType=VARCHAR}
         limit 1
     </select>
 

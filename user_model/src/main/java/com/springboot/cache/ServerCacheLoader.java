@@ -26,6 +26,8 @@ public class ServerCacheLoader implements CommandLineRunner {
     private QuotaRuleService quotaRuleService;
     @Autowired
     private QuotaGrandService quotaGrandService;
+    @Autowired
+    private LegalDataAddColumnService legalDataAddColumnService;
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
@@ -47,6 +49,7 @@ public class ServerCacheLoader implements CommandLineRunner {
         ServerCacheUtils.setQuotaList(quotaRuleService.findEnableQuotaRules());
         log.info("loading quota grand list......");
         ServerCacheUtils.setQuotaGrandList(quotaGrandService.findQuotaGrandList());
-
+        log.info("loading analysis of justice data......");
+        legalDataAddColumnService.initAnalysisJudicialEngine();
     }
 }
