@@ -7,6 +7,7 @@ import com.springboot.domain.risk.StdLegalEnterpriseExecutedTemp;
 import com.springboot.mapper.StdLegalDataStructuredTempMapper;
 import com.springboot.mapper.StdLegalEntUnexecutedTempMapper;
 import com.springboot.mapper.StdLegalEnterpriseExecutedTempMapper;
+import com.springboot.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +42,13 @@ public class LitigaFrequency implements QuotaComponent{
 
         //<案件年份，案件数量>
         Map<Integer, Integer> caseMap = Maps.newHashMap();
-        for(StdLegalDataStructuredTemp structured : structuredList) {
+        for(StdLegalDataStructuredTemp structured : Utils.getList(structuredList)) {
             initCaseMap(structured.getCaseDate(), structured.getPdate(), structured.getCaseNo(), caseMap);
         }
-        for(StdLegalEnterpriseExecutedTemp enterpriseExecuted: enterpriseExecutedList) {
+        for(StdLegalEnterpriseExecutedTemp enterpriseExecuted: Utils.getList(enterpriseExecutedList)) {
             initCaseMap(enterpriseExecuted.getCaseCreateTime(), null, enterpriseExecuted.getCaseCode(), caseMap);
         }
-        for(StdLegalEntUnexecutedTemp entUnexecuted : entUnexecutedList) {
+        for(StdLegalEntUnexecutedTemp entUnexecuted : Utils.getList(entUnexecutedList)) {
             initCaseMap(entUnexecuted.getRegDate(), entUnexecuted.getPublishDate(), entUnexecuted.getCaseCode(), caseMap);
         }
         //获取当前时间
@@ -95,11 +96,11 @@ public class LitigaFrequency implements QuotaComponent{
             return pdate.getYear();
         }
         if(caseno != null) {
-            Pattern r = Pattern.compile(REG_PATTERN);
-            Matcher m = r.matcher(caseno);
-            if (m.find( )) {
+            Pattern p = Pattern.compile(REG_PATTERN);
+            Matcher m = p.matcher(caseno);
+            if (m.find()) {
                 String year = m.group(0).trim();
-                return Integer.valueOf(year.substring(1, year.length() -1));
+                return Integer.getInteger(year.substring(1, year.length() -1));
             } else {
                 return null;
             }
