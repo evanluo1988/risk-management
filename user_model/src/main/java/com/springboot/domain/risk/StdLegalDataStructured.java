@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@Accessors(chain = true)
 @TableName("std_legal_data_structured")
 public class StdLegalDataStructured extends BaseDomain {
     @TableField(value = "req_id")

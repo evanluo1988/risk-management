@@ -1,5 +1,6 @@
 package com.springboot.domain.risk;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class StdLegalDataStructuredTemp extends StdLegalDataStructured {
     /**
      * 风险等级
      */
+    @TableField(value = "caserisklevel")
     private String caseRiskLevel;
     private Long stdLegalDataStructuredId;
 }

@@ -2,11 +2,11 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
+import com.springboot.domain.risk.StdLegalEnterpriseExecutedTemp;
 import com.springboot.domain.risk.*;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.StdLegalCasemedianMapper;
 import com.springboot.mapper.StdLegalDataStructuredMapper;
-import com.springboot.mapper.StdLegalEnterpriseExecutedMapper;
 import com.springboot.service.StdLegalDataStructuredService;
 import com.springboot.service.StdLegalEntUnexecutedService;
 import com.springboot.service.StdLegalEnterpriseExecutedService;
@@ -22,11 +22,11 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class StdLegalServiceImpl implements StdLegalService {
@@ -46,15 +46,15 @@ public class StdLegalServiceImpl implements StdLegalService {
     private StdLegalCasemedianServiceImpl stdLegalCasemedianService;
 
     //案件风险等级判断
-    private static final String CASERISKLEVEL_N = "N";
-    private static final String CASERISKLEVEL_L = "L";
-    private static final String CASERISKLEVEL_M1 = "M1";
-    private static final String CASERISKLEVEL_M2 = "M2";
-    private static final String CASERISKLEVEL_M3 = "M3";
-    private static final String CASERISKLEVEL_M4 = "M4";
-    private static final String CASERISKLEVEL_M5 = "M5";
-    private static final String CASERISKLEVEL_M6 = "M6";
-    private static final String CASERISKLEVEL_H = "H";
+    public static final String CASERISKLEVEL_N = "N";
+    public static final String CASERISKLEVEL_L = "L";
+    public static final String CASERISKLEVEL_M1 = "M1";
+    public static final String CASERISKLEVEL_M2 = "M2";
+    public static final String CASERISKLEVEL_M3 = "M3";
+    public static final String CASERISKLEVEL_M4 = "M4";
+    public static final String CASERISKLEVEL_M5 = "M5";
+    public static final String CASERISKLEVEL_M6 = "M6";
+    public static final String CASERISKLEVEL_H = "H";
 
     /**
      * H>M6>M5>M4>M3>M2>M1>L
@@ -821,7 +821,7 @@ public class StdLegalServiceImpl implements StdLegalService {
 
         /**
          * 3.利用上一步保留的案件记录，再清洗各司法表内的重复记录：
-         * ①保留各表内distinct（非空【案号】）& 最高（【@修订案件风险等级】）的案件记录。     // 每个表内的  非空案号的  最高风险等级的n条保留
+         * ①保留各表内distinct（非空【案号】）& 最高（【@修订案件风险等级】）的案件记录。     // 每个案号组风险等级最高的n条保留
          * 注：各表统计采用的【案件风险等级】（风险等级由高到低顺序：H>M6>M5>M4>M3>M2>M1>L）
          */
         calcRiskLevelOfS1(reqId, copyS1);
@@ -870,7 +870,7 @@ public class StdLegalServiceImpl implements StdLegalService {
                     List<StdLegalDataStructuredTemp> v = entry.getValue();
                     if (v.size()>1){
                         String maxPtype = v.stream().map(StdLegalDataStructuredTemp::getPtype).max(Comparator.comparingInt(Integer::valueOf)).get();
-                        List<StdLegalDataStructuredTemp> notMaxPtypeDatas = v.stream().filter(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype().equalsIgnoreCase(maxPtype)).collect(Collectors.toList());
+                        List<StdLegalDataStructuredTemp> notMaxPtypeDatas = v.stream().filter(stdLegalDataStructuredTemp -> !stdLegalDataStructuredTemp.getPtype().equalsIgnoreCase(maxPtype)).collect(Collectors.toList());
                         if (!CollectionUtils.isEmpty(notMaxPtypeDatas)){
                             copyS1.removeAll(notMaxPtypeDatas);
                         }
@@ -1033,9 +1033,8 @@ public class StdLegalServiceImpl implements StdLegalService {
             Double numberOfYear = null;
             LocalDate caseCreateTime = stdLegalEnterpriseExecutedTemp.getCaseCreateTime();
             if (Objects.nonNull(caseCreateTime)) {
-                int year = LocalDate.now().getYear();
-                int year1 = caseCreateTime.getYear();
-                numberOfYear = ((double) (year - year1)) / 365;
+                long days = Duration.between(LocalDate.now(), caseCreateTime).toDays();
+                numberOfYear = (double)days / 365;
             }
 
             // 风险等级
