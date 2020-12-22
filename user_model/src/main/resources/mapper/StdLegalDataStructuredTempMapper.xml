@@ -60,17 +60,38 @@
         <result column="sentenceeffect" property="sentenceEffect" />
     </resultMap>
 
+    <resultMap id="LitigaInitiativeResultMap" type="com.springboot.model.LitigaInitiativeModel">
+        <result column="id" property="id" />
+        <result column="req_id" property="reqId" />
+        <result column="plaintiff" property="plaintiff" />
+        <result column="phase" property="phase" />
+    </resultMap>
+
     <sql id="Verdict_Column_List" >
         sldst.id, sldst.req_id, sldst.ptype, slct.caseresult, slct.sentenceeffect
     </sql>
 
+    <sql id="Litiga_Column_List" >
+        sldst.id, sldst.req_id, sldst.plaintiff, slct.phase
+    </sql>
+
     <!-- 获取判决结果 判决类案件(ptype=16且已结案) -->
-    <select id="getVerdictResult"  resultMap="BaseResultMap" parameterType="String">
+    <select id="getVerdictResult"  resultMap="VerdictResultMap" parameterType="String">
         SELECT <include refid="Verdict_Column_List"/> FROM std_legal_data_structured_temp sldst
         LEFT JOIN std_legal_casemedian_temp slct ON sldst.serialno = slct.serialno
         WHERE sldst.ptype = '16'
         AND slct.caseresult = '已结案'
         AND (slct.sentenceeffect = '99' OR slct.sentenceeffect = '0' OR slct.sentenceeffect = '1')
+        AND sldst.req_id = #{reqId}
+    </select>
+
+
+    <!-- 获取一审记录  CASEMEDIAN.审理程序【PHASE】='一审' 仅统计判决类案件(ptype=14,15,16) -->
+    <select id="getLitigaInitiativeResult"  resultMap="LitigaInitiativeResultMap" parameterType="String">
+        SELECT <include refid="Litiga_Column_List"/> FROM std_legal_data_structured_temp sldst
+        LEFT JOIN std_legal_casemedian_temp slct ON sldst.serialno = slct.serialno
+        WHERE (sldst.ptype = '14' OR sldst.ptype = '15' OR sldst.ptype = '16')
+        AND slct.phase = '一审'
         AND sldst.req_id = #{reqId}
     </select>
 
