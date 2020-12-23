@@ -5,6 +5,7 @@ import com.springboot.domain.Area;
 import com.springboot.domain.Menu;
 import com.springboot.domain.risk.EtlTranRule;
 import com.springboot.domain.risk.Quota;
+import com.springboot.domain.risk.QuotaDimension;
 import com.springboot.domain.risk.QuotaGrand;
 import com.springboot.model.RolePerm;
 import com.springboot.model.StdTable;
@@ -51,6 +52,11 @@ public class ServerCacheUtils {
     private static Map<String, List<QuotaGrand>> quotaGrandMap;
 
     /**
+     * 指标维度
+     */
+    private static List<QuotaDimension> quotaDimensionList;
+
+    /**
      * 司法解析数据
      */
 //    private static Map<String, Object> judicialAnalysisMap = Maps.newHashMap();
@@ -78,6 +84,22 @@ public class ServerCacheUtils {
 //    public static void setJudicialAnalysisData(Map<String,Object> map) {
 //        ServerCacheUtils.judicialAnalysisMap = map;
 //    }
+
+    public static void setQuotaDimensionList(List<QuotaDimension> quotaDimensionList) {
+        ServerCacheUtils.quotaDimensionList = quotaDimensionList;
+    }
+
+    public static QuotaDimension getQuotaDimensionById(Long id) {
+        if(id == null) {
+            return null;
+        }
+        for(QuotaDimension quotaDimension : quotaDimensionList) {
+            if(id.equals(quotaDimension.getId())) {
+                return quotaDimension;
+            }
+        }
+        return null;
+    }
 
     /**
      *

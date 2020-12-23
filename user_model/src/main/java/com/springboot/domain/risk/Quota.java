@@ -60,5 +60,10 @@ public class Quota extends BaseDomain {
      */
     @TableField(value = "second_level_id")
     private String secondLevelId;
+    /**
+     * 时段
+     */
+    @TableField(value = "time_interval")
+    private String timeInterval;
 
 }

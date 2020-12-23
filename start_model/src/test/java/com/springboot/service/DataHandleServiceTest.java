@@ -287,4 +287,9 @@ public class DataHandleServiceTest extends ApplicationTest {
         dataHandleService.analysisJustice(reqId);
     }
 
+    @Test
+    public void testGetEntHealthReportVo() {
+        String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
+        dataHandleService.getEntHealthReportVo(reqId);
+    }
 }

@@ -1,8 +1,11 @@
 package com.springboot.vo.risk;
 
+import lombok.Data;
+
 /**
  * 行政处罚
  */
+@Data
 public class EntCaseinfoVo {
     /**
      * 处罚决定书文号

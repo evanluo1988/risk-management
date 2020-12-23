@@ -32,53 +32,45 @@ public class EntBasicInformationVo {
      */
     private String ancheYear;
     /**
-     * 成立日期
+     * 行业
      */
-    private String esDate;
+    private String industry;
     /**
      * 注销日期
      */
     private String canDate;
     /**
-     * 经营状态
+     * 经营期限自
      */
-    private String regStatus;
+    private String openFrom;
     /**
      * 吊销日期
      */
     private String revDate;
     /**
-     * 行业
+     * 工商注册号
      */
-    private String industry;
+    private String regNo;
     /**
      * 员工人数
      */
     private String empNum;
     /**
-     * 经营期限自
+     * 统一社会信用代码
      */
-    private String openFrom;
+    private String creditCode;
     /**
      * 经营期限至
      */
     private String openTo;
     /**
-     * 工商注册号
+     * 注册地址
      */
-    private String regNo;
-    /**
-     * 统一社会信用代码
-     */
-    private String creditCode;
+    private String address;
     /**
      * 组织机构代码
      */
     private String orgCode;
-    /**
-     * 注册地址
-     */
-    private String address;
     /**
      * 登记机关
      */

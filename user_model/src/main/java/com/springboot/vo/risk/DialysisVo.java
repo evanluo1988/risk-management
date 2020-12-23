@@ -8,6 +8,10 @@ import lombok.Data;
 @Data
 public class DialysisVo {
     /**
+     * 指标ID
+     */
+    private Long quotaId;
+    /**
      * 评价雷达
      */
     private String evaluationRadar;

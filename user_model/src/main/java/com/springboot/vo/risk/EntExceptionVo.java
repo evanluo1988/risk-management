@@ -1,8 +1,11 @@
 package com.springboot.vo.risk;
 
+import lombok.Data;
+
 /**
  * 企业异常名录
  */
+@Data
 public class EntExceptionVo {
     /**
      * 企业名称

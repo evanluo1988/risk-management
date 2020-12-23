@@ -1,8 +1,11 @@
 package com.springboot.vo.risk;
 
+import lombok.Data;
+
 /**
  * 股权冻结
  */
+@Data
 public class EntSharesfrostVo {
     /**
      * 冻结文号

@@ -6,6 +6,7 @@ import com.springboot.service.CloudInfoTimelinessService;
 import com.springboot.service.DataHandleService;
 import com.springboot.service.EdsGsBasicService;
 import com.springboot.service.RiskDetectionService;
+import com.springboot.vo.risk.EntHealthReportVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
     private EdsGsBasicService edsGsBasicService;
 
     @Override
-    public void checkByEntName(String entName) {
+    public EntHealthReportVo checkByEntName(String entName) {
         CloudInfoTimeliness cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
         String reqId = cloudInfoTimeliness.getReqId();
         if(cloudInfoTimelinessService.checkTimeliness(cloudInfoTimeliness)) {
@@ -34,7 +35,11 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
             }
         }
         //通过本地标准表计算指标值
+        dataHandleService.culQuotas(reqId);
+
         //todo
+
+        return null;
     }
 
     @Override

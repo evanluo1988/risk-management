@@ -3,6 +3,7 @@ package com.springboot.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.domain.risk.QuotaValue;
 import com.springboot.mapper.QuotaValueMapper;
+import com.springboot.model.QuotaModel;
 import com.springboot.service.QuotaValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,10 @@ public class QuotaValueServiceImpl extends ServiceImpl<QuotaValueMapper, QuotaVa
             return;
         }
         saveBatch(quotaValueList);
+    }
+
+    @Override
+    public List<QuotaModel> getQuotaList(String reqId) {
+        return quotaValueMapper.getQuotaModels(reqId);
     }
 }

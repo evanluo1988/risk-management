@@ -1,5 +1,7 @@
 package com.springboot.service;
 
+import com.springboot.vo.risk.EntHealthReportVo;
+
 public interface DataHandleService {
     /**
      * 1.根据企业名称获取工商司法数据
@@ -22,4 +24,11 @@ public interface DataHandleService {
      * @param reqId
      */
     public void analysisJustice(String reqId) throws Exception;
+
+    /**
+     * 通过指标获取企业健康报告
+     * @param reqId
+     * @return
+     */
+    public EntHealthReportVo getEntHealthReportVo(String reqId);
 }
