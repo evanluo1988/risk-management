@@ -7,10 +7,7 @@ import com.springboot.domain.risk.*;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.StdLegalCasemedianMapper;
 import com.springboot.mapper.StdLegalDataStructuredMapper;
-import com.springboot.service.StdLegalDataStructuredService;
-import com.springboot.service.StdLegalEntUnexecutedService;
-import com.springboot.service.StdLegalEnterpriseExecutedService;
-import com.springboot.service.StdLegalService;
+import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
 import com.springboot.util.DateUtils;
 import com.springboot.utils.CalculatUtil;
@@ -18,11 +15,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -41,9 +38,17 @@ public class StdLegalServiceImpl implements StdLegalService {
     private StdLegalEntUnexecutedService stdLegalEntUnexecutedService;
     @Autowired
     private StdLegalCasemedianMapper stdLegalCasemedianMapper;
-
     @Autowired
     private StdLegalCasemedianServiceImpl stdLegalCasemedianService;
+    @Autowired
+    private StdLegalCasemedianTempService stdLegalCasemedianTempService;
+    @Autowired
+    private StdLegalDataStructuredTempService stdLegalDataStructuredTempService;
+    @Autowired
+    private StdLegalEnterpriseExecutedTempService stdLegalEnterpriseExecutedTempService;
+    @Autowired
+    private StdLegalEntUnexecutedTempService stdLegalEntUnexecutedTempService;
+
 
     //案件风险等级判断
     public static final String CASERISKLEVEL_N = "N";
@@ -60,6 +65,8 @@ public class StdLegalServiceImpl implements StdLegalService {
      * H>M6>M5>M4>M3>M2>M1>L
      **/
     public static final List<String> CASE_RISK_LEVEL_STAGE = Lists.newArrayList(CASERISKLEVEL_L, CASERISKLEVEL_M1, CASERISKLEVEL_M2, CASERISKLEVEL_M3, CASERISKLEVEL_M4, CASERISKLEVEL_M5, CASERISKLEVEL_M6, CASERISKLEVEL_H);
+
+    public static final List<String> P_TYPES = Lists.newArrayList("14", "15", "16");
 
     @Override
     public void createStdLegalMidTable(String reqId) {
@@ -673,7 +680,7 @@ public class StdLegalServiceImpl implements StdLegalService {
                     caseriskLevel = CASERISKLEVEL_L;
                 }
             }
-        } else if (StringUtils.isEmpty(sentenceEffect)|| CalculatUtil.myEquals("1", sentenceEffect) || CalculatUtil.myEquals("99", sentenceEffect)) {
+        } else if (StringUtils.isEmpty(sentenceEffect) || CalculatUtil.myEquals("1", sentenceEffect) || CalculatUtil.myEquals("99", sentenceEffect)) {
             if (referMoney != null && 0 <= referMoney.doubleValue() && referMoney.doubleValue() < 300000) {
                 //条件1
                 if (intervalYear != null && (intervalYear >= 0 && intervalYear < 0.25)) {
@@ -771,92 +778,46 @@ public class StdLegalServiceImpl implements StdLegalService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void preStdSsDatas(String reqId) {
-        List<StdLegalDataStructuredTemp> set1 = ConvertUtils.sourceToTarget(stdLegalDataStructuredService.findStdLegalDataStructuredByReqId(reqId), StdLegalDataStructuredTemp.class);
-        set1.forEach(stdLegalDataStructuredTemp -> {
-            Long id = stdLegalDataStructuredTemp.getId();
-            stdLegalDataStructuredTemp.setStdLegalDataStructuredId(id);
-            stdLegalDataStructuredTemp.setId(null);
-        });
-
-        List<StdLegalEnterpriseExecutedTemp> set2 = ConvertUtils.sourceToTarget(stdLegalEnterpriseExecutedService.findStdLegalEnterpriseExecutedByReqId(reqId), StdLegalEnterpriseExecutedTemp.class);
-        set2.forEach(stdLegalEnterpriseExecutedTemp -> {
-            Long id = stdLegalEnterpriseExecutedTemp.getId();
-            stdLegalEnterpriseExecutedTemp.setStdLegalEnterpriseExecutedId(id);
-            stdLegalEnterpriseExecutedTemp.setId(null);
-        });
-
-        List<StdLegalEntUnexecutedTemp> set3 = ConvertUtils.sourceToTarget(stdLegalEntUnexecutedService.findStdLegalEntUnexecutedByReqId(reqId), StdLegalEntUnexecutedTemp.class);
-        set3.forEach(stdLegalEntUnexecutedTemp -> {
-            Long id = stdLegalEntUnexecutedTemp.getId();
-            stdLegalEntUnexecutedTemp.setStdLegalEntUnexecutedId(id);
-            stdLegalEntUnexecutedTemp.setId(null);
-        });
-
-        /**
-         * 1.为空【案号】的案件记录，不做清洗。
-         */
-        List<StdLegalDataStructuredTemp> nullCaseNoInS1 = set1.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getCaseNo())).collect(Collectors.toList());
-        List<StdLegalEnterpriseExecutedTemp> nullCaseNoInS2 = set2.stream().filter(stdLegalEnterpriseExecutedTemp -> Objects.isNull(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList());
-        List<StdLegalEntUnexecutedTemp> nullCaseNoInS3 = set3.stream().filter(stdLegalEntUnexecutedTemp -> Objects.isNull(stdLegalEntUnexecutedTemp.getCaseCode())).collect(Collectors.toList());
+        List<StdLegalDataStructuredTemp> set1 = getS1(reqId);
+        List<StdLegalEnterpriseExecutedTemp> set2 = getS2(reqId);
+        List<StdLegalEntUnexecutedTemp> set3 = getS3(reqId);
 
         List<StdLegalDataStructuredTemp> copyS1 = Lists.newArrayList(set1);
         List<StdLegalEnterpriseExecutedTemp> copyS2 = Lists.newArrayList(set2);
         List<StdLegalEntUnexecutedTemp> copyS3 = Lists.newArrayList(set3);
 
+        calcRiskLevel(reqId,copyS1,copyS2,copyS3);
+
+        /**
+         * 1.为空【案号】的案件记录，不做清洗。
+         */
+        List<StdLegalDataStructuredTemp> nullCaseNoInS1 = copyS1.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getCaseNo())).collect(Collectors.toList());
+        List<StdLegalEnterpriseExecutedTemp> nullCaseNoInS2 = copyS2.stream().filter(stdLegalEnterpriseExecutedTemp -> Objects.isNull(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList());
+        List<StdLegalEntUnexecutedTemp> nullCaseNoInS3 = copyS3.stream().filter(stdLegalEntUnexecutedTemp -> Objects.isNull(stdLegalEntUnexecutedTemp.getCaseCode())).collect(Collectors.toList());
+
         copyS1.removeAll(nullCaseNoInS1);
         copyS2.removeAll(nullCaseNoInS2);
         copyS3.removeAll(nullCaseNoInS3);
+
         /**
          * 2.清洗不同司法表间的重复记录：
          * ①若set1与set2存在非空【案号】一致的案件记录，则保留set1的案件记录；    //清理s2
          * ②若set1与set3存在非空【案号】一致的案件记录，则保留set3的案件记录；    //清理s1
          * ③若set2与set3存在非空【案号】一致的案件记录，则保留set3的案件记录。    //清理s2
          */
-        final Set<String> caseNoInS1 = copyS1.stream().map(StdLegalDataStructuredTemp::getCaseNo).collect(Collectors.toSet());
-        copyS2 = copyS2.stream().filter(stdLegalEnterpriseExecutedTemp -> !caseNoInS1.contains(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList());
-
-        final Set<String> caseNoInS3 = copyS3.stream().map(StdLegalEntUnexecutedTemp::getCaseCode).collect(Collectors.toSet());
-        copyS1 = copyS1.stream().filter(stdLegalDataStructuredTemp -> !caseNoInS3.contains(stdLegalDataStructuredTemp.getCaseNo())).collect(Collectors.toList());
-        copyS2 = copyS2.stream().filter(stdLegalEnterpriseExecutedTemp -> !caseNoInS3.contains(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList());
+        cleanRepeat2(copyS1, copyS2, copyS3);
 
         /**
          * 3.利用上一步保留的案件记录，再清洗各司法表内的重复记录：
          * ①保留各表内distinct（非空【案号】）& 最高（【@修订案件风险等级】）的案件记录。     // 每个案号组风险等级最高的n条保留
          * 注：各表统计采用的【案件风险等级】（风险等级由高到低顺序：H>M6>M5>M4>M3>M2>M1>L）
          */
-        calcRiskLevelOfS1(reqId, copyS1);
-        calcRiskLevelOfS2(copyS2);
-        calcRiskLevelOfS3(copyS3);
-
-        //按照案号分组
-        Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseNoMap = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getCaseNo));
-        Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2GroupByCaseNoMap = copyS2.stream().collect(Collectors.groupingBy(StdLegalEnterpriseExecutedTemp::getCaseCode));
-        Map<String, List<StdLegalEntUnexecutedTemp>> copyS3GroupByCaseNoMap = copyS3.stream().collect(Collectors.groupingBy(StdLegalEntUnexecutedTemp::getCaseCode));
-
-        //每个案号组保留最高风险等级的记录
-        List<StdLegalDataStructuredTemp> copyS1FilterRiskLevel = Lists.newArrayList();
-        copyS1GroupByCaseNoMap.forEach((k,v)->{
-            String maxCaseRiskLevel = v.stream().map(StdLegalDataStructuredTemp::getCaseRiskLevel).max(Comparator.comparingInt(CASE_RISK_LEVEL_STAGE::indexOf)).get();
-            copyS1FilterRiskLevel.addAll(v.stream().filter(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getCaseRiskLevel().equalsIgnoreCase(maxCaseRiskLevel)).collect(Collectors.toList()));
-        });
-        copyS1 = copyS1FilterRiskLevel;
-
-        List<StdLegalEnterpriseExecutedTemp> copyS2FilterRiskLevel = Lists.newArrayList();
-        copyS2GroupByCaseNoMap.forEach((k,v)->{
-            String maxCaseRiskLevel = v.stream().map(StdLegalEnterpriseExecutedTemp::getCaseRiskLevel).max(Comparator.comparingInt(CASE_RISK_LEVEL_STAGE::indexOf)).get();
-            copyS2FilterRiskLevel.addAll(v.stream().filter(stdLegalEnterpriseExecutedTemp -> stdLegalEnterpriseExecutedTemp.getCaseRiskLevel().equalsIgnoreCase(maxCaseRiskLevel)).collect(Collectors.toList()));
-        });
-        copyS2 = copyS2FilterRiskLevel;
-
-        List<StdLegalEntUnexecutedTemp> copyS3FilterRiskLevel = Lists.newArrayList();
-        copyS3GroupByCaseNoMap.forEach((k,v)->{
-            String maxCaseRiskLevel = v.stream().map(StdLegalEntUnexecutedTemp::getCaseRiskLevel).max(Comparator.comparingInt(CASE_RISK_LEVEL_STAGE::indexOf)).get();
-            copyS3FilterRiskLevel.addAll(v.stream().filter(stdLegalEntUnexecutedTemp -> stdLegalEntUnexecutedTemp.getCaseRiskLevel().equalsIgnoreCase(maxCaseRiskLevel)).collect(Collectors.toList()));
-        });
-        copyS3 = copyS3FilterRiskLevel;
+        cleanRepeat3(copyS1, copyS2, copyS3);
 
         /**
+         * set1
          * ②若set1存在多个非空【案号】且【案件风险等级】均一致案件记录，处理规则如下：
          * if 存在【PTYPE】=14 or 15 or 16的 至少两条案件记录，则优先保留顺序：16 > 15> 14
          * else if 【PTYPE】一致 ，则优先保留 案件性质/案件类型【DOCUCLASS】不为空的案件记录
@@ -864,141 +825,225 @@ public class StdLegalServiceImpl implements StdLegalService {
          * else if 【PTYPE】一致 & 案件性质/案件类型【DOCUCLASS】 & 立案时间/开庭时间/案件日期/裁定时间【CASEDATE】，随机保留一条案件记录
          * esle 均保留案件记录
          */
-        if (condition0(copyS1)){
-            if (condition1(copyS1)) {
-                Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMap = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getCaseRiskLevel));
-                for (Map.Entry<String, List<StdLegalDataStructuredTemp>> entry : copyS1GroupByCaseRiskLevelMap.entrySet()) {
-                    List<StdLegalDataStructuredTemp> v = entry.getValue();
-                    if (v.size()>1){
-                        String maxPtype = v.stream().map(StdLegalDataStructuredTemp::getPtype).max(Comparator.comparingInt(Integer::valueOf)).get();
-                        List<StdLegalDataStructuredTemp> notMaxPtypeDatas = v.stream().filter(stdLegalDataStructuredTemp -> !stdLegalDataStructuredTemp.getPtype().equalsIgnoreCase(maxPtype)).collect(Collectors.toList());
-                        if (!CollectionUtils.isEmpty(notMaxPtypeDatas)){
-                            copyS1.removeAll(notMaxPtypeDatas);
-                        }
-                    }
-                }
-            }
+        cleanS1(copyS1);
 
-            if (condition2(copyS1)) {
-                Map<String, List<StdLegalDataStructuredTemp>> groupByPtype = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getPtype));
-                for (Map.Entry<String, List<StdLegalDataStructuredTemp>> entry : groupByPtype.entrySet()) {
-                    List<StdLegalDataStructuredTemp> v = entry.getValue();
-                    if (v.size()>1){
-                        List<StdLegalDataStructuredTemp> docuClassIsNullData = v.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getDocuClass())).collect(Collectors.toList());
-                        if (!CollectionUtils.isEmpty(docuClassIsNullData)){
-                            copyS1.removeAll(docuClassIsNullData);
-                        }
-                    }
-                }
-            }
-
-            if (condition3(copyS1)) {
-                Map<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclass = copyS1.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype() + stdLegalDataStructuredTemp.getDocuClass()));
-                for (Map.Entry<String, List<StdLegalDataStructuredTemp>> entry : groupByPtypeAndDocuclass.entrySet()) {
-                    List<StdLegalDataStructuredTemp> v = entry.getValue();
-                    if (v.size()>1){
-                        List<StdLegalDataStructuredTemp> caseDateIsNullDatas = v.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getCaseDate())).collect(Collectors.toList());
-                        if (!CollectionUtils.isEmpty(caseDateIsNullDatas)){
-                            copyS1.removeAll(caseDateIsNullDatas);
-                        }
-                    }
-                }
-            }
-
-            if (condition4(copyS1)) {
-                Map<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclassAndCaseDate = copyS1.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype() + stdLegalDataStructuredTemp.getDocuClass() + stdLegalDataStructuredTemp.getCaseDate()));
-                for (Map.Entry<String, List<StdLegalDataStructuredTemp>> entry : groupByPtypeAndDocuclassAndCaseDate.entrySet()) {
-                    List<StdLegalDataStructuredTemp> v = entry.getValue();
-                    if (v.size()>1){
-                        v.remove(v.get(RandomUtils.nextInt(v.size())));
-                        if (!CollectionUtils.isEmpty(v)){
-                            copyS1.removeAll(v);
-                        }
-                    }
-                }
-            }
-        }
         /**
          * ③若set2或set3各自表内存在多个非空【案号】且【案件风险等级】均一致案件记录，处理规则如下：
          * else if 优先取各自表内【立案时间】有值的案件记录
          * else 随机保留一条"
          */
-        // set2
-        Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2GroupByRiskLevel = copyS2.stream().collect(Collectors.groupingBy(StdLegalEnterpriseExecutedTemp::getCaseRiskLevel));
-        for (Map.Entry<String, List<StdLegalEnterpriseExecutedTemp>> entry : copyS2GroupByRiskLevel.entrySet()) {
-            List<StdLegalEnterpriseExecutedTemp> v = entry.getValue();
-            if (v.size()>1){
-                List<StdLegalEnterpriseExecutedTemp> nullCaseCreateTimeDatas = v.stream().filter(stdLegalEnterpriseExecutedTemp -> Objects.isNull(stdLegalEnterpriseExecutedTemp.getCaseCreateTime())).collect(Collectors.toList());
-                if (v.size()==nullCaseCreateTimeDatas.size()){
-                    //随机保留一条
-                    v.remove(v.get(RandomUtils.nextInt(v.size())));
-                    if (!CollectionUtils.isEmpty(v)){
-                        copyS2.removeAll(v);
-                    }
-                }else {
-                    // 优先取各自表内【立案时间】有值的案件记录
-                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)){
-                        copyS2.removeAll(nullCaseCreateTimeDatas);
-                    }
-                }
-            }
-        }
+        clearS2(copyS2);
+        clearS3(copyS3);
+        //获取中间表临时表数据
+        List<StdLegalCasemedianTemp> stdLegalCasemedianTempList = getStdLegalCasemedianTemps(reqId, nullCaseNoInS1, copyS1);
+        //保存结果
+        saveTemp(stdLegalCasemedianTempList, copyS1, nullCaseNoInS1, copyS2, nullCaseNoInS2, copyS3, nullCaseNoInS3);
+    }
 
-        // set3
+    public void calcRiskLevel(String reqId, List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
+        calcRiskLevelOfS1(reqId, copyS1);
+        calcRiskLevelOfS2(copyS2);
+        calcRiskLevelOfS3(copyS3);
+    }
+
+    private List<StdLegalEntUnexecutedTemp> getS3(String reqId) {
+        List<StdLegalEntUnexecutedTemp> set3 = ConvertUtils.sourceToTarget(stdLegalEntUnexecutedService.findStdLegalEntUnexecutedByReqId(reqId), StdLegalEntUnexecutedTemp.class);
+        set3.forEach(stdLegalEntUnexecutedTemp -> {
+            Long id = stdLegalEntUnexecutedTemp.getId();
+            stdLegalEntUnexecutedTemp.setStdLegalEntUnexecutedId(id);
+            stdLegalEntUnexecutedTemp.setId(null);
+        });
+        return set3;
+    }
+
+    private List<StdLegalEnterpriseExecutedTemp> getS2(String reqId) {
+        List<StdLegalEnterpriseExecutedTemp> set2 = ConvertUtils.sourceToTarget(stdLegalEnterpriseExecutedService.findStdLegalEnterpriseExecutedByReqId(reqId), StdLegalEnterpriseExecutedTemp.class);
+        set2.forEach(stdLegalEnterpriseExecutedTemp -> {
+            Long id = stdLegalEnterpriseExecutedTemp.getId();
+            stdLegalEnterpriseExecutedTemp.setStdLegalEnterpriseExecutedId(id);
+            stdLegalEnterpriseExecutedTemp.setId(null);
+        });
+        return set2;
+    }
+
+    private List<StdLegalDataStructuredTemp> getS1(String reqId) {
+        List<StdLegalDataStructuredTemp> set1 = ConvertUtils.sourceToTarget(stdLegalDataStructuredService.findStdLegalDataStructuredByReqId(reqId), StdLegalDataStructuredTemp.class);
+        set1.forEach(stdLegalDataStructuredTemp -> {
+            Long id = stdLegalDataStructuredTemp.getId();
+            stdLegalDataStructuredTemp.setStdLegalDataStructuredId(id);
+            stdLegalDataStructuredTemp.setId(null);
+        });
+        return set1;
+    }
+
+    private List<StdLegalCasemedianTemp> getStdLegalCasemedianTemps(String reqId, List<StdLegalDataStructuredTemp> nullCaseNoInS1, List<StdLegalDataStructuredTemp> copyS1) {
+        List<String> s1SerialNos = nullCaseNoInS1.stream().map(StdLegalDataStructuredTemp::getSerialno).collect(Collectors.toList());
+        s1SerialNos.addAll(copyS1.stream().map(StdLegalDataStructuredTemp::getSerialno).collect(Collectors.toList()));
+        List<StdLegalCasemedianTemp> stdLegalCasemedianTempList = ConvertUtils.sourceToTarget(stdLegalCasemedianService.findStdLegalCasemedianBySerialNos(reqId, s1SerialNos), StdLegalCasemedianTemp.class);
+        stdLegalCasemedianTempList.forEach(stdLegalCasemedianTemp -> {
+            Long id = stdLegalCasemedianTemp.getId();
+            stdLegalCasemedianTemp.setStdLegalCasemedianId(id);
+            stdLegalCasemedianTemp.setId(null);
+        });
+        return stdLegalCasemedianTempList;
+    }
+
+    private void saveTemp(List<StdLegalCasemedianTemp> stdLegalCasemedianTempList, List<StdLegalDataStructuredTemp> copyS1, List<StdLegalDataStructuredTemp> nullCaseNoInS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEnterpriseExecutedTemp> nullCaseNoInS2, List<StdLegalEntUnexecutedTemp> copyS3, List<StdLegalEntUnexecutedTemp> nullCaseNoInS3) {
+        stdLegalCasemedianTempService.saveBatch(stdLegalCasemedianTempList);
+        copyS1.addAll(nullCaseNoInS1);
+        stdLegalDataStructuredTempService.saveBatch(copyS1);
+        copyS2.addAll(nullCaseNoInS2);
+        stdLegalEnterpriseExecutedTempService.saveBatch(copyS2);
+        copyS3.addAll(nullCaseNoInS3);
+        stdLegalEntUnexecutedTempService.saveBatch(copyS3);
+    }
+
+    public void clearS3(List<StdLegalEntUnexecutedTemp> copyS3) {
         Map<String, List<StdLegalEntUnexecutedTemp>> copyS3GroupByRiskLevel = copyS3.stream().collect(Collectors.groupingBy(StdLegalEntUnexecutedTemp::getCaseRiskLevel));
         for (Map.Entry<String, List<StdLegalEntUnexecutedTemp>> entry : copyS3GroupByRiskLevel.entrySet()) {
             List<StdLegalEntUnexecutedTemp> v = entry.getValue();
-            if (v.size()>1){
+            if (v.size() > 1) {
                 List<StdLegalEntUnexecutedTemp> nullCaseCreateTimeDatas = v.stream().filter(stdLegalEntUnexecutedTemp -> Objects.isNull(stdLegalEntUnexecutedTemp.getRegDate())).collect(Collectors.toList());
-                if (v.size()==nullCaseCreateTimeDatas.size()){
+                if (v.size() == nullCaseCreateTimeDatas.size()) {
                     //随机保留一条
                     v.remove(v.get(RandomUtils.nextInt(v.size())));
-                    if (!CollectionUtils.isEmpty(v)){
+                    if (!CollectionUtils.isEmpty(v)) {
                         copyS3.removeAll(v);
                     }
-                }else {
+                } else {
                     // 优先取各自表内【立案时间】有值的案件记录
-                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)){
+                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)) {
                         copyS3.removeAll(nullCaseCreateTimeDatas);
                     }
                 }
             }
         }
-
-        System.out.println("filter result is next line : ===================================");
-        // TODO: 2020/12/21 merge and save
-        System.out.println(copyS1);
-        System.out.println(nullCaseNoInS1);
-
-        System.out.println(copyS2);
-        System.out.println(nullCaseNoInS2);
-
-        System.out.println(copyS3);
-        System.out.println(nullCaseNoInS3);
     }
 
-    private boolean condition4(List<StdLegalDataStructuredTemp> copyS1) {
-        // else if 【PTYPE】一致 & 案件性质/案件类型【DOCUCLASS】 & 立案时间/开庭时间/案件日期/裁定时间【CASEDATE】，随机保留一条案件记录
-        Map<String, List<StdLegalDataStructuredTemp>> collect = copyS1.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype() + stdLegalDataStructuredTemp.getDocuClass() + stdLegalDataStructuredTemp.getCaseDate()));
-        return copyS1.size() > collect.size();
+    public void clearS2(List<StdLegalEnterpriseExecutedTemp> copyS2) {
+        Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2GroupByRiskLevel = copyS2.stream().collect(Collectors.groupingBy(StdLegalEnterpriseExecutedTemp::getCaseRiskLevel));
+        for (Map.Entry<String, List<StdLegalEnterpriseExecutedTemp>> entry : copyS2GroupByRiskLevel.entrySet()) {
+            List<StdLegalEnterpriseExecutedTemp> v = entry.getValue();
+            if (v.size() > 1) {
+                List<StdLegalEnterpriseExecutedTemp> nullCaseCreateTimeDatas = v.stream().filter(stdLegalEnterpriseExecutedTemp -> Objects.isNull(stdLegalEnterpriseExecutedTemp.getCaseCreateTime())).collect(Collectors.toList());
+                if (v.size() == nullCaseCreateTimeDatas.size()) {
+                    //随机保留一条
+                    v.remove(v.get(RandomUtils.nextInt(v.size())));
+                    if (!CollectionUtils.isEmpty(v)) {
+                        copyS2.removeAll(v);
+                    }
+                } else {
+                    // 优先取各自表内【立案时间】有值的案件记录
+                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)) {
+                        copyS2.removeAll(nullCaseCreateTimeDatas);
+                    }
+                }
+            }
+        }
     }
 
-    private boolean condition3(List<StdLegalDataStructuredTemp> copyS1) {
-        // else if 【PTYPE】一致 & 案件性质/案件类型【DOCUCLASS】一致，优先保留立案时间/开庭时间/案件日期/裁定时间【CASEDATE】不为空的案件记录
-        Map<String, List<StdLegalDataStructuredTemp>> collect = copyS1.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype() + stdLegalDataStructuredTemp.getDocuClass()));
-        return copyS1.size() > collect.size();
+    public void cleanS1(List<StdLegalDataStructuredTemp> copyS1) {
+        if (condition0(copyS1)) {
+            Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMap = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getCaseRiskLevel));
+            for (Map.Entry<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMapEntry : copyS1GroupByCaseRiskLevelMap.entrySet()) {
+                List<StdLegalDataStructuredTemp> v = copyS1GroupByCaseRiskLevelMapEntry.getValue();
+                //1 存在【PTYPE】=14 or 15 or 16的 至少两条案件记录，则优先保留顺序：16 > 15> 14
+                if (condition1(v)) {
+                    String maxPtype = v.stream().map(StdLegalDataStructuredTemp::getPtype).max(Comparator.comparingInt(Integer::valueOf)).get();
+                    List<StdLegalDataStructuredTemp> notMaxPtypeDatas = v.stream().filter(stdLegalDataStructuredTemp -> !stdLegalDataStructuredTemp.getPtype().equalsIgnoreCase(maxPtype)).collect(Collectors.toList());
+                    if (!CollectionUtils.isEmpty(notMaxPtypeDatas)) {
+                        copyS1.removeAll(notMaxPtypeDatas);
+                        v.removeAll(notMaxPtypeDatas);
+                    }
+                }
+
+                //2 if 【PTYPE】一致 ，则优先保留 案件性质/案件类型【DOCUCLASS】不为空的案件记录
+                Map<String, List<StdLegalDataStructuredTemp>> groupByPtype = v.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getPtype));
+                for (Map.Entry<String, List<StdLegalDataStructuredTemp>> groupByPtypeEntry : groupByPtype.entrySet()) {
+                    List<StdLegalDataStructuredTemp> ptypeEqDatas = groupByPtypeEntry.getValue();
+                    // ptype存在并且一致
+                    if (ptypeEqDatas.size() > 1 && StringUtils.isNotBlank(ptypeEqDatas.get(0).getPtype())) {
+                        List<StdLegalDataStructuredTemp> docuClassIsNullData = v.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getDocuClass())).collect(Collectors.toList());
+                        // v.size()>docuClassIsNullData.size() 全为空时不清除，认为一致
+                        if (!CollectionUtils.isEmpty(docuClassIsNullData) && v.size()>docuClassIsNullData.size()) {
+                            copyS1.removeAll(docuClassIsNullData);
+                            v.removeAll(docuClassIsNullData);
+                        }
+                    }
+                }
+                //3 if 【PTYPE】一致 & 案件性质/案件类型【DOCUCLASS】一致，优先保留立案时间/开庭时间/案件日期/裁定时间【CASEDATE】不为空的案件记录
+                Map<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclass = v.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype() + stdLegalDataStructuredTemp.getDocuClass()));
+                for (Map.Entry<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclassEntry : groupByPtypeAndDocuclass.entrySet()) {
+                    List<StdLegalDataStructuredTemp> ptypeAndDocuclassEqData = groupByPtypeAndDocuclassEntry.getValue();
+                    // ptype 存在并且一致
+                    if (ptypeAndDocuclassEqData.size() > 1 && StringUtils.isNotBlank(ptypeAndDocuclassEqData.get(0).getPtype())) {
+                        List<StdLegalDataStructuredTemp> caseDateIsNullDatas = ptypeAndDocuclassEqData.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getCaseDate())).collect(Collectors.toList());
+                        // 全为空代表一致，不清除
+                        if (!CollectionUtils.isEmpty(caseDateIsNullDatas) && v.size()>caseDateIsNullDatas.size()) {
+                            copyS1.removeAll(caseDateIsNullDatas);
+                            v.removeAll(caseDateIsNullDatas);
+                        }
+                    }
+                }
+                //4 if 【PTYPE】一致 & 案件性质/案件类型【DOCUCLASS】 & 立案时间/开庭时间/案件日期/裁定时间【CASEDATE】，随机保留一条案件记录
+                Map<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclassAndCaseDate = v.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype() + stdLegalDataStructuredTemp.getDocuClass() + stdLegalDataStructuredTemp.getCaseDate()));
+                for (Map.Entry<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclassAndCaseDateEntry : groupByPtypeAndDocuclassAndCaseDate.entrySet()) {
+                    List<StdLegalDataStructuredTemp> ptypeAndDocuclassAndCaseDateEqData = groupByPtypeAndDocuclassAndCaseDateEntry.getValue();
+                    // ptype docuclass casedate 存在并且一致
+                    if (ptypeAndDocuclassAndCaseDateEqData.size() > 1 && StringUtils.isNotBlank(ptypeAndDocuclassAndCaseDateEqData.get(0).getPtype())) {
+                        ptypeAndDocuclassAndCaseDateEqData.remove(ptypeAndDocuclassAndCaseDateEqData.get(RandomUtils.nextInt(ptypeAndDocuclassAndCaseDateEqData.size())));
+                        if (!CollectionUtils.isEmpty(ptypeAndDocuclassAndCaseDateEqData) && v.size()>1) {
+                            copyS1.removeAll(ptypeAndDocuclassAndCaseDateEqData);
+                            v.removeAll(ptypeAndDocuclassAndCaseDateEqData);
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    private boolean condition2(List<StdLegalDataStructuredTemp> copyS1) {
-        //else if 【PTYPE】一致 ，则优先保留 案件性质/案件类型【DOCUCLASS】不为空的案件记录
-        Map<String, List<StdLegalDataStructuredTemp>> collect = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getDocuClass));
-        return copyS1.size() > collect.size();
+    public void cleanRepeat3(List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
+        //按照案号分组
+        Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseNoMap = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getCaseNo));
+        Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2GroupByCaseNoMap = copyS2.stream().collect(Collectors.groupingBy(StdLegalEnterpriseExecutedTemp::getCaseCode));
+        Map<String, List<StdLegalEntUnexecutedTemp>> copyS3GroupByCaseNoMap = copyS3.stream().collect(Collectors.groupingBy(StdLegalEntUnexecutedTemp::getCaseCode));
+
+        //每个案号组保留最高风险等级的记录
+        List<StdLegalDataStructuredTemp> copyS1FilterRiskLevel = Lists.newArrayList();
+        copyS1GroupByCaseNoMap.forEach((k, v) -> {
+            String maxCaseRiskLevel = v.stream().map(StdLegalDataStructuredTemp::getCaseRiskLevel).max(Comparator.comparingInt(CASE_RISK_LEVEL_STAGE::indexOf)).get();
+            copyS1FilterRiskLevel.addAll(v.stream().filter(stdLegalDataStructuredTemp -> !stdLegalDataStructuredTemp.getCaseRiskLevel().equalsIgnoreCase(maxCaseRiskLevel)).collect(Collectors.toList()));
+        });
+        copyS1.removeAll(copyS1FilterRiskLevel);
+
+        List<StdLegalEnterpriseExecutedTemp> copyS2FilterRiskLevel = Lists.newArrayList();
+        copyS2GroupByCaseNoMap.forEach((k, v) -> {
+            String maxCaseRiskLevel = v.stream().map(StdLegalEnterpriseExecutedTemp::getCaseRiskLevel).max(Comparator.comparingInt(CASE_RISK_LEVEL_STAGE::indexOf)).get();
+            copyS2FilterRiskLevel.addAll(v.stream().filter(stdLegalEnterpriseExecutedTemp -> !stdLegalEnterpriseExecutedTemp.getCaseRiskLevel().equalsIgnoreCase(maxCaseRiskLevel)).collect(Collectors.toList()));
+        });
+        copyS2.removeAll(copyS2FilterRiskLevel);
+
+        List<StdLegalEntUnexecutedTemp> copyS3FilterRiskLevel = Lists.newArrayList();
+        copyS3GroupByCaseNoMap.forEach((k, v) -> {
+            String maxCaseRiskLevel = v.stream().map(StdLegalEntUnexecutedTemp::getCaseRiskLevel).max(Comparator.comparingInt(CASE_RISK_LEVEL_STAGE::indexOf)).get();
+            copyS3FilterRiskLevel.addAll(v.stream().filter(stdLegalEntUnexecutedTemp -> !stdLegalEntUnexecutedTemp.getCaseRiskLevel().equalsIgnoreCase(maxCaseRiskLevel)).collect(Collectors.toList()));
+        });
+        copyS3.removeAll(copyS3FilterRiskLevel);
     }
 
-    private boolean condition1(List<StdLegalDataStructuredTemp> copyS1) {
+    public void cleanRepeat2(List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
+        final Set<String> caseNoInS1 = copyS1.stream().map(StdLegalDataStructuredTemp::getCaseNo).collect(Collectors.toSet());
+        List<StdLegalEnterpriseExecutedTemp> copyS2CaseCodeInCopyS1 = copyS2.stream().filter(stdLegalEnterpriseExecutedTemp -> caseNoInS1.contains(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList());
+        copyS2.removeAll(copyS2CaseCodeInCopyS1);
+
+        final Set<String> caseNoInS3 = copyS3.stream().map(StdLegalEntUnexecutedTemp::getCaseCode).collect(Collectors.toSet());
+        copyS1.removeAll(copyS1.stream().filter(stdLegalDataStructuredTemp -> caseNoInS3.contains(stdLegalDataStructuredTemp.getCaseNo())).collect(Collectors.toList()));
+        copyS2.removeAll(copyS2.stream().filter(stdLegalEnterpriseExecutedTemp -> caseNoInS3.contains(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList()));
+    }
+
+    private boolean condition1(List<StdLegalDataStructuredTemp> s) {
         //if 存在【PTYPE】=14 or 15 or 16的 至少两条案件记录
-        List<String> ptypes = Lists.newArrayList("14", "15", "16");
-        List<StdLegalDataStructuredTemp> collect = copyS1.stream().filter(stdLegalDataStructuredTemp -> ptypes.contains(stdLegalDataStructuredTemp.getPtype())).collect(Collectors.toList());
+        List<StdLegalDataStructuredTemp> collect = s.stream().filter(stdLegalDataStructuredTemp -> P_TYPES.contains(stdLegalDataStructuredTemp.getPtype())).collect(Collectors.toList());
         return !CollectionUtils.isEmpty(collect) && collect.size() > 1;
     }
 
@@ -1034,14 +1079,13 @@ public class StdLegalServiceImpl implements StdLegalService {
             Double numberOfYear = null;
             LocalDate caseCreateTime = stdLegalEnterpriseExecutedTemp.getCaseCreateTime();
             if (Objects.nonNull(caseCreateTime)) {
-                long days = Duration.between(LocalDate.now(), caseCreateTime).toDays();
-                numberOfYear = (double)days / 365;
+                numberOfYear = (double) (LocalDate.now().toEpochDay() - caseCreateTime.toEpochDay()) / 365;
             }
 
             // 风险等级
             if (Objects.nonNull(numberOfYear) && numberOfYear >= 1) {
                 caseRiskLevel = CASERISKLEVEL_L;
-            } else if (Objects.isNull(numberOfYear) || Objects.nonNull(numberOfYear) && numberOfYear >= 0.5) {
+            } else if (Objects.isNull(numberOfYear) || (Objects.nonNull(numberOfYear) && numberOfYear >= 0.5)) {
                 caseRiskLevel = CASERISKLEVEL_M3;
             }
 

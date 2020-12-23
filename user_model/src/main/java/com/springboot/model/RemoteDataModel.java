@@ -2,6 +2,7 @@ package com.springboot.model;
 
 import com.springboot.domain.risk.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 

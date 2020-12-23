@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.transaction.annotation.Transactional;
 
 @Data
+@EqualsAndHashCode(callSuper=true)
 @TableName("std_legal_data_added")
 public class StdLegalDataAdded extends BaseDomain {
     @TableField(value = "req_id")

@@ -2,10 +2,12 @@ package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
 @Data
+@EqualsAndHashCode(callSuper=true)
 @TableName("enterprises")
 public class Enterprise extends BaseDomain {
     private static final long serialVersionUID = 1423774902833637941L;
