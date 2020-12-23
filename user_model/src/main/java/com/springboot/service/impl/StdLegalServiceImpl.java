@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -777,6 +778,7 @@ public class StdLegalServiceImpl implements StdLegalService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void preStdSsDatas(String reqId) {
         List<StdLegalDataStructuredTemp> set1 = getS1(reqId);
         List<StdLegalEnterpriseExecutedTemp> set2 = getS2(reqId);
@@ -812,9 +814,8 @@ public class StdLegalServiceImpl implements StdLegalService {
          * ①保留各表内distinct（非空【案号】）& 最高（【@修订案件风险等级】）的案件记录。     // 每个案号组风险等级最高的n条保留
          * 注：各表统计采用的【案件风险等级】（风险等级由高到低顺序：H>M6>M5>M4>M3>M2>M1>L）
          */
-
-
         cleanRepeat3(copyS1, copyS2, copyS3);
+
         /**
          * set1
          * ②若set1存在多个非空【案号】且【案件风险等级】均一致案件记录，处理规则如下：
@@ -897,7 +898,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         stdLegalEntUnexecutedTempService.saveBatch(copyS3);
     }
 
-    private void clearS3(List<StdLegalEntUnexecutedTemp> copyS3) {
+    public void clearS3(List<StdLegalEntUnexecutedTemp> copyS3) {
         Map<String, List<StdLegalEntUnexecutedTemp>> copyS3GroupByRiskLevel = copyS3.stream().collect(Collectors.groupingBy(StdLegalEntUnexecutedTemp::getCaseRiskLevel));
         for (Map.Entry<String, List<StdLegalEntUnexecutedTemp>> entry : copyS3GroupByRiskLevel.entrySet()) {
             List<StdLegalEntUnexecutedTemp> v = entry.getValue();
@@ -919,7 +920,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         }
     }
 
-    private void clearS2(List<StdLegalEnterpriseExecutedTemp> copyS2) {
+    public void clearS2(List<StdLegalEnterpriseExecutedTemp> copyS2) {
         Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2GroupByRiskLevel = copyS2.stream().collect(Collectors.groupingBy(StdLegalEnterpriseExecutedTemp::getCaseRiskLevel));
         for (Map.Entry<String, List<StdLegalEnterpriseExecutedTemp>> entry : copyS2GroupByRiskLevel.entrySet()) {
             List<StdLegalEnterpriseExecutedTemp> v = entry.getValue();
@@ -941,7 +942,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         }
     }
 
-    private void cleanS1(List<StdLegalDataStructuredTemp> copyS1) {
+    public void cleanS1(List<StdLegalDataStructuredTemp> copyS1) {
         if (condition0(copyS1)) {
             Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMap = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getCaseRiskLevel));
             for (Map.Entry<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMapEntry : copyS1GroupByCaseRiskLevelMap.entrySet()) {
@@ -963,7 +964,8 @@ public class StdLegalServiceImpl implements StdLegalService {
                     // ptype存在并且一致
                     if (ptypeEqDatas.size() > 1 && StringUtils.isNotBlank(ptypeEqDatas.get(0).getPtype())) {
                         List<StdLegalDataStructuredTemp> docuClassIsNullData = v.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getDocuClass())).collect(Collectors.toList());
-                        if (!CollectionUtils.isEmpty(docuClassIsNullData)) {
+                        // v.size()>docuClassIsNullData.size() 全为空时不清除，认为一致
+                        if (!CollectionUtils.isEmpty(docuClassIsNullData) && v.size()>docuClassIsNullData.size()) {
                             copyS1.removeAll(docuClassIsNullData);
                             v.removeAll(docuClassIsNullData);
                         }
@@ -973,12 +975,11 @@ public class StdLegalServiceImpl implements StdLegalService {
                 Map<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclass = v.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getPtype() + stdLegalDataStructuredTemp.getDocuClass()));
                 for (Map.Entry<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclassEntry : groupByPtypeAndDocuclass.entrySet()) {
                     List<StdLegalDataStructuredTemp> ptypeAndDocuclassEqData = groupByPtypeAndDocuclassEntry.getValue();
-                    // ptype docuclass 存在并且一致
-                    if (ptypeAndDocuclassEqData.size() > 1
-                            && StringUtils.isNotBlank(ptypeAndDocuclassEqData.get(0).getPtype())
-                            && StringUtils.isNotBlank(ptypeAndDocuclassEqData.get(0).getDocuClass())) {
+                    // ptype 存在并且一致
+                    if (ptypeAndDocuclassEqData.size() > 1 && StringUtils.isNotBlank(ptypeAndDocuclassEqData.get(0).getPtype())) {
                         List<StdLegalDataStructuredTemp> caseDateIsNullDatas = ptypeAndDocuclassEqData.stream().filter(stdLegalDataStructuredTemp -> Objects.isNull(stdLegalDataStructuredTemp.getCaseDate())).collect(Collectors.toList());
-                        if (!CollectionUtils.isEmpty(caseDateIsNullDatas)) {
+                        // 全为空代表一致，不清除
+                        if (!CollectionUtils.isEmpty(caseDateIsNullDatas) && v.size()>caseDateIsNullDatas.size()) {
                             copyS1.removeAll(caseDateIsNullDatas);
                             v.removeAll(caseDateIsNullDatas);
                         }
@@ -989,12 +990,9 @@ public class StdLegalServiceImpl implements StdLegalService {
                 for (Map.Entry<String, List<StdLegalDataStructuredTemp>> groupByPtypeAndDocuclassAndCaseDateEntry : groupByPtypeAndDocuclassAndCaseDate.entrySet()) {
                     List<StdLegalDataStructuredTemp> ptypeAndDocuclassAndCaseDateEqData = groupByPtypeAndDocuclassAndCaseDateEntry.getValue();
                     // ptype docuclass casedate 存在并且一致
-                    if (ptypeAndDocuclassAndCaseDateEqData.size() > 1
-                            && StringUtils.isNotBlank(ptypeAndDocuclassAndCaseDateEqData.get(0).getPtype())
-                            && StringUtils.isNotBlank(ptypeAndDocuclassAndCaseDateEqData.get(0).getDocuClass())
-                            && Objects.nonNull((ptypeAndDocuclassAndCaseDateEqData.get(0).getCaseDate()))) {
+                    if (ptypeAndDocuclassAndCaseDateEqData.size() > 1 && StringUtils.isNotBlank(ptypeAndDocuclassAndCaseDateEqData.get(0).getPtype())) {
                         ptypeAndDocuclassAndCaseDateEqData.remove(ptypeAndDocuclassAndCaseDateEqData.get(RandomUtils.nextInt(ptypeAndDocuclassAndCaseDateEqData.size())));
-                        if (!CollectionUtils.isEmpty(ptypeAndDocuclassAndCaseDateEqData)) {
+                        if (!CollectionUtils.isEmpty(ptypeAndDocuclassAndCaseDateEqData) && v.size()>1) {
                             copyS1.removeAll(ptypeAndDocuclassAndCaseDateEqData);
                             v.removeAll(ptypeAndDocuclassAndCaseDateEqData);
                         }
@@ -1004,7 +1002,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         }
     }
 
-    private void cleanRepeat3(List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
+    public void cleanRepeat3(List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
         //按照案号分组
         Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseNoMap = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getCaseNo));
         Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2GroupByCaseNoMap = copyS2.stream().collect(Collectors.groupingBy(StdLegalEnterpriseExecutedTemp::getCaseCode));
