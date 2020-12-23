@@ -3,6 +3,7 @@ package com.springboot.domain.risk;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author 刘宏飞
@@ -10,6 +11,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper=true)
 @TableName(value = "std_ent_filiation_list")
 public class StdEntFiliation extends BaseDomain {
 

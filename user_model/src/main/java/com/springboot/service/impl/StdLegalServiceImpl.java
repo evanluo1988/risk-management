@@ -39,6 +39,15 @@ public class StdLegalServiceImpl implements StdLegalService {
     private StdLegalCasemedianMapper stdLegalCasemedianMapper;
     @Autowired
     private StdLegalCasemedianServiceImpl stdLegalCasemedianService;
+    @Autowired
+    private StdLegalCasemedianTempService stdLegalCasemedianTempService;
+    @Autowired
+    private StdLegalDataStructuredTempService stdLegalDataStructuredTempService;
+    @Autowired
+    private StdLegalEnterpriseExecutedTempService stdLegalEnterpriseExecutedTempService;
+    @Autowired
+    private StdLegalEntUnexecutedTempService stdLegalEntUnexecutedTempService;
+
 
     //案件风险等级判断
     public static final String CASERISKLEVEL_N = "N";
@@ -830,7 +839,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         saveTemp(stdLegalCasemedianTempList, copyS1, nullCaseNoInS1, copyS2, nullCaseNoInS2, copyS3, nullCaseNoInS3);
     }
 
-    private void calcRiskLevel(String reqId, List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
+    public void calcRiskLevel(String reqId, List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
         calcRiskLevelOfS1(reqId, copyS1);
         calcRiskLevelOfS2(copyS2);
         calcRiskLevelOfS3(copyS3);
@@ -879,8 +888,13 @@ public class StdLegalServiceImpl implements StdLegalService {
     }
 
     private void saveTemp(List<StdLegalCasemedianTemp> stdLegalCasemedianTempList, List<StdLegalDataStructuredTemp> copyS1, List<StdLegalDataStructuredTemp> nullCaseNoInS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEnterpriseExecutedTemp> nullCaseNoInS2, List<StdLegalEntUnexecutedTemp> copyS3, List<StdLegalEntUnexecutedTemp> nullCaseNoInS3) {
-
-        // TODO: 2020/12/22
+        stdLegalCasemedianTempService.saveBatch(stdLegalCasemedianTempList);
+        copyS1.addAll(nullCaseNoInS1);
+        stdLegalDataStructuredTempService.saveBatch(copyS1);
+        copyS2.addAll(nullCaseNoInS2);
+        stdLegalEnterpriseExecutedTempService.saveBatch(copyS2);
+        copyS3.addAll(nullCaseNoInS3);
+        stdLegalEntUnexecutedTempService.saveBatch(copyS3);
     }
 
     private void clearS3(List<StdLegalEntUnexecutedTemp> copyS3) {
@@ -1019,10 +1033,10 @@ public class StdLegalServiceImpl implements StdLegalService {
         copyS3.removeAll(copyS3FilterRiskLevel);
     }
 
-    public void cleanRepeat2
-            (List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
+    public void cleanRepeat2(List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
         final Set<String> caseNoInS1 = copyS1.stream().map(StdLegalDataStructuredTemp::getCaseNo).collect(Collectors.toSet());
-        copyS2.removeAll(copyS2.stream().filter(stdLegalEnterpriseExecutedTemp -> caseNoInS1.contains(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList()));
+        List<StdLegalEnterpriseExecutedTemp> copyS2CaseCodeInCopyS1 = copyS2.stream().filter(stdLegalEnterpriseExecutedTemp -> caseNoInS1.contains(stdLegalEnterpriseExecutedTemp.getCaseCode())).collect(Collectors.toList());
+        copyS2.removeAll(copyS2CaseCodeInCopyS1);
 
         final Set<String> caseNoInS3 = copyS3.stream().map(StdLegalEntUnexecutedTemp::getCaseCode).collect(Collectors.toSet());
         copyS1.removeAll(copyS1.stream().filter(stdLegalDataStructuredTemp -> caseNoInS3.contains(stdLegalDataStructuredTemp.getCaseNo())).collect(Collectors.toList()));

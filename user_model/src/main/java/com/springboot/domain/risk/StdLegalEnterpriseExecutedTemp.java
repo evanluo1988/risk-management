@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.risk.StdLegalEnterpriseExecuted;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author 刘宏飞
@@ -11,6 +12,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper=true)
 @TableName("std_legal_enterprise_executed_temp")
 public class StdLegalEnterpriseExecutedTemp extends StdLegalEnterpriseExecuted {
     /**

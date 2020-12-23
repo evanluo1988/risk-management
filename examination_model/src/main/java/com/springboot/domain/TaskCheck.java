@@ -2,11 +2,13 @@ package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 
 @Data
+@EqualsAndHashCode(callSuper=true)
 @Accessors(chain = true)
 @TableName("task_checks")
 public class TaskCheck extends BaseDomain {

@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.springboot.domain.BaseDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
 @Data
+@EqualsAndHashCode(callSuper=true)
 @TableName("std_legal_enterprise_executed")
 public class StdLegalEnterpriseExecuted extends BaseDomain {
     @TableField(value = "req_id")
