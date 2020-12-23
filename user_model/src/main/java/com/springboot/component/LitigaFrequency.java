@@ -72,7 +72,7 @@ public class LitigaFrequency implements QuotaComponent{
         }
     }
 
-    public void initCaseMap(LocalDate caseDate, LocalDate pdate, String caseno, Map<Integer, Integer> caseMap) {
+    private void initCaseMap(LocalDate caseDate, LocalDate pdate, String caseno, Map<Integer, Integer> caseMap) {
         Integer caseYear = getCaseDate(caseDate, pdate, caseno);
         if(caseYear != null) {
             if(caseMap.containsKey(caseYear)) {
@@ -88,7 +88,7 @@ public class LitigaFrequency implements QuotaComponent{
      * 若【立案时间】为空，则取【发布时间】；若【发布时间】为空或无该字段，则取从【案号】解析出的年份；若【案号】为空，则该案件的【案件年份】视为空。
      * @return
      */
-    public Integer getCaseDate(LocalDate caseDate, LocalDate pdate, String caseno) {
+    private Integer getCaseDate(LocalDate caseDate, LocalDate pdate, String caseno) {
         if(caseDate != null) {
             return caseDate.getYear();
         }
@@ -100,7 +100,7 @@ public class LitigaFrequency implements QuotaComponent{
             Matcher m = p.matcher(caseno);
             if (m.find()) {
                 String year = m.group(0).trim();
-                return Integer.getInteger(year.substring(1, year.length() -1));
+                return Integer.valueOf(year.substring(1, year.length() -1));
             } else {
                 return null;
             }

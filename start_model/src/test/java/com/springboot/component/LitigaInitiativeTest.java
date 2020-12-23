@@ -31,11 +31,6 @@ public class LitigaInitiativeTest extends ApplicationTest {
         m1.setPhase("一审");
         m1.setReqId(reqId);
         litigaInitiativeModelList.add(m1);
-        LitigaInitiativeModel m2 = new LitigaInitiativeModel();
-        m2.setId(2L);
-        m2.setPhase("一审");
-        m2.setReqId(reqId);
-        litigaInitiativeModelList.add(m2);
         Mockito.when(stdLegalDataStructuredTempMapper.getLitigaInitiativeResult(reqId)).thenReturn(litigaInitiativeModelList);
         res = litigaInitiative.execQuota(reqId);
         Assert.assertEquals("else", res);
@@ -49,6 +44,14 @@ public class LitigaInitiativeTest extends ApplicationTest {
         res = litigaInitiative.execQuota(reqId);
         Assert.assertEquals("偏被动", res);
 
+        LitigaInitiativeModel p2 = new LitigaInitiativeModel();
+        p2.setId(4L);
+        p2.setPhase("一审");
+        p2.setReqId(reqId);
+        p2.setPlaintiff("evan");
+        litigaInitiativeModelList.add(p2);
+        res = litigaInitiative.execQuota(reqId);
+        Assert.assertEquals("else", res);
     }
 
 }

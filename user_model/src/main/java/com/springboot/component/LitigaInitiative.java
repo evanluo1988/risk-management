@@ -27,7 +27,7 @@ public class LitigaInitiative implements QuotaComponent{
         if(CollectionUtils.isEmpty(plaintiff)) {
             return "else";
         }
-        float m = plaintiff.size()/litigaInitiativeModelList.size();
+        float m = (float) plaintiff.size()/litigaInitiativeModelList.size();
         return m > 0.5 ? "else" : "偏被动";
     }
 }
