@@ -2,8 +2,13 @@ package com.springboot.domain.risk;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.springboot.vo.risk.LitigaCaseVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang.StringUtils;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * @Author 刘宏飞
@@ -20,4 +25,30 @@ public class StdLegalEntUnexecutedTemp extends StdLegalEntUnexecuted {
     @TableField(value = "caserisklevel")
     private String caseRiskLevel;
     private Long stdLegalEntUnexecutedId;
+
+    public LitigaCaseVo toLitigaCaseVo() {
+        LitigaCaseVo litigaCaseVo = LitigaCaseVo.builder()
+                .caseCode(this.getCaseCode())
+                .docClass("执行案件")
+                .caseReason(null)
+                .lawStatus(null)
+                .intervalYear(calcIntervalYear(this.getRegDate(),this.getPublishDate()))
+                .payment(null)
+                .courtLevel(StdLegalEnterpriseExecutedTemp.calcCourtLevel(this.getCourtName()))
+                .sentenceBrief(null)
+                .sentenceEffect(null)
+                .build();
+        return litigaCaseVo;
+    }
+
+    private String calcIntervalYear(LocalDate regDate, LocalDate publishDate) {
+        String intervalYear = null;
+        LocalDate now = LocalDate.now();
+        if (Objects.nonNull(regDate)){
+            String.valueOf(Math.round((((double)(now.toEpochDay()-regDate.toEpochDay()))/365 )*10000)/10000);
+        }else if (Objects.nonNull(publishDate)){
+            String.valueOf(Math.round((((double)(now.toEpochDay()-publishDate.toEpochDay()))/365 )*10000)/10000);
+        }
+        return intervalYear;
+    }
 }

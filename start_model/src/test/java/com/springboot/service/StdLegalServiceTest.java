@@ -7,6 +7,7 @@ import com.springboot.domain.risk.*;
 import com.springboot.mapper.StdLegalCasemedianMapper;
 import com.springboot.mapper.StdLegalDataStructuredMapper;
 import com.springboot.service.impl.StdLegalServiceImpl;
+import com.springboot.vo.risk.LitigaCaseVo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -333,5 +334,12 @@ public class StdLegalServiceTest extends ApplicationTest {
     public void testPreStdSsDatas(){
         final String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
         stdLegalServiceInSpring.preStdSsDatas(reqId);
+    }
+
+    @Test
+    public void testLitigaCaseVo(){
+        final String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
+        List<LitigaCaseVo> litigaCase = stdLegalServiceInSpring.getLitigaCase(reqId);
+        System.out.println(litigaCase);
     }
 }

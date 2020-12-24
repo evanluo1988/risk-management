@@ -11,6 +11,7 @@ import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
 import com.springboot.util.DateUtils;
 import com.springboot.utils.CalculatUtil;
+import com.springboot.vo.risk.LitigaCaseVo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -838,6 +839,31 @@ public class StdLegalServiceImpl implements StdLegalService {
         List<StdLegalCasemedianTemp> stdLegalCasemedianTempList = getStdLegalCasemedianTemps(reqId, nullCaseNoInS1, copyS1);
         //保存结果
         saveTemp(stdLegalCasemedianTempList, copyS1, nullCaseNoInS1, copyS2, nullCaseNoInS2, copyS3, nullCaseNoInS3);
+    }
+
+    @Override
+    public List<LitigaCaseVo> getLitigaCase(String reqId) {
+        List<LitigaCaseVo> litigaCaseVos = Lists.newArrayList();
+        List<StdLegalEnterpriseExecutedTemp> stdLegalEnterpriseExecutedTempList = stdLegalEnterpriseExecutedTempService.findByReqId(reqId);
+        List<StdLegalDataStructuredTemp> stdLegalDataStructuredTempList = stdLegalDataStructuredTempService.findByReqId(reqId);
+        List<StdLegalEntUnexecutedTemp> stdLegalEntUnexecutedTempList = stdLegalEntUnexecutedTempService.findByReqId(reqId);
+
+        List<String> serialNos = stdLegalDataStructuredTempList.stream().map(StdLegalDataStructuredTemp::getSerialno).collect(Collectors.toList());
+        List<StdLegalCasemedianTemp> stdLegalCasemedianTempList = stdLegalCasemedianTempService.findByReqAndSerialNos(reqId,serialNos);
+        Map<String, StdLegalCasemedianTemp> casemedianTempMap = stdLegalCasemedianTempList.stream().collect(Collectors.toMap(item -> item.getSerialNo(), item -> item));
+
+        for (StdLegalEnterpriseExecutedTemp stdLegalEnterpriseExecutedTemp : stdLegalEnterpriseExecutedTempList) {
+            litigaCaseVos.add(stdLegalEnterpriseExecutedTemp.toLitigaCaseVo());
+        }
+
+        for (StdLegalDataStructuredTemp stdLegalDataStructuredTemp : stdLegalDataStructuredTempList) {
+            litigaCaseVos.add(stdLegalDataStructuredTemp.toLitigaCaseVo(casemedianTempMap.get(stdLegalDataStructuredTemp.getSerialno())));
+        }
+
+        for (StdLegalEntUnexecutedTemp stdLegalEntUnexecutedTemp : stdLegalEntUnexecutedTempList) {
+            litigaCaseVos.add(stdLegalEntUnexecutedTemp.toLitigaCaseVo());
+        }
+        return litigaCaseVos;
     }
 
     public void calcRiskLevel(String reqId, List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {

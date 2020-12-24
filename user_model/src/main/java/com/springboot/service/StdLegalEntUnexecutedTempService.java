@@ -2,6 +2,9 @@ package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.risk.StdLegalEntUnexecutedTemp;
+import com.springboot.domain.risk.StdLegalEnterpriseExecutedTemp;
+
+import java.util.List;
 
 /**
  * @Author 刘宏飞
@@ -9,4 +12,5 @@ import com.springboot.domain.risk.StdLegalEntUnexecutedTemp;
  * @Version 1.0
  */
 public interface StdLegalEntUnexecutedTempService extends IService<StdLegalEntUnexecutedTemp> {
+    List<StdLegalEntUnexecutedTemp> findByReqId(String reqId);
 }

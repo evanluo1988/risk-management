@@ -1,5 +1,9 @@
 package com.springboot.service;
 
+import com.springboot.vo.risk.LitigaCaseVo;
+
+import java.util.List;
+
 public interface StdLegalService {
     /**
      * 生成司法中间表
@@ -12,4 +16,11 @@ public interface StdLegalService {
      * @param reqId
      */
     public void preStdSsDatas(String reqId);
+
+    /**
+     * 查询pdf所需要的
+     * @param reqId
+     * @return
+     */
+    List<LitigaCaseVo> getLitigaCase(String reqId);
 }
