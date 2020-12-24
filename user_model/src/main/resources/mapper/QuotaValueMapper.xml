@@ -25,6 +25,7 @@
         <result column="quota_code" property="quotaCode" />
         <result column="grand_code" property="grandCode" />
         <result column="quota_name" property="quotaName" />
+        <result column="quota_type" property="quotaType" />
         <result column="model_id" property="modelId" />
         <result column="first_level_id" property="firstLevelId" />
         <result column="second_level_id" property="secondLevelId" />
@@ -35,7 +36,19 @@
     </resultMap>
 
     <sql id="QuotaModel_Column_List" >
-        q.id, qv.req_id,q.quota_code,q.grand_code,q.quota_name,q.model_id,q.first_level_id,q.second_level_id, q.time_interval,qv.quota_value,qv.minus_points,qv.ideal_interval
+        q.id,
+        qv.req_id,
+        q.quota_code,
+        q.grand_code,
+        q.quota_name,
+        q.quota_type,
+        q.model_id,
+        q.first_level_id,
+        q.second_level_id,
+        q.time_interval,
+        qv.quota_value,
+        qv.minus_points,
+        qv.ideal_interval
     </sql>
 
     <select id="getQuotaModels" resultMap="QuotaModelResultMap" parameterType="String">
@@ -43,6 +56,5 @@
         left join quotas q on q.id = qv.quota_id
         where qv.req_id = #{reqId}
     </select>
-
 
 </mapper>

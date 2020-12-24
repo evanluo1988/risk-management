@@ -20,6 +20,10 @@ public class QuotaModel implements Serializable {
      */
     private String quotaName;
     /**
+     * 指标类型
+     */
+    private String quotaType;
+    /**
      * 指标维度模块ID
      */
     private Long modelId;

@@ -12,8 +12,7 @@ public class EntHealthDialysisVo {
     /**
      * 五维雷达透析一览表
      */
-    //todo 五维雷达透析一览表
-
+    FiveDRaderVo fiveDRader;
     /**
      * 经营稳定性
      */

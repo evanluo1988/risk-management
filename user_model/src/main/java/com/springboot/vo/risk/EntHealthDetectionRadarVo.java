@@ -36,6 +36,10 @@ public class EntHealthDetectionRadarVo {
      */
     private String businessStabilityScore;
     /**
+     * 知识产权价值度评分
+     */
+    private String intellectualPropertyScore;
+    /**
      * 经营风险评分
      */
     private String businessRiskScore;

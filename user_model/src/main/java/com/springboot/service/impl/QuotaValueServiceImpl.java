@@ -1,7 +1,9 @@
 package com.springboot.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.domain.risk.QuotaValue;
+import com.springboot.domain.risk.StdEntAlter;
 import com.springboot.mapper.QuotaValueMapper;
 import com.springboot.model.QuotaModel;
 import com.springboot.service.QuotaValueService;
@@ -28,5 +30,12 @@ public class QuotaValueServiceImpl extends ServiceImpl<QuotaValueMapper, QuotaVa
     @Override
     public List<QuotaModel> getQuotaList(String reqId) {
         return quotaValueMapper.getQuotaModels(reqId);
+    }
+
+    @Override
+    public int countQuotaValues(String reqId) {
+        LambdaQueryWrapper<QuotaValue> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(QuotaValue::getReqId, reqId);
+        return count(queryWrapper);
     }
 }

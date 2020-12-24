@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DataHandleServiceImpl implements DataHandleService {
@@ -358,26 +359,53 @@ public class DataHandleServiceImpl implements DataHandleService {
         if(CollectionUtils.isEmpty(quotaList)){
             return;
         }
+        List<Quota> quotas = quotaList.stream().filter(item -> item.getQuotaType().equals("QUOTA")).collect(Collectors.toList());
         //初始化指标任务
         List<QuotaTask> quotaTaskList = Lists.newArrayList();
-        for(Quota quota : quotaList) {
+        for(Quota quota : Utils.getList(quotas)) {
             quotaTaskList.add(new QuotaTask(reqId ,quota));
         }
+        List<QuotaValue> quotaValueList = culQuotaTasks(quotaTaskList);
+
+        //save all quota values
+        quotaValueService.saveQuotaValues(quotaValueList);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void culModels(String reqId) {
+        List<Quota> quotaList = ServerCacheUtils.getQuotaList();
+        if(CollectionUtils.isEmpty(quotaList)){
+            return;
+        }
+        List<Quota> quotas = quotaList.stream().filter(item -> item.getQuotaType().equals("MODEL")).collect(Collectors.toList());
+        //初始化指标任务
+        List<QuotaTask> quotaTaskList = Lists.newArrayList();
+        for(Quota quota : Utils.getList(quotas)) {
+            quotaTaskList.add(new QuotaTask(reqId ,quota));
+        }
+
+        List<QuotaValue> quotaValueList = culQuotaTasks(quotaTaskList);
+
+        //save all quota values
+        quotaValueService.saveQuotaValues(quotaValueList);
+
+    }
+
+    private List<QuotaValue> culQuotaTasks(List<QuotaTask> quotaTaskList) {
 
         //执行任务
         List<QuotaValue> quotaValueList = Lists.newArrayList();
         try {
             for(QuotaTask quotaTask : quotaTaskList){
                 //if(quotaTask.getQuota().getId() == 58L){
-                    quotaValueList.add(quotaTask.call());
+                quotaValueList.add(quotaTask.call());
                 //}
             }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-
-        //save all quota values
-        quotaValueService.saveQuotaValues(quotaValueList);
+        return quotaValueList;
     }
 
     @Override
@@ -395,67 +423,86 @@ public class DataHandleServiceImpl implements DataHandleService {
 
     @Override
     public EntHealthReportVo getEntHealthReportVo(String reqId) {
-
+        List<QuotaModel> quotaModelList = quotaValueService.getQuotaList(reqId);
+        StdGsEntInfoModel stdGsEntInfo = stdDataService.getStdGsEntInfo(reqId);
         EntHealthReportVo entHealthReportVo = new EntHealthReportVo();
-
         //企业健康评价
+        entHealthReportVo.setEntHealthAssessment(getEntHealthAssessment(quotaModelList));
+        //企业健康详情
+        entHealthReportVo.setEntHealthDetails(getEntHealthDetails(reqId, quotaModelList, stdGsEntInfo));
+        return entHealthReportVo;
+    }
+
+    /**
+     * 企业健康评价
+     * @return
+     */
+    private EntHealthAssessmentVo getEntHealthAssessment(List<QuotaModel> quotaModelList) {
         EntHealthAssessmentVo entHealthAssessment = new EntHealthAssessmentVo();
-        EntHealthDetectionRadarVo entHealthDetectionRadar = new EntHealthDetectionRadarVo();
-        //todo entHealthDetectionRadar
+        entHealthAssessment.setEntHealthDetectionRadar(getEntHealthDetectionRadar(quotaModelList));
+        entHealthAssessment.setEntHealthDialysis(getEntHealthDialysis(quotaModelList));
+        return entHealthAssessment;
+    }
+
+    /**
+     * 企业健康检测雷达
+     * @return
+     */
+    private EntHealthDetectionRadarVo getEntHealthDetectionRadar(List<QuotaModel> quotaModelList) {
+        EntHealthDetectionRadarVo entHealthDetectionRadarVo = new EntHealthDetectionRadarVo();
+        for(QuotaModel quotaModel : quotaModelList) {
+            switch(quotaModel.getQuotaCode().trim()){
+                case "GS_ENT_INDUSTRY":
+                    entHealthDetectionRadarVo.setIndustry(quotaModel.getQuotaValue());
+                    break;
+                case "GS_ENT_CREDITCODE":
+                    entHealthDetectionRadarVo.setCreditCode(quotaModel.getQuotaValue());
+                    break;
+                case "GS_ENT_REGCAP":
+                    entHealthDetectionRadarVo.setRegCap(quotaModel.getQuotaValue());
+                    break;
+                case "GS_ENT_LRNAME":
+                    entHealthDetectionRadarVo.setLrName(quotaModel.getQuotaValue());
+                    break;
+                case "GS_ENT_ESTABLISH_PERIOD":
+                    entHealthDetectionRadarVo.setEstablishPeriod(quotaModel.getQuotaValue());
+                    break;
+            }
+        }
+        return entHealthDetectionRadarVo;
+    }
+
+    /**
+     * 企业健康检测透析
+     */
+    private EntHealthDialysisVo getEntHealthDialysis(List<QuotaModel> quotaModelList) {
         EntHealthDialysisVo entHealthDialysis = new EntHealthDialysisVo();
+        FiveDRaderVo fiveDRader = new FiveDRaderVo();
+        List<FiveDRaderItemVo> fiveDRaderItemList = Lists.newArrayList();
+        fiveDRader.setFiveDRaderItemList(fiveDRaderItemList);
+
         List<DialysisVo> businessStabilityList = Lists.newArrayList();
         List<DialysisVo> businessRiskList = Lists.newArrayList();
         List<DialysisVo> legalRiskList = Lists.newArrayList();
         entHealthDialysis.setBusinessStabilityList(businessStabilityList);
         entHealthDialysis.setBusinessRiskList(businessRiskList);
         entHealthDialysis.setLegalRiskList(legalRiskList);
-
-        entHealthAssessment.setEntHealthDetectionRadar(entHealthDetectionRadar);
-        entHealthAssessment.setEntHealthDialysis(entHealthDialysis);
-
-
-        //企业健康详情
-        EntHealthDetailsVo entHealthDetails = new EntHealthDetailsVo();
-
-        EntRegInformationVo entRegInformation = new EntRegInformationVo();
-        EntBasicInformationVo entBasicInformation = new EntBasicInformationVo();
-        List<PersonnelVo> personnelList = Lists.newArrayList();
-        List<ShareholderVo> shareholderList = Lists.newArrayList();
-
-        entRegInformation.setEntBasicInformation(entBasicInformation);
-        entRegInformation.setPersonnelList(personnelList);
-        entRegInformation.setShareholderList(shareholderList);
-        entHealthDetails.setEntRegInformation(entRegInformation);
-
-        //企业经营发展信息
-        List<EntAlterVo> entAlterList = Lists.newArrayList();
-        entHealthDetails.setEntAlterList(entAlterList);
-
-        //企业经营异常详情
-        EntAbnormalDetailsVo entAbnormalDetails = new EntAbnormalDetailsVo();
-        List<EntCaseinfoVo> caseinfoList = Lists.newArrayList();
-        List<EntSharesfrostVo> entSharesfrostList = Lists.newArrayList();
-        List<EntExceptionVo> entExceptionList = Lists.newArrayList();
-        List<EntLiquidationVo> entLiquidationList = Lists.newArrayList();
-
-
-        entAbnormalDetails.setCaseinfoList(caseinfoList);
-        entAbnormalDetails.setEntSharesfrostList(entSharesfrostList);
-        entAbnormalDetails.setEntExceptionList(entExceptionList);
-        entAbnormalDetails.setEntLiquidationList(entLiquidationList);
-        entHealthDetails.setEntAbnormalDetails(entAbnormalDetails);
-
-
-
-
-        entHealthReportVo.setEntHealthAssessment(entHealthAssessment);
-        entHealthReportVo.setEntHealthDetails(entHealthDetails);
-
-        List<QuotaModel> quotaModelList = quotaValueService.getQuotaList(reqId);
-
+        entHealthDialysis.setFiveDRader(fiveDRader);
 
         for(QuotaModel quotaModel : quotaModelList) {
             switch(quotaModel.getQuotaCode().trim()){
+                case "GS_BUSINESS_CONTINUITY":
+                case "GS_BUSINESS_CHANGE":
+                case "GS_CONTROL_STABILITY":
+                case "GS_INVESTOR_CAPACITY":
+                case "GS_BUSINESS_ANOMALIES":
+                case "GS_MANAGE_ANOMALIES":
+                case "GS_ADMINISTRATIVE_SANCTION":
+                case "SF_CASE_RISK":
+                case "SF_LITIGATION_RELATED_BEHAVIOR":
+                    //5维雷达透析
+                    fiveDRaderItemList.add(createFiveDRaderItemVo(quotaModel));
+                    break;
                 case "GS_ENT_ESTABLISH_PERIOD" :
                 case "GS_NUM_MANAGE_CHANGE" :
                 case "GS_NUM_INVESTOR_WITHDRAW":
@@ -484,6 +531,66 @@ public class DataHandleServiceImpl implements DataHandleService {
                     //法律风险透析
                     legalRiskList.add(createDialysisVo(quotaModel));
                     break;
+            }
+        }
+        culFiveDRader(fiveDRader, quotaModelList);
+
+        return entHealthDialysis;
+    }
+
+    /**
+     * 企业健康详情
+     * @return
+     */
+    private EntHealthDetailsVo getEntHealthDetails(String reqId, List<QuotaModel> quotaModelList, StdGsEntInfoModel stdGsEntInfo) {
+        EntHealthDetailsVo entHealthDetails = new EntHealthDetailsVo();
+        entHealthDetails.setEntRegInformation(getEntRegInformation(quotaModelList, stdGsEntInfo));
+        entHealthDetails.setEntAlterList(getEntAlter(stdGsEntInfo));
+        entHealthDetails.setEntAbnormalDetails(getEntAbnormalDetails(stdGsEntInfo));
+        //涉诉案件列表
+        entHealthDetails.setLitigaCaseList(stdLegalService.getLitigaCase(reqId));
+        return entHealthDetails;
+    }
+
+    /**
+     * 企业注册信息
+     * @return
+     */
+    private EntRegInformationVo getEntRegInformation(List<QuotaModel> quotaModelList, StdGsEntInfoModel stdGsEntInfo) {
+        EntRegInformationVo entRegInformation = new EntRegInformationVo();
+        //EntBasicInformationVo entBasicInformation = new EntBasicInformationVo();
+        List<PersonnelVo> personnelList = Lists.newArrayList();
+        List<ShareholderVo> shareholderList = Lists.newArrayList();
+        entRegInformation.setEntBasicInformation(getEntBasicInformation(quotaModelList));
+
+        entRegInformation.setPersonnelList(personnelList);
+        entRegInformation.setShareholderList(shareholderList);
+
+        //主要人员
+        for(StdEntPerson stdEntPerson : Utils.getList(stdGsEntInfo.getStdEntPeople())) {
+            PersonnelVo personnelVo = new PersonnelVo();
+            BeanUtils.copyProperties(stdEntPerson, personnelVo);
+            personnelList.add(personnelVo);
+        }
+        //股东信息
+        for(StdEntShareHolder stdEntShareHolder : Utils.getList(stdGsEntInfo.getStdEntShareHolders())) {
+            ShareholderVo shareholderVo = new ShareholderVo();
+            BeanUtils.copyProperties(stdEntShareHolder, shareholderVo);
+            shareholderList.add(shareholderVo);
+        }
+        //分支机构不要了
+
+        return entRegInformation;
+    }
+
+    /**
+     * 企业基本信息
+     * @return
+     */
+    private EntBasicInformationVo getEntBasicInformation(List<QuotaModel> quotaModelList){
+        EntBasicInformationVo entBasicInformation = new EntBasicInformationVo();
+        for(QuotaModel quotaModel : quotaModelList) {
+            switch(quotaModel.getQuotaCode().trim()){
                 case "GS_ENT_LRNAME":
                     entBasicInformation.setLrName(quotaModel.getQuotaValue());
                     break;
@@ -540,31 +647,38 @@ public class DataHandleServiceImpl implements DataHandleService {
                     break;
             }
         }
+        return entBasicInformation;
+    }
 
-
-        StdGsEntInfoModel stdGsEntInfo = stdDataService.getStdGsEntInfo(reqId);
-        //主要人员
-        for(StdEntPerson stdEntPerson : Utils.getList(stdGsEntInfo.getStdEntPeople())) {
-            PersonnelVo personnelVo = new PersonnelVo();
-            BeanUtils.copyProperties(stdEntPerson, personnelVo);
-            personnelList.add(personnelVo);
-        }
-        //股东信息
-        for(StdEntShareHolder stdEntShareHolder : Utils.getList(stdGsEntInfo.getStdEntShareHolders())) {
-            ShareholderVo shareholderVo = new ShareholderVo();
-            BeanUtils.copyProperties(stdEntShareHolder, shareholderVo);
-            shareholderList.add(shareholderVo);
-        }
-        //分支机构不要了
-
-        //信息变更记录
+    /**
+     * 企业经营发展信息
+     */
+    private List<EntAlterVo> getEntAlter(StdGsEntInfoModel stdGsEntInfo) {
+        List<EntAlterVo> entAlterList = Lists.newArrayList();
         for(StdEntAlter stdEntAlter : Utils.getList(stdGsEntInfo.getStdEntAlters())) {
             EntAlterVo entAlterVo = new EntAlterVo();
             BeanUtils.copyProperties(stdEntAlter, entAlterVo);
             entAlterList.add(entAlterVo);
         }
+        return entAlterList;
+    }
 
-        //企业经营异常详情
+    /**
+     * 企业经营异常详情
+     */
+    private EntAbnormalDetailsVo getEntAbnormalDetails(StdGsEntInfoModel stdGsEntInfo){
+        EntAbnormalDetailsVo entAbnormalDetails = new EntAbnormalDetailsVo();
+        List<EntCaseinfoVo> caseinfoList = Lists.newArrayList();
+        List<EntSharesfrostVo> entSharesfrostList = Lists.newArrayList();
+        List<EntExceptionVo> entExceptionList = Lists.newArrayList();
+        List<EntLiquidationVo> entLiquidationList = Lists.newArrayList();
+
+
+        entAbnormalDetails.setCaseinfoList(caseinfoList);
+        entAbnormalDetails.setEntSharesfrostList(entSharesfrostList);
+        entAbnormalDetails.setEntExceptionList(entExceptionList);
+        entAbnormalDetails.setEntLiquidationList(entLiquidationList);
+
         //行政处罚
         for(StdEntCaseinfo stdEntCaseinfo : Utils.getList(stdGsEntInfo.getStdEntCaseinfos())) {
             EntCaseinfoVo entCaseinfoVo = new EntCaseinfoVo();
@@ -589,12 +703,39 @@ public class DataHandleServiceImpl implements DataHandleService {
             BeanUtils.copyProperties(stdEntLiquidation, entLiquidationVo);
             entLiquidationList.add(entLiquidationVo);
         }
-        //涉诉案件列表
-        //todo
+
+        return entAbnormalDetails;
+    }
 
 
 
-        return entHealthReportVo;
+
+
+
+    /**
+     * 计算5维雷达综合得分
+     * @param fiveDRader
+     */
+    private void culFiveDRader(FiveDRaderVo fiveDRader, List<QuotaModel> quotaModelList) {
+        List<Long> firstLevelIds = Arrays.asList(new Long[] {10L,11L,12L,13L});
+        Map<Long, List<QuotaModel>> quotaModelMap = quotaModelList.stream()
+                .filter(item -> (firstLevelIds.contains(item.getFirstLevelId()) && "QUOTA".equals(item.getQuotaType()) && !"Y".equals(item.getIdealInterval())))
+                .collect(Collectors.groupingBy(QuotaModel::getFirstLevelId));
+        for(Long key : quotaModelMap.keySet()) {
+            double score = 100;
+            for(QuotaModel quotaModel : Utils.getList(quotaModelMap.get(key))) {
+                score = score - quotaModel.getMinusPoints();
+            }
+            if(key == 10) {
+                fiveDRader.setBusinessStabilityScore(score);
+            } else if(key == 11) {
+                fiveDRader.setIntellectualPropertyScore(score);
+            } else if(key == 12) {
+                fiveDRader.setBusinessRiskScore(score);
+            } else if(key == 13) {
+                fiveDRader.setLegalRiskScore(score);
+            }
+        }
     }
 
     private String getDimensionName(Long dimensionId) {
@@ -617,5 +758,16 @@ public class DataHandleServiceImpl implements DataHandleService {
         dialysisVo.setActualValue(quotaModel.getQuotaValue());
         //todo 理想区间
         return dialysisVo;
+    }
+
+    private FiveDRaderItemVo createFiveDRaderItemVo(QuotaModel quotaModel) {
+        FiveDRaderItemVo fiveDRaderItemVo = new FiveDRaderItemVo();
+        fiveDRaderItemVo.setQuotaId(quotaModel.getId());
+        fiveDRaderItemVo.setQuotaName(quotaModel.getQuotaName());
+        fiveDRaderItemVo.setQuotaCode(quotaModel.getQuotaCode());
+        fiveDRaderItemVo.setQuotaValue(quotaModel.getQuotaValue());
+        fiveDRaderItemVo.setMinusPoints(quotaModel.getMinusPoints());
+        fiveDRaderItemVo.setFirstLevelId(quotaModel.getFirstLevelId());
+        return fiveDRaderItemVo;
     }
 }

@@ -26,6 +26,11 @@ public class Quota extends BaseDomain {
     @TableField(value = "quota_name")
     private String quotaName;
     /**
+     * 指标类型
+     */
+    @TableField(value = "quota_type")
+    private String quotaType;
+    /**
      * 指标计算规则
      */
     @TableField(value = "quota_rule")

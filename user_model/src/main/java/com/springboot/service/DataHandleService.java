@@ -13,11 +13,17 @@ public interface DataHandleService {
     public String handelData(String entName) throws Exception;
 
     /**
-     * 通过企业名称计算指标值
+     * 计算指标值
      * @param reqId
      * @return
      */
     public void culQuotas(String reqId);
+
+    /**
+     * 计算模型
+     * @param reqId
+     */
+    public void culModels(String reqId);
 
     /**
      * 解析司法

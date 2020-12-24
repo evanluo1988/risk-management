@@ -24,7 +24,7 @@ public class EntHealthDetailsVo {
     /**
      * 企业涉诉详情
      */
-    //todo 涉诉案件列表
+    private List<LitigaCaseVo> litigaCaseList;
 
 
 }
