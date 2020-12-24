@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Builder;
 import lombok.Data;
 
@@ -56,4 +57,8 @@ public class LitigaCaseVo {
      * 案件结果对客户的影响
      */
     private String sentenceEffect;
+
+    public String getPayment() {
+        return StrUtils.getMoney(payment);
+    }
 }

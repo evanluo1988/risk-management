@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -36,4 +37,8 @@ public class EntLiquidationVo {
      * 债权承接人
      */
     private String claimtranee;
+
+    public String getLigenddate() {
+        return StrUtils.getDataStr(ligenddate);
+    }
 }

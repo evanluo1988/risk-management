@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -79,4 +80,29 @@ public class EntBasicInformationVo {
      * 经营范围
      */
     private String operateScope;
+
+
+    public String getRegCap() {
+        return StrUtils.getMoneyText(regCap, regCapCur);
+    }
+
+    public String getRecCap() {
+        return StrUtils.getMoneyText(recCap, regCapCur);
+    }
+
+    public String getCanDate() {
+        return StrUtils.getDataStr(canDate);
+    }
+
+    public String getOpenFrom() {
+        return StrUtils.getDataStr(openFrom);
+    }
+
+    public String getRevDate() {
+        return StrUtils.getDataStr(revDate);
+    }
+
+    public String getOpenTo() {
+        return StrUtils.getDataStr(openTo);
+    }
 }

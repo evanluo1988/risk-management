@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -31,4 +32,12 @@ public class EntExceptionVo {
      * 移出异常名录原因
      */
     private String outreason;
+
+    public String getIndate() {
+        return StrUtils.getDataStr(indate);
+    }
+
+    public String getOutdate() {
+        return StrUtils.getDataStr(outdate);
+    }
 }

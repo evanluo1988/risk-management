@@ -1,5 +1,6 @@
 package com.springboot.util;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -57,4 +58,61 @@ public class StrUtils {
         }
         return linkNo;
     }
+
+    /**
+     * 获取钱
+     * @param moneyStr 金额
+     * @param regCapCur 币种
+     * @return
+     */
+    public static String getMoneyText(String moneyStr, String regCapCur) {
+        if(moneyStr == null) {
+            return null;
+        }
+        BigDecimal money = new BigDecimal(moneyStr);
+
+        return money.divide(BigDecimal.valueOf(10000)).stripTrailingZeros().toPlainString()+"万元";
+    }
+
+    /**
+     * 保留两位小数
+     * @param moneyStr
+     * @return
+     */
+    public static String getMoney(String moneyStr) {
+        if(moneyStr == null) {
+            return null;
+        }
+        BigDecimal money = new BigDecimal(moneyStr);
+        return money.stripTrailingZeros().toPlainString();
+    }
+
+    /**
+     * 日期字符串
+     * @param date
+     * @return
+     */
+    public static String getDataStr(String date) {
+        if(date == null) {
+            return null;
+        }
+        return date.replace("-", "/");
+    }
+
+    /**
+     * 百分比
+     * @param ratio
+     */
+    public static String getRatioStr(String ratio) {
+        if(ratio == null){
+            return null;
+        }
+        BigDecimal bRatio = new BigDecimal(ratio);
+        return bRatio.multiply(BigDecimal.valueOf(100)).stripTrailingZeros().toPlainString()+"%";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(StrUtils.getRatioStr("0.5140"));
+    }
+
 }

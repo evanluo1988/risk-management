@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -24,6 +25,10 @@ public class EntHealthDetectionRadarVo {
      */
     private String regCap;
     /**
+     * 币种
+     */
+    private String regCapCur;
+    /**
      * 法定代表人
      */
     private String lrName;
@@ -47,4 +52,8 @@ public class EntHealthDetectionRadarVo {
      * 法律风险评分
      */
     private String legalRiskScore;
+
+    public String getRegCap() {
+        return StrUtils.getMoneyText(regCap, regCapCur);
+    }
 }

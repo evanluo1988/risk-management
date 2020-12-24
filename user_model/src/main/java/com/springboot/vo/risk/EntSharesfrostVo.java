@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -46,4 +47,20 @@ public class EntSharesfrostVo {
      * 解冻说明
      */
     private String thawcomment;
+
+    public String getFrofrom() {
+        return StrUtils.getDataStr(frofrom);
+    }
+
+    public String getFroto() {
+        return StrUtils.getDataStr(froto);
+    }
+
+    public String getThawdate() {
+        return StrUtils.getDataStr(thawdate);
+    }
+
+    public String getFroam() {
+        return StrUtils.getMoneyText(froam, null);
+    }
 }

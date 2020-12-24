@@ -461,6 +461,9 @@ public class DataHandleServiceImpl implements DataHandleService {
                 case "GS_ENT_REGCAP":
                     entHealthDetectionRadarVo.setRegCap(quotaModel.getQuotaValue());
                     break;
+                case "GS_ENT_REGCAPCUR":
+                    entHealthDetectionRadarVo.setRegCapCur(quotaModel.getQuotaValue());
+                    break;
                 case "GS_ENT_LRNAME":
                     entHealthDetectionRadarVo.setLrName(quotaModel.getQuotaValue());
                     break;

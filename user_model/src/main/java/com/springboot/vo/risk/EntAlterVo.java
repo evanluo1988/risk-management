@@ -1,6 +1,7 @@
 package com.springboot.vo.risk;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -32,4 +33,8 @@ public class EntAlterVo {
      * 变更后
      */
     private String altaf;
+
+    public String getAltdate() {
+        return StrUtils.getDataStr(altdate);
+    }
 }

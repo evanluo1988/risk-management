@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -41,4 +42,8 @@ public class EntCaseinfoVo {
      * 处罚结果
      */
     private String penresult;
+
+    public String getPublicdate() {
+        return StrUtils.getDataStr(publicdate);
+    }
 }

@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -36,4 +37,12 @@ public class ShareholderVo {
      * 出资方式
      */
     private String conform;
+
+    public String getConDate() {
+        return StrUtils.getDataStr(conDate);
+    }
+
+    public String getFundedratio() {
+        return StrUtils.getRatioStr(fundedratio);
+    }
 }
