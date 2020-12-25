@@ -10,6 +10,8 @@ import com.springboot.mapper.*;
 import com.springboot.model.QuotaModel;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.model.StdGsEntInfoModel;
+import com.springboot.model.remote.CustomerIndustrialAndJusticeRequest;
+import com.springboot.model.remote.CustomerIndustrialAndJusticeResponse;
 import com.springboot.service.*;
 import com.springboot.service.remote.WYRemoteService;
 import com.springboot.util.StrUtils;
@@ -29,22 +31,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class DataHandleServiceImpl implements DataHandleService {
-
-    @Value("${wy.product.code}")
-    private String productCode;
-
-    @Value("${wy.appid}")
-    private String appId;
-
-    @Value("${wy.appkey}")
-    private String appKey;
-    @Value("${wy.aeskey}")
-    private String aesKey;
-
-
-
     @Autowired
-    private WYRemoteService wyRemoteService;
+    private WYSourceDataService wySourceDataService;
     @Autowired
     private EntWyBasicMapper entWyBasicMapper;
     @Autowired
@@ -126,28 +114,6 @@ public class DataHandleServiceImpl implements DataHandleService {
 
     @Autowired
     private StdDataService stdDataService;
-
-    private String grabData(String entName) {
-        WYRemoteService.CustomerDataCollectionRequest customerDataCollectionRequest = new WYRemoteService.CustomerDataCollectionRequest();
-        String businessId = StrUtils.randomStr(20);
-        String timeStamp = String.valueOf(System.currentTimeMillis());
-        String sign = WYRemoteService.calcSign(businessId,timeStamp,appKey);
-        customerDataCollectionRequest
-                .setBusinessID(businessId)
-                .setEntName("广西南宁卓信商贸有限公司")
-                .setEntCreditID("911112345671234567")
-                .setIndName("黄日林")
-                .setIndCertID("uTln8yoWNBcFDHgUv24IXvQTVoGyDvrYzKvAcHzbyhM=")
-                .setProductCode(productCode)
-                .setAppID(appId)
-                .setTimestamp(timeStamp)
-                .setSignature(sign);
-
-        System.out.println("请求报文："+JSON.toJSONString(customerDataCollectionRequest));
-        WYRemoteService.CustomerDataCollectionResponse customerDataCollectionResponse = wyRemoteService.customerDataCollection(customerDataCollectionRequest);
-
-        return JSON.toJSONString(customerDataCollectionResponse);
-    }
 
 
     /**
@@ -331,12 +297,11 @@ public class DataHandleServiceImpl implements DataHandleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String handelData(String entName) throws Exception {
-        String response = grabData(entName);
+        String response = wySourceDataService.getIndustrialAndJusticeData(entName);
         String reqId = UUID.randomUUID().toString();
         createEdsData(reqId, response);
         createStdData(reqId);
         analysisJustice(reqId);
-
 
         //设置时效性，并记录日志
         cloudInfoTimelinessService.updateTimeLiness(entName, reqId);

@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.springboot.ApplicationTest;
-import com.springboot.model.RemoteDataModel;
+import com.springboot.model.remote.CustomerIndustrialAndJusticeRequest;
+import com.springboot.model.remote.CustomerIndustrialAndJusticeResponse;
 import com.springboot.util.StrUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
  * @Version 1.0
  */
 public class WYRemoteServiceTest extends ApplicationTest {
-    @Value("${wy.product.code}")
-    private String productCode;
 
     @Value("${wy.appid}")
     private String appId;
@@ -33,7 +31,7 @@ public class WYRemoteServiceTest extends ApplicationTest {
 
     @Test
     public void testCustomerDataCollection() {
-        WYRemoteService.CustomerDataCollectionRequest customerDataCollectionRequest = new WYRemoteService.CustomerDataCollectionRequest();
+        CustomerIndustrialAndJusticeRequest customerDataCollectionRequest = new CustomerIndustrialAndJusticeRequest();
         String businessId = StrUtils.randomStr(20);
         String timeStamp = String.valueOf(System.currentTimeMillis());
         String sign = WYRemoteService.calcSign(businessId,timeStamp,appKey);
@@ -43,13 +41,13 @@ public class WYRemoteServiceTest extends ApplicationTest {
                 .setEntCreditID("911112345671234567")
                 .setIndName("黄日林")
                 .setIndCertID("uTln8yoWNBcFDHgUv24IXvQTVoGyDvrYzKvAcHzbyhM=")
-                .setProductCode(productCode)
+                //.setProductCode(productCode)
                 .setAppID(appId)
                 .setTimestamp(timeStamp)
                 .setSignature(sign);
 
         System.out.println("请求报文："+JSON.toJSONString(customerDataCollectionRequest));
-        WYRemoteService.CustomerDataCollectionResponse customerDataCollectionResponse = wyRemoteService.customerDataCollection(customerDataCollectionRequest);
+        CustomerIndustrialAndJusticeResponse customerDataCollectionResponse = wyRemoteService.customerDataCollection(customerDataCollectionRequest);
         System.out.println("响应报文："+JSON.toJSONString(customerDataCollectionResponse));
 
         JSONObject jsonObject = JSONObject.parseObject(customerDataCollectionResponse.getData());
