@@ -1,9 +1,6 @@
 package com.springboot.service.remote;
 
-import com.springboot.model.remote.CustomerIndustrialAndJusticeRequest;
-import com.springboot.model.remote.CustomerIndustrialAndJusticeResponse;
-import com.springboot.model.remote.CustomerIntellectualPropertyRequest;
-import com.springboot.model.remote.CustomerIntellectualPropertyResponse;
+import com.springboot.model.remote.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +22,7 @@ public interface WYRemoteService {
     CustomerIndustrialAndJusticeResponse customerDataCollection(@RequestBody CustomerIndustrialAndJusticeRequest customerDataCollectionRequest);
 
     @RequestMapping(value = "/exchange/entry/customer/asip",method = RequestMethod.POST)
-    CustomerIntellectualPropertyResponse customerDataCollection(@RequestBody CustomerIntellectualPropertyRequest customerIntellectualPropertyRequest);
+    CustomerIntellectualPropertyResponse customerBrandDataCollection(@RequestBody CustomerIntellectualPropertyRequest customerIntellectualPropertyRequest);
 
 
 }

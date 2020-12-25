@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.springboot.ApplicationTest;
 import com.springboot.model.remote.CustomerIndustrialAndJusticeRequest;
 import com.springboot.model.remote.CustomerIndustrialAndJusticeResponse;
+import com.springboot.service.WYSourceDataService;
 import com.springboot.util.StrUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,13 +30,15 @@ public class WYRemoteServiceTest extends ApplicationTest {
 
     @Autowired
     private WYRemoteService wyRemoteService;
+    @Autowired
+    private WYSourceDataService wySourceDataService;
 
     @Test
     public void testCustomerDataCollection() {
         CustomerIndustrialAndJusticeRequest customerDataCollectionRequest = new CustomerIndustrialAndJusticeRequest();
         String businessId = StrUtils.randomStr(20);
         String timeStamp = String.valueOf(System.currentTimeMillis());
-        String sign = WYRemoteService.calcSign(businessId,timeStamp,appKey);
+        String sign = calcSign(businessId,timeStamp,appKey);
         customerDataCollectionRequest
                 .setBusinessID(businessId)
                 .setEntName("广西南宁卓信商贸有限公司")
@@ -53,5 +57,11 @@ public class WYRemoteServiceTest extends ApplicationTest {
         JSONObject jsonObject = JSONObject.parseObject(customerDataCollectionResponse.getData());
         JSONArray dataJsonArr = (JSONArray)jsonObject.getJSONObject("R11C53").get("data");
        // RemoteDataModel data = JSON.parseObject(dataJsonArr.get(0).toString(), RemoteDataModel.class);
+    }
+
+    private String calcSign(String businessId, String timeStamp, String appKey) {
+        String originStr = businessId+timeStamp+appKey;
+        String md5 = DigestUtils.md5Hex(originStr);
+        return md5;
     }
 }

@@ -1,19 +1,28 @@
 package com.springboot.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.springboot.model.remote.CustomerIndustrialAndJusticeRequest;
-import com.springboot.model.remote.CustomerIndustrialAndJusticeResponse;
-import com.springboot.model.remote.CustomerIntellectualPropertyRequest;
-import com.springboot.model.remote.CustomerIntellectualPropertyResponse;
+import com.google.common.collect.Lists;
+import com.springboot.domain.risk.IaAsBrand;
+import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.model.remote.*;
 import com.springboot.service.WYSourceDataService;
 import com.springboot.service.remote.WYRemoteService;
 import com.springboot.util.StrUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+@Slf4j
 @Service
 public class WYSourceDataServiceImpl implements WYSourceDataService {
     @Value("${wy.appid}")
@@ -58,7 +67,95 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
     }
 
     @Override
-    public String getIntellectualPropertyData(String entName) {
+    public String getPatentData(String entName) {
+        LocalDateTime beginTime = LocalDateTime.now();
+        int pageId = 1;
+        String data = getIntellectualProperty(entName, pageId, "product_eds_patent");
+        JSONObject jsonObject = JSONObject.parseObject(data);
+
+        //解析页码
+        String pageMsg = jsonObject.getJSONObject("R11A73").getString("msg");
+        Integer totalPage = getTotalPage(pageMsg);
+        JSONArray brandDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A73").get("data");
+
+        return null;
+    }
+
+    @Override
+    public List<IaAsBrand> getBrandData(String entName) {
+        LocalDateTime beginTime = LocalDateTime.now();
+        int pageId = 1;
+        String data = getIntellectualProperty(entName, pageId, "product_eds_trademark");
+        JSONObject jsonObject = JSONObject.parseObject(data);
+        //解析页码
+        String pageMsg = jsonObject.getJSONObject("R11A74").getString("msg");
+        Integer totalPage = getTotalPage(pageMsg);
+        JSONArray brandDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A74").get("data");
+        List<IaAsBrand> iaAsBrandList = Lists.newArrayList();
+        //得到第一页数据
+        iaAsBrandList.addAll(JSON.parseArray(brandDataJsonArray.toString(), IaAsBrand.class));
+
+        pageId++;
+        if(totalPage != null) {
+            while(pageId <= totalPage){
+                data = getIntellectualProperty(entName, pageId, "product_eds_trademark");
+                brandDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A74").get("data");
+                iaAsBrandList.addAll(JSON.parseArray(brandDataJsonArray.toString(), IaAsBrand.class));
+                pageId++;
+            }
+        }
+
+        Long opetime = Duration.between(beginTime,LocalDateTime.now()).toMillis();
+        log.info("###########################"+opetime+"##############");
+        return iaAsBrandList;
+    }
+
+
+    @Override
+    public List<IaAsCopyright> getCopyrightData(String entName) {
+        LocalDateTime beginTime = LocalDateTime.now();
+        int pageId = 1;
+        String data = getIntellectualProperty(entName, pageId, "product_eds_copyright");
+        JSONObject jsonObject = JSONObject.parseObject(data);
+
+        //解析页码
+        String pageMsg = jsonObject.getJSONObject("R11A83").getString("msg");
+        Integer totalPage = getTotalPage(pageMsg);
+        JSONArray copyrightDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A83").get("data");
+        List<IaAsCopyright> iaAsCopyrightList = Lists.newArrayList();
+
+        //得到第一页数据
+        iaAsCopyrightList.addAll(JSON.parseArray(copyrightDataJsonArray.toString(), IaAsCopyright.class));
+
+        pageId++;
+        if(totalPage != null) {
+            while(pageId <= totalPage){
+                data = getIntellectualProperty(entName, pageId, "product_eds_copyright");
+                copyrightDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A83").get("data");
+                iaAsCopyrightList.addAll(JSON.parseArray(copyrightDataJsonArray.toString(), IaAsCopyright.class));
+                pageId++;
+            }
+        }
+
+        Long opetime = Duration.between(beginTime,LocalDateTime.now()).toMillis();
+        log.info("###########################"+opetime+"##############");
+
+        return iaAsCopyrightList;
+    }
+
+
+    public Integer getTotalPage(String pageMsg) {
+        String regEx = "[共]\\d+[页]";
+        Pattern c = Pattern.compile(regEx);
+        Matcher mc=c.matcher(pageMsg);
+        if(mc.find()){
+            String s = mc.group(0);
+            return Integer.valueOf(s.substring(1,s.length()-1));
+        }
+        return null;
+    }
+
+    private String getIntellectualProperty(String entName, int pageId, String productCode) {
         CustomerIntellectualPropertyRequest intellectualPropertyRequest = new CustomerIntellectualPropertyRequest();
         String businessId = StrUtils.randomStr(20);
         String timeStamp = String.valueOf(System.currentTimeMillis());
@@ -66,16 +163,16 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         intellectualPropertyRequest
                 .setBusinessID(businessId)
                 .setName(entName)
-                .setNameType("")
-                .setPageId("1")
-                .setProductCode("")
+                .setNameType("1")
+                .setPageId(pageId+"")
+                .setProductCode(productCode)
                 .setAppID(appId)
                 .setTimestamp(timeStamp)
                 .setSignature(sign);
         System.out.println("请求报文："+ JSON.toJSONString(intellectualPropertyRequest));
 
-        CustomerIntellectualPropertyResponse customerIntellectualPropertyResponse = wyRemoteService.customerDataCollection(intellectualPropertyRequest);
-        return JSON.toJSONString(customerIntellectualPropertyResponse);
+        CustomerIntellectualPropertyResponse customerBrandResponse = wyRemoteService.customerBrandDataCollection(intellectualPropertyRequest);
+        return customerBrandResponse.getData();
     }
 
 }
