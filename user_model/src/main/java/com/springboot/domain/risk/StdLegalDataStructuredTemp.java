@@ -38,12 +38,21 @@ public class StdLegalDataStructuredTemp extends StdLegalDataStructured {
                 .caseReason(this.getCaseReason())
                 .lawStatus(this.getLawstatus())
                 .intervalYear(stdLegalCasemedianTemp.getIntervalYear())
-                .payment(Objects.isNull(stdLegalCasemedianTemp) ? null : StringUtils.isNotBlank(stdLegalCasemedianTemp.getPayment()) ? stdLegalCasemedianTemp.getPayment() : String.valueOf(Objects.isNull(this.getTargetAmount())?null:this.getTargetAmount().setScale(4, BigDecimal.ROUND_HALF_UP)))
+                .payment(getPayment(stdLegalCasemedianTemp))
                 .courtLevel(stdLegalCasemedianTemp.getCourtLevel())
                 .sentenceBrief(calcSentenceBrief(stdLegalCasemedianTemp.getSentenceBrief()))
                 .sentenceEffect(calcSentenceEffect(stdLegalCasemedianTemp.getSentenceEffect()))
                 .build();
         return litigaCaseVo;
+    }
+
+    private String getPayment(StdLegalCasemedianTemp stdLegalCasemedianTemp) {
+        String payment = null;
+        if (Objects.nonNull(stdLegalCasemedianTemp)){
+            payment = stdLegalCasemedianTemp.getPayment();
+        }
+        //Objects.isNull(stdLegalCasemedianTemp) ? null : StringUtils.isNotBlank(stdLegalCasemedianTemp.getPayment()) ? stdLegalCasemedianTemp.getPayment() : String.valueOf(Objects.isNull(this.getTargetAmount())?null:this.getTargetAmount().setScale(4, BigDecimal.ROUND_HALF_UP))
+        return payment;
     }
 
     /**

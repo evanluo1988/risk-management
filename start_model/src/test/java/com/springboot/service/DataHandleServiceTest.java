@@ -8,6 +8,7 @@ import com.springboot.ApplicationTest;
 import com.springboot.domain.risk.*;
 import com.springboot.mapper.*;
 import com.springboot.model.RemoteDataModel;
+import com.springboot.vo.risk.EntHealthReportVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -291,6 +292,7 @@ public class DataHandleServiceTest extends ApplicationTest {
     @Test
     public void testGetEntHealthReportVo() {
         String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
-        dataHandleService.getEntHealthReportVo(reqId);
+        EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId);
+        System.out.println(entHealthReportVo);
     }
 }
