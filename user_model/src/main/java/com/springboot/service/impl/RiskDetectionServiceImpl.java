@@ -60,6 +60,9 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
 
         //查询数据库记录得到address后返回
         EntWyBasic edsGsBasic = edsGsBasicService.getEdsGsBasicByReqId(reqId);
+        if(edsGsBasic == null){
+            return null;
+        }
         return edsGsBasic.getAddress();
     }
 }

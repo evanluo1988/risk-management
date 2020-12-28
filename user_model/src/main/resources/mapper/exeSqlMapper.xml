@@ -6,9 +6,9 @@
         ${exeSql}
     </select>
 
-    <select id="exeInsertSql" parameterType="String">
+    <insert id="exeInsertSql" parameterType="String">
         ${exeSql}
-    </select>
+    </insert>
 
     <select id="exeQuotaSql" parameterType="String" resultType="java.util.LinkedHashMap">
         ${exeSql}

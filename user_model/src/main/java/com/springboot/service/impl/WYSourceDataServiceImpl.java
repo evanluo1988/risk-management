@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.springboot.domain.risk.IaAsBrand;
 import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.model.IaAsPartentModel;
 import com.springboot.model.remote.*;
 import com.springboot.service.WYSourceDataService;
 import com.springboot.service.remote.WYRemoteService;
@@ -67,7 +68,7 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
     }
 
     @Override
-    public String getPatentData(String entName) {
+    public List<IaAsPartentModel> getPatentData(String entName) {
         LocalDateTime beginTime = LocalDateTime.now();
         int pageId = 1;
         String data = getIntellectualProperty(entName, pageId, "product_eds_patent");
@@ -76,9 +77,25 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         //解析页码
         String pageMsg = jsonObject.getJSONObject("R11A73").getString("msg");
         Integer totalPage = getTotalPage(pageMsg);
-        JSONArray brandDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A73").get("data");
+        JSONArray partentDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A73").get("data");
+        List<IaAsPartentModel> iaAsPartentModelList = Lists.newArrayList();
 
-        return null;
+        //得到第一页数据
+        iaAsPartentModelList.addAll(JSON.parseArray(partentDataJsonArray.toString(), IaAsPartentModel.class));
+
+        pageId++;
+        if(totalPage != null) {
+            while(pageId <= totalPage){
+                data = getIntellectualProperty(entName, pageId, "product_eds_patent");
+                partentDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A73").get("data");
+                iaAsPartentModelList.addAll(JSON.parseArray(partentDataJsonArray.toString(), IaAsPartentModel.class));
+                pageId++;
+            }
+        }
+
+        Long opetime = Duration.between(beginTime,LocalDateTime.now()).toMillis();
+        log.info("###########################"+opetime+"##############");
+        return iaAsPartentModelList;
     }
 
     @Override
@@ -86,6 +103,9 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         LocalDateTime beginTime = LocalDateTime.now();
         int pageId = 1;
         String data = getIntellectualProperty(entName, pageId, "product_eds_trademark");
+        if(data == null){
+            return null;
+        }
         JSONObject jsonObject = JSONObject.parseObject(data);
         //解析页码
         String pageMsg = jsonObject.getJSONObject("R11A74").getString("msg");
@@ -116,6 +136,9 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         LocalDateTime beginTime = LocalDateTime.now();
         int pageId = 1;
         String data = getIntellectualProperty(entName, pageId, "product_eds_copyright");
+        if(data == null){
+            return null;
+        }
         JSONObject jsonObject = JSONObject.parseObject(data);
 
         //解析页码

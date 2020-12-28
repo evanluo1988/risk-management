@@ -3,6 +3,7 @@ package com.springboot.service;
 import com.springboot.ApplicationTest;
 import com.springboot.domain.risk.IaAsBrand;
 import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.model.IaAsPartentModel;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +21,7 @@ public class WYSourceDataServiceTest extends ApplicationTest {
 
     @Test
     public void testGetPatentData() {
-        String res =  wySourceDataService.getPatentData("北大方正集团有限公司");
+        List<IaAsPartentModel> res =  wySourceDataService.getPatentData("北大方正集团有限公司");
         System.out.println(res);
     }
 

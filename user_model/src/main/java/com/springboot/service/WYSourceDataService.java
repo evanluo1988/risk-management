@@ -2,6 +2,7 @@ package com.springboot.service;
 
 import com.springboot.domain.risk.IaAsBrand;
 import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.model.IaAsPartentModel;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface WYSourceDataService {
      * @param entName
      * @return
      */
-    public String getPatentData(String entName);
+    public List<IaAsPartentModel> getPatentData(String entName);
 
     /**
      * 商标
