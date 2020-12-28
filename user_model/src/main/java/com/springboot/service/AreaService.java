@@ -38,4 +38,7 @@ public interface AreaService extends IService<Area> {
      * @return
      */
     Area getAreaById(Long areaId);
+
+
+    Area getArea(String entName);
 }

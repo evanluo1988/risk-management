@@ -10,6 +10,7 @@ import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.InformPageVo;
 import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -26,6 +28,7 @@ import java.util.List;
  * @author 刘宏飞
  * @since 2020-11-30
  */
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/informs")
@@ -67,11 +70,21 @@ public class InformController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
-    @Validated(InformVo.DispatcherGroup.class)
     @PutMapping("/dispatcher/{id}")
-    public ReturnT dispatcher(@PathVariable("id") Long id,
-                              @RequestBody @Valid InformVo informVo) {
-        informService.dispatcher(id, informVo.getAreaId());
+    public ReturnT dispatcher(@PathVariable("id") Long id) {
+        informService.dispatcher(id);
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @PutMapping("/dispatcher/batch")
+    public ReturnT dispatcherBatch(@RequestBody Set<Long> ids){
+        for (Long id : ids) {
+            try{
+                informService.dispatcher(id);
+            }catch (Exception e){
+                log.error("下发异常",e);
+            }
+        }
         return ReturnTUtils.newCorrectReturnT();
     }
 

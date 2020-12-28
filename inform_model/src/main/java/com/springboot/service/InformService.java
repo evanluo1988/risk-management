@@ -1,6 +1,7 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.springboot.domain.Area;
 import com.springboot.domain.Inform;
 import com.springboot.page.Pagination;
 import com.springboot.vo.InformImportVo;
@@ -37,9 +38,8 @@ public interface InformService extends IService<Inform> {
     /**
      * 分派
      * @param id
-     * @param areaId
      */
-    void dispatcher(Long id, Long areaId);
+    void dispatcher(Long id);
 
     /**
      * 退回

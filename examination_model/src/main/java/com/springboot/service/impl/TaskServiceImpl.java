@@ -50,6 +50,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     private TaskDispositionService taskDispositionService;
     @Autowired
     private TaskRefundService taskRefundService;
+    @Autowired
+    private AreaService areaService;
 
 
     @Override
@@ -169,12 +171,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public void dispatcher(Long id, Long areaId) {
-        Area area = ServerCacheUtils.getAreaById(areaId);
-        if (Objects.isNull(area)) {
-            throw new ServiceException("区域信息不存在");
-        }
-
+    public void dispatcher(Long id) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("任务不存在");
@@ -184,10 +181,19 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("已分派的不能分派");
         }
 
-        taskCheckById.setAssignment(AssignmentEnum.ASSIGNED.getCode())
-                .setAreaId(areaId);
-        taskCheckById.setUpdateTime(new Date());
-        taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+        Enterprise enterpriseById = enterpriseService.getEnterpriseById(taskCheckById.getEnterpriseId());
+        Area area = areaService.getArea(enterpriseById.getEnterpriseName());
+        if (Objects.isNull(area)) {
+            taskCheckById.setAssignment(AssignmentEnum.ASSIGNED_FAIL.getCode());
+            taskCheckById.setUpdateTime(new Date());
+            taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+        }else {
+            taskCheckById.setAssignment(AssignmentEnum.ASSIGNED.getCode())
+                    .setAreaId(area.getId());
+            taskCheckById.setUpdateTime(new Date());
+            taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+        }
+
         taskCheckService.updateById(taskCheckById);
     }
 

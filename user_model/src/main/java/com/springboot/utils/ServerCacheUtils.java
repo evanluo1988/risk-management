@@ -197,4 +197,9 @@ public class ServerCacheUtils {
         List<Area> collect = ServerCacheUtils.areaCache.stream().filter(area -> area.getAreaName().equals(areaName)).collect(Collectors.toList());
         return collect.size() > 0 ? collect.get(0) : null;
     }
+
+    public static Area getAreaLikeName(String areaName) {
+        List<Area> collect = ServerCacheUtils.areaCache.stream().filter(area -> area.getAreaName().contains(areaName)).collect(Collectors.toList());
+        return collect.size() > 0 ? collect.get(0) : null;
+    }
 }

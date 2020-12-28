@@ -10,11 +10,17 @@ import com.springboot.exception.ServiceException;
 import com.springboot.mapper.AreaDao;
 import com.springboot.model.RolePerm;
 import com.springboot.service.AreaService;
+import com.springboot.service.RiskDetectionService;
+import com.springboot.service.remote.GeoRemoteService;
 import com.springboot.util.ConvertUtils;
 import com.springboot.utils.RoleUtils;
+import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.AreaVo;
+import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.internal.guava.Sets;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -31,6 +37,13 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaService {
+
+    @Autowired
+    private RiskDetectionService riskDetectionService;
+    @Autowired
+    private GeoRemoteService geoRemoteService;
+    @Value("${map.key}")
+    private String key;
 
     @Override
     public Collection<AreaVo> listAreaByParentId(Long parentId) {
@@ -85,6 +98,25 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
                 .eq(Area::getId, areaId)
                 .eq(Area::getEnable, EnableEnum.Y.getCode());
         return getOne(queryWrapper,false);
+    }
+
+    @Override
+    public Area getArea(String entName) {
+        Area area = null;
+        String entAddress = riskDetectionService.getEntAddress(entName);
+        GeoRemoteService.GeoResponse geoResponse = geoRemoteService.geo(key, entAddress);
+        if (geoResponse.succ()){
+            String location = geoResponse.getGeocodes().get(0).getLocation();
+
+            if (StringUtils.isNotBlank(location)){
+                GeoRemoteService.ReGeoResponse regeo = geoRemoteService.regeo(key, location, "base", "false", "1");
+                if (regeo.succ()){
+                    String township = regeo.getRegeocode().getAddressComponent().getTownship();
+                    area = ServerCacheUtils.getAreaLikeName(township);
+                }
+            }
+        }
+        return area;
     }
 
     private Collection<Area> listAreaByParentIds(Set<Long> parentIds) {

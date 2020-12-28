@@ -7,13 +7,16 @@ import com.springboot.service.TaskService;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.TaskDetailVo;
 import com.springboot.vo.TaskVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Set;
 
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/verifies")
@@ -52,11 +55,21 @@ public class TaskController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
-    @Validated(TaskVo.DispatcherGroup.class)
     @PutMapping("/dispatcher/{id}")
-    public ReturnT dispatcher(@PathVariable("id") Long id,
-                              @RequestBody @Valid TaskVo taskVo){
-        taskService.dispatcher(id,taskVo.getAreaId());
+    public ReturnT dispatcher(@PathVariable("id") Long id){
+        taskService.dispatcher(id);
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @PutMapping("/dispatcher/batch")
+    public ReturnT dispatcher(@RequestBody Set<Long> ids){
+        for (Long id : ids) {
+            try {
+                taskService.dispatcher(id);
+            }catch (Exception e){
+                log.error("下发异常：",e);
+            }
+        }
         return ReturnTUtils.newCorrectReturnT();
     }
 

@@ -41,7 +41,7 @@ public interface GeoRemoteService {
         }
 
         @Data
-        static class GeoCode {
+        public static class GeoCode {
             private String location;
         }
     }
@@ -57,10 +57,10 @@ public interface GeoRemoteService {
             return "OK".equalsIgnoreCase(info);
         }
         @Data
-        static class ReGeoCode{
+        public static class ReGeoCode{
             private AddressComponent addressComponent;
             @Data
-            static class AddressComponent{
+            public static class AddressComponent{
                 //街道
                 private String township;
                 private StreetNumber streetNumber;

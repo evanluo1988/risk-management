@@ -18,6 +18,7 @@ import com.springboot.mapper.InformDao;
 import com.springboot.model.InformPageModel;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
+import com.springboot.service.remote.GeoRemoteService;
 import com.springboot.util.ConvertUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.utils.ServerCacheUtils;
@@ -26,8 +27,10 @@ import com.springboot.vo.InformPageVo;
 import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -100,12 +103,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void dispatcher(Long id, Long areaId) {
-        Area area = ServerCacheUtils.getAreaById(areaId);
-        if (Objects.isNull(area)) {
-            throw new ServiceException("区域信息不存在");
-        }
-
+    public void dispatcher(Long id) {
         Inform inform = getInformById(id);
         if (Objects.isNull(inform)) {
             throw new ServiceException("举报信息不存在");
@@ -115,10 +113,19 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("已分派的不能分派");
         }
 
-        inform.setAreaId(areaId)
-                .setAssignment(AssignmentEnum.ASSIGNED.getCode());
-        inform.setUpdateTime(new Date());
-        inform.setUpdateBy(UserAuthInfoContext.getUserName());
+        Area area = areaService.getArea(inform.getInformName());
+
+        if (Objects.isNull(area)) {
+            inform.setAssignment(AssignmentEnum.ASSIGNED_FAIL.getCode());
+            inform.setUpdateTime(new Date());
+            inform.setUpdateBy(UserAuthInfoContext.getUserName());
+        }else {
+            inform.setAreaId(area.getId())
+                    .setAssignment(AssignmentEnum.ASSIGNED.getCode());
+            inform.setUpdateTime(new Date());
+            inform.setUpdateBy(UserAuthInfoContext.getUserName());
+        }
+
         updateById(inform);
     }
 
@@ -286,7 +293,6 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
 
         @Override
         public void invoke(InformImportVo informImportVo, AnalysisContext analysisContext) {
-            log.debug("解析到一条数据:{}", JSON.toJSONString(informImportVo));
             data.add(informImportVo);
         }
 
