@@ -230,6 +230,12 @@ public class IaAsPartent extends BaseDomain {
     @TableField(value = "ago")
     private String ago;
     /**
+     * 专利权人-中文
+     */
+    @JSONField(name = "asc")
+    @TableField(value = "iasc")
+    private String iasc;
+    /**
      * 专利权人-英文
      */
     @JSONField(name = "ase")
