@@ -131,7 +131,7 @@ public class DataHandleServiceImpl implements DataHandleService {
      */
     private void createEdsData(String reqId, String entName) {
         createIndustrialAndJustice(reqId, entName);
-        createIntellectualProperty(reqId, "北大方正集团有限公司");
+        createIntellectualProperty(reqId, entName);
     }
 
     /**
