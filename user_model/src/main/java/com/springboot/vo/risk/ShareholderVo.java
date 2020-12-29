@@ -45,4 +45,8 @@ public class ShareholderVo {
     public String getFundedratio() {
         return StrUtils.getRatioStr(fundedratio);
     }
+
+    public String getSubconam() {
+        return StrUtils.getMoneyText(subconam,null);
+    }
 }
