@@ -24,7 +24,7 @@ public class PdfTest extends ApplicationTest{
 
     @Test
     public void test() throws FileNotFoundException {
-        String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
+        String reqId = "3e9e0594-15d9-409a-8c7d-fafe83098c6d";
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId);
         HashMap data = new HashMap();
         data.put("data",entHealthReportVo);
