@@ -69,10 +69,6 @@ public class EntBasicInformationVo {
      */
     private String address;
     /**
-     * 组织机构代码
-     */
-    private String orgCode;
-    /**
      * 登记机关
      */
     private String regOrg;

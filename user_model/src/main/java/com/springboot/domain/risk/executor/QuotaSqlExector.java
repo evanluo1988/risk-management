@@ -1,5 +1,6 @@
 package com.springboot.domain.risk.executor;
 
+import com.google.common.collect.Maps;
 import com.springboot.domain.risk.Quota;
 import com.springboot.domain.risk.StdEntBasic;
 import com.springboot.mapper.ExeSqlMapper;
@@ -24,6 +25,9 @@ public class QuotaSqlExector implements QuotaExecutor {
     public Map execQuota(String reqId, Quota quota) {
         String exeQuotaSql = replaceRule(reqId, quota.getQuotaRule());
         HashMap map = exeSqlMapper.exeQuotaSql(exeQuotaSql);
+        if(map == null) {
+            map = Maps.newHashMap();
+        }
         map.put("quota_sql", exeQuotaSql);
         return map;
     }

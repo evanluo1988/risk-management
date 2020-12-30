@@ -4,9 +4,11 @@ import com.springboot.domain.risk.CloudInfoTimeliness;
 import com.springboot.domain.risk.EntWyBasic;
 import com.springboot.service.*;
 import com.springboot.vo.risk.EntHealthReportVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class RiskDetectionServiceImpl implements RiskDetectionService {
     @Autowired
@@ -22,27 +24,26 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
     public EntHealthReportVo checkByEntName(String entName) {
         CloudInfoTimeliness cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
         String reqId = cloudInfoTimeliness.getReqId();
-        if(cloudInfoTimelinessService.checkTimeliness(cloudInfoTimeliness)) {
-            //查询指标值表，如果指标值存在直接返回
-            int count = quotaValueService.countQuotaValues(reqId);
-            if(count > 0) {
-                EntHealthReportVo reportVo = dataHandleService.getEntHealthReportVo(reqId);
-                return reportVo;
-            }
-        } else {
-            //调用远程接口查询，入库，计算，后返回
-            try {
+        try{
+            if(cloudInfoTimelinessService.checkTimeliness(cloudInfoTimeliness)) {
+                //查询指标值表，如果指标值存在直接返回
+                int count = quotaValueService.countQuotaValues(reqId);
+                if(count > 0) {
+                    EntHealthReportVo reportVo = dataHandleService.getEntHealthReportVo(reqId);
+                    return reportVo;
+                }
+            } else {
+                //调用远程接口查询，入库，计算，后返回
                 reqId = dataHandleService.handelData(entName);
-            } catch (Exception exception) {
-                exception.printStackTrace();
             }
+            //通过本地标准表计算指标值
+            dataHandleService.culQuotas(reqId);
+            EntHealthReportVo reportVo = dataHandleService.getEntHealthReportVo(reqId);
+            return reportVo;
+        } catch (Exception e) {
+            log.info("checkByEntName:" + e.getMessage());
         }
-        //通过本地标准表计算指标值
-        dataHandleService.culQuotas(reqId);
-        //dataHandleService.culModels(reqId);
-        EntHealthReportVo reportVo = dataHandleService.getEntHealthReportVo(reqId);
-
-        return reportVo;
+        return null;
     }
 
     @Override

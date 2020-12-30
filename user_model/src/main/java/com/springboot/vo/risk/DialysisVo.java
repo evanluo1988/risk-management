@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 /**
@@ -35,4 +36,11 @@ public class DialysisVo {
      * 理想区间值
      */
     private String idealIntervalValue;
+
+    public String getActualValue() {
+        if(quotaId == 49L) {
+            return StrUtils.getRatioStr(actualValue);
+        }
+        return actualValue;
+    }
 }
