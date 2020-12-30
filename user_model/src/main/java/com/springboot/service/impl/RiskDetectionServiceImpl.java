@@ -39,7 +39,7 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
         }
         //通过本地标准表计算指标值
         dataHandleService.culQuotas(reqId);
-        dataHandleService.culModels(reqId);
+        //dataHandleService.culModels(reqId);
         EntHealthReportVo reportVo = dataHandleService.getEntHealthReportVo(reqId);
 
         return reportVo;

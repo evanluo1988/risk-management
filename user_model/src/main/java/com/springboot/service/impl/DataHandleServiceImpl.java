@@ -130,6 +130,12 @@ public class DataHandleServiceImpl implements DataHandleService {
     private StdIaCopyrightService stdIaCopyrightService;
 
 
+    @Autowired
+    private IndustrialJusticeService industrialJusticeService;
+    @Autowired
+    private IntellectualPropertyService intellectualPropertyService;
+
+
     /**
      * 创建原始表记录
      * @param reqId
@@ -353,37 +359,43 @@ public class DataHandleServiceImpl implements DataHandleService {
 
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public String handelData(String entName) throws Exception {
-        String reqId = UUID.randomUUID().toString();
-        createEdsData(reqId, entName);
-        createStdData(reqId);
-        analysisJustice(reqId);
+//        String reqId = UUID.randomUUID().toString();
+//        createEdsData(reqId, entName);
+//        createStdData(reqId);
+//        analysisJustice(reqId);
+//
+//        //设置时效性，并记录日志
+//        cloudInfoTimelinessService.updateTimeLiness(entName, reqId);
 
-        //设置时效性，并记录日志
-        cloudInfoTimelinessService.updateTimeLiness(entName, reqId);
+        //工商司法
+        String reqId = industrialJusticeService.handelData(entName);
+        //知识产权
+        intellectualPropertyService.handelData(entName);
+
         return reqId;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void culQuotas(String reqId) {
-        //通过reqId先查找企业指标值是否存在，如果存在直接获取，如果不存在就通过标准表重新计算
-        //先得到指标列表
-        List<Quota> quotaList = ServerCacheUtils.getQuotaList();
-        if(CollectionUtils.isEmpty(quotaList)){
-            return;
-        }
-        List<Quota> quotas = quotaList.stream().filter(item -> item.getQuotaType().equals("QUOTA")).collect(Collectors.toList());
-        //初始化指标任务
-        List<QuotaTask> quotaTaskList = Lists.newArrayList();
-        for(Quota quota : Utils.getList(quotas)) {
-            quotaTaskList.add(new QuotaTask(reqId ,quota));
-        }
-        List<QuotaValue> quotaValueList = culQuotaTasks(quotaTaskList);
-
-        //save all quota values
-        quotaValueService.saveQuotaValues(quotaValueList);
+//        List<Quota> quotaList = ServerCacheUtils.getQuotaList();
+//        if(CollectionUtils.isEmpty(quotaList)){
+//            return;
+//        }
+//        List<Quota> quotas = quotaList.stream().filter(item -> item.getQuotaType().equals("QUOTA")).collect(Collectors.toList());
+//        //初始化指标任务
+//        List<QuotaTask> quotaTaskList = Lists.newArrayList();
+//        for(Quota quota : Utils.getList(quotas)) {
+//            quotaTaskList.add(new QuotaTask(reqId ,quota));
+//        }
+//        List<QuotaValue> quotaValueList = culQuotaTasks(quotaTaskList);
+//
+//        //save all quota values
+//        quotaValueService.saveQuotaValues(quotaValueList);
+        industrialJusticeService.culQuotas(reqId,"QUOTA");
+        industrialJusticeService.culQuotas(reqId, "MODEL");
+        intellectualPropertyService.culQuotas(reqId, "QUOTA");
+        intellectualPropertyService.culQuotas(reqId, "MODEL");
     }
 
     @Override

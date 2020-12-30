@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service("quotaSqlExector")
@@ -22,7 +23,9 @@ public class QuotaSqlExector implements QuotaExecutor {
     @Override
     public Map execQuota(String reqId, Quota quota) {
         String exeQuotaSql = replaceRule(reqId, quota.getQuotaRule());
-        return exeSqlMapper.exeQuotaSql(exeQuotaSql);
+        HashMap map = exeSqlMapper.exeQuotaSql(exeQuotaSql);
+        map.put("quota_sql", exeQuotaSql);
+        return map;
     }
 
     public String replaceRule(String reqId, String quotaRule) {

@@ -25,4 +25,6 @@ public class QuotaValue extends BaseDomain {
     private Integer minusPoints;
     @TableField(value = "ideal_interval")
     private String idealInterval;
+    @TableField(value = "quota_sql")
+    private String quotaSql;
 }

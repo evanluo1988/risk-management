@@ -66,6 +66,7 @@ public class QuotaTask implements Callable<QuotaValue> {
         quotaValue.setQuotaId(quota.getId());
         quotaValue.setReqId(reqId);
         quotaValue.setQuotaValue((map != null && map.get("keyvalue") != null) ? map.get("keyvalue").toString() : null);
+        quotaValue.setQuotaSql((map != null && map.get("quota_sql") != null) ? map.get("quota_sql").toString() : null);
         //计算理想区间
         if (quota.getGrandCode() != null) {
             QuotaGrand quotaGrand = getQuotaGrand(quotaValue.getQuotaValue());
