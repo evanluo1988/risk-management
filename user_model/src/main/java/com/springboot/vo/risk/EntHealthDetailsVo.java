@@ -18,6 +18,18 @@ public class EntHealthDetailsVo {
      */
     private List<EntAlterVo> entAlterList;
     /**
+     * 专利信息
+     */
+    private PatentInformationVo patentInformation;
+    /**
+     * 商标信息
+     */
+    private BrandInformationVo brandInformation;
+    /**
+     * 软件著作权信息
+     */
+    private CopyrightInformationVo copyrightInformation;
+    /**
      * 企业经营异常详情
      */
     private EntAbnormalDetailsVo entAbnormalDetails;

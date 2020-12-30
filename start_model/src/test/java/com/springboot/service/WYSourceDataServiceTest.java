@@ -27,7 +27,7 @@ public class WYSourceDataServiceTest extends ApplicationTest {
 
     @Test
     public void testGetBrandData() {
-        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData("北大方正集团有限公司");
+        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData("广西南宁卓信商贸有限公司");
         System.out.println(iaAsBrandList);
     }
 

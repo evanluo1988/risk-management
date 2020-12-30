@@ -18,6 +18,10 @@ public class EntHealthDialysisVo {
      */
     List<DialysisVo> businessStabilityList;
     /**
+     * 知识产权价值度透析
+     */
+    List<DialysisVo> intellectualPropertyList;
+    /**
      * 经营风险透析
      */
     List<DialysisVo> businessRiskList;

@@ -122,6 +122,12 @@ public class DataHandleServiceImpl implements DataHandleService {
     private IaAsBrandService iaAsBrandService;
     @Autowired
     private IaAsCopyrightService iaAsCopyrightService;
+    @Autowired
+    private StdIaPartentService stdIaPartentService;
+    @Autowired
+    private StdIaBrandService stdIaBrandService;
+    @Autowired
+    private StdIaCopyrightService stdIaCopyrightService;
 
 
     /**
@@ -494,9 +500,11 @@ public class DataHandleServiceImpl implements DataHandleService {
         fiveDRader.setFiveDRaderItemList(fiveDRaderItemList);
 
         List<DialysisVo> businessStabilityList = Lists.newArrayList();
+        List<DialysisVo> intellectualPropertyList = Lists.newArrayList();
         List<DialysisVo> businessRiskList = Lists.newArrayList();
         List<DialysisVo> legalRiskList = Lists.newArrayList();
         entHealthDialysis.setBusinessStabilityList(businessStabilityList);
+        entHealthDialysis.setIntellectualPropertyList(intellectualPropertyList);
         entHealthDialysis.setBusinessRiskList(businessRiskList);
         entHealthDialysis.setLegalRiskList(legalRiskList);
         entHealthDialysis.setFiveDRader(fiveDRader);
@@ -525,6 +533,21 @@ public class DataHandleServiceImpl implements DataHandleService {
                 case "GS_MAX_QUALIFICATION_SHAREHOLDER":
                     //经营稳定性透析
                     businessStabilityList.add(createDialysisVo(quotaModel));
+                    break;
+                case "ZS_REPORT_STRENGTH":
+                case "ZS_NUM_EFFECT_INVENTION_CUR":
+                case "ZS_NUM_VALID_PATENTS_CUR":
+                case "ZS_NUM_CITATIONS_PATENTS_CUR":
+                case "ZS_NUM_EFFECT_DESIGN_PATENTS_CUR":
+                case "ZS_NUM_EFFECT_TRADEMARKS_CUR":
+                case "ZS_NUM_TRADEMARK_REG_CUR":
+                case "ZS_NUM_INVALID_TRADEMARKS_CUR":
+                case "ZS_NUM_TRADEMARK_CATEGORIES_CUR":
+                case "ZS_SUC_RATE_TRADEMARK_REG":
+                case "ZS_NUM_EFFECT_SOFTWORKS_CUR":
+                case "ZS_NUM_SOFTWORK_YEARS":
+                    //知识产权价值度透析
+                    intellectualPropertyList.add(createDialysisVo(quotaModel));
                     break;
                 case "GS_ENT_ABNORMAL_STATE":
                 case "GS_NUM_COMMERCIAL_PENALTIES":
@@ -558,10 +581,158 @@ public class DataHandleServiceImpl implements DataHandleService {
         EntHealthDetailsVo entHealthDetails = new EntHealthDetailsVo();
         entHealthDetails.setEntRegInformation(getEntRegInformation(quotaModelList, stdGsEntInfo));
         entHealthDetails.setEntAlterList(getEntAlter(stdGsEntInfo));
+        entHealthDetails.setPatentInformation(getPatentInformation(reqId, quotaModelList));
+        entHealthDetails.setBrandInformation(getBrandInformation(reqId, quotaModelList));
+        entHealthDetails.setCopyrightInformation(getCopyrightInformation(reqId, quotaModelList));
         entHealthDetails.setEntAbnormalDetails(getEntAbnormalDetails(stdGsEntInfo));
         //涉诉案件列表
         entHealthDetails.setLitigaCaseList(stdLegalService.getLitigaCase(reqId));
         return entHealthDetails;
+    }
+
+    /**
+     * 软件著作权信息
+     * @param reqId
+     * @param quotaModelList
+     * @return
+     */
+    public CopyrightInformationVo getCopyrightInformation(String reqId, List<QuotaModel> quotaModelList) {
+        CopyrightInformationVo copyrightInformationVo = new CopyrightInformationVo();
+        //著作权概况
+        for(QuotaModel quotaModel : quotaModelList) {
+            switch(quotaModel.getQuotaCode().trim()){
+                case "ZS_SOFTWARE_APPLICATION_NUM":
+                    copyrightInformationVo.setSoftwareApplicationNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_LAST_SOFTWARE_APPLICATION_PUB_YEAR":
+                    copyrightInformationVo.setLastSoftwareApplicationPubYear(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_LAST_SOFTWARE_APPLICATION_REG_YEAR":
+                    copyrightInformationVo.setLastSoftwareApplicationRegYear(quotaModel.getQuotaValue());
+                    break;
+            }
+        }
+        //软件著作权明细
+        List<StdIaCopyrightVo> stdIaCopyrightVoList = Lists.newArrayList();
+        copyrightInformationVo.setStdIaCopyrightList(stdIaCopyrightVoList);
+        List<StdIaCopyright> stdIaCopyrightList = stdIaCopyrightService.findByReqId(reqId);
+        for(StdIaCopyright stdIaCopyright : Utils.getList(stdIaCopyrightList)) {
+            StdIaCopyrightVo stdIaCopyrightVo = new StdIaCopyrightVo();
+            BeanUtils.copyProperties(stdIaCopyright, stdIaCopyrightVo);
+            stdIaCopyrightVoList.add(stdIaCopyrightVo);
+        }
+
+        return copyrightInformationVo;
+    }
+
+
+    /**
+     * 商标信息
+     * @param reqId
+     * @param quotaModelList
+     * @return
+     */
+    private BrandInformationVo getBrandInformation(String reqId, List<QuotaModel> quotaModelList) {
+        BrandInformationVo brandInformationVo = new BrandInformationVo();
+        //商标概况
+        for(QuotaModel quotaModel : quotaModelList) {
+            switch(quotaModel.getQuotaCode().trim()){
+                case "ZS_INVALID_BRAND_NUM":
+                    brandInformationVo.setInvalidBrandNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_INVALID_BRAND_SPECIES_DISTRIBUTION":
+                    brandInformationVo.setInvalidBrandSpeciesDistribution(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_VALID_BRAND_NUM":
+                    brandInformationVo.setValidBrandNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_VALID_BRAND_SPECIES_DISTRIBUTION":
+                    brandInformationVo.setValidBrandSpeciesDistribution(quotaModel.getQuotaValue());
+                    break;
+            }
+        }
+        //商标明细
+        List<StdIaBrandVo> stdIaBrandVoList = Lists.newArrayList();
+        brandInformationVo.setStdIaBrandList(stdIaBrandVoList);
+        List<StdIaBrand> stdIaBrandList = stdIaBrandService.findByReqId(reqId);
+        for(StdIaBrand stdIaBrand : Utils.getList(stdIaBrandList)) {
+            StdIaBrandVo stdIaBrandVo = new StdIaBrandVo();
+            BeanUtils.copyProperties(stdIaBrand, stdIaBrandVo);
+            stdIaBrandVoList.add(stdIaBrandVo);
+        }
+        return brandInformationVo;
+    }
+
+
+    /**
+     * 专利信息
+     * @param reqId
+     * @param quotaModelList
+     * @return
+     */
+    private PatentInformationVo getPatentInformation(String reqId, List<QuotaModel> quotaModelList) {
+        PatentInformationVo patentInformation = new PatentInformationVo();
+        //专利概况
+        for(QuotaModel quotaModel : quotaModelList) {
+            switch(quotaModel.getQuotaCode().trim()){
+                case "ZS_INVALID_PATENT_NUM":
+                    patentInformation.setInvalidPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_INVALID_INVENTION_PATENT_NUM":
+                    patentInformation.setInvalidInventionPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_INVALID_NEW_PATENT_NUM":
+                    patentInformation.setInvalidNewPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_INVALID_APPEARANCE_PATENT_NUM":
+                    patentInformation.setInvalidAppearancePatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_ONTRIAL_PATENT_NUM":
+                    patentInformation.setOntrialPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_ONTRIAL_INVENTION_PATENT_NUM":
+                    patentInformation.setOntrialInventionPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_ONTRIAL_NEW_PATENT_NUM":
+                    patentInformation.setOntrialNewPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_ONTRIAL_APPEARANCE_PATENT_NUM":
+                    patentInformation.setOntrialAppearancePatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_VALID_PATENT_NUM":
+                    patentInformation.setValidPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_VALID_INVENTION_PATENT_NUM":
+                    patentInformation.setValidInventionPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_VALID_NEW_PATENT_NUM":
+                    patentInformation.setValidNewPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_VALID_APPEARANCE_PATENT_NUM":
+                    patentInformation.setValidAppearancePatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_TRANSFER_PATENT_NUM":
+                    patentInformation.setTransferPatentNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_INVENTOR_NUM":
+                    patentInformation.setInventorNum(quotaModel.getQuotaValue());
+                    break;
+                case "ZS_INDEPENDENT_DEVELOPMENT_PATENT_NUM":
+                    patentInformation.setIndependentDevelopmentPatentNum(quotaModel.getQuotaValue());
+                    break;
+            }
+        }
+
+        //专利明细
+        List<StdIaPartentVo> stdIaPartentVoList = Lists.newArrayList();
+        patentInformation.setStdIaPartentList(stdIaPartentVoList);
+        List<StdIaPartent> stdIaPartentList = stdIaPartentService.findByReqId(reqId);
+        for(StdIaPartent stdIaPartent : Utils.getList(stdIaPartentList)) {
+            StdIaPartentVo stdIaPartentVo = new StdIaPartentVo();
+            BeanUtils.copyProperties(stdIaPartent, stdIaPartentVo);
+            stdIaPartentVoList.add(stdIaPartentVo);
+        }
+        return patentInformation;
     }
 
     /**
