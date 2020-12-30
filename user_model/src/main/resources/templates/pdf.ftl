@@ -299,27 +299,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>知识产权价值度</td>
-                <td>专利价值度</td>
-                <td>当前</td>
-                <td>报告主体专利总强度</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>知识产权价值度</td>
-                <td>专利价值度</td>
-                <td>当前/近12个月/近24个月</td>
-                <td>报告主体有效发明专利数量</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>知识产权价值度</td>
-                <td>专利价值度</td>
-                <td>当前/近12个月/近24个月</td>
-                <td>报告主体有效实用新型专利数量</td>
-                <td></td>
-            </tr>
+            <#list data.entHealthAssessment.entHealthDialysis.intellectualPropertyList as intellectualProperty>
+                <tr>
+                    <td>${intellectualProperty.evaluationRadar}</td>
+                    <td>${intellectualProperty.evaluationDimension}</td>
+                    <td>${intellectualProperty.timeInterval}</td>
+                    <td>${intellectualProperty.concerns}</td>
+                    <td>${intellectualProperty.actualValue}</td>
+                </tr>
+            </#list>
             </tbody>
         </table>
     </div>
@@ -557,6 +545,224 @@
     </div>
 </div>
 
+<h3>三、专利信息</h3>
+<div>
+    <div>
+        <h4>无效专利概况</h4>
+        <table>
+            <tbody>
+            <tr>
+                <td rowspan="3">无效专利总数</td>
+                <td rowspan="3">${data.entHealthDetails.patentInformation.invalidPatentNum}件</td>
+                <td>发明专利</td>
+                <td>${data.entHealthDetails.patentInformation.invalidInventionPatentNum}件</td>
+                <td rowspan="3">在审专利总数</td>
+                <td rowspan="3">${data.entHealthDetails.patentInformation.ontrialPatentNum}件</td>
+                <td>发明专利</td>
+                <td>${data.entHealthDetails.patentInformation.ontrialInventionPatentNum}件</td>
+            </tr>
+            <tr>
+                <td>新型专利</td>
+                <td>${data.entHealthDetails.patentInformation.invalidNewPatentNum}件</td>
+                <td>新型专利</td>
+                <td>${data.entHealthDetails.patentInformation.ontrialNewPatentNum}件</td>
+            </tr>
+            <tr>
+                <td>外观专利</td>
+                <td>${data.entHealthDetails.patentInformation.invalidAppearancePatentNum}件</td>
+                <td>外观专利</td>
+                <td>${data.entHealthDetails.patentInformation.ontrialAppearancePatentNum}件</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h4>有效专利概况</h4>
+        <table>
+            <tbody>
+            <tr>
+                <td rowspan="3">有效专利总数</td>
+                <td rowspan="3">${data.entHealthDetails.patentInformation.validPatentNum}件</td>
+                <td>发明专利</td>
+                <td>${data.entHealthDetails.patentInformation.validInventionPatentNum}件</td>
+                <td rowspan="2">转入专利数</td>
+                <td rowspan="2">${data.entHealthDetails.patentInformation.transferPatentNum}件</td>
+                <td>发明人总数</td>
+                <td>${data.entHealthDetails.patentInformation.inventorNum}件</td>
+            </tr>
+            <tr>
+                <td>新型专利</td>
+                <td>${data.entHealthDetails.patentInformation.validNewPatentNum}件</td>
+                <td>自主研发专利数</td>
+                <td>${data.entHealthDetails.patentInformation.independentDevelopmentPatentNum}件</td>
+            </tr>
+            <tr>
+                <td>外观专利</td>
+                <td>${data.entHealthDetails.patentInformation.validAppearancePatentNum}件</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h4>专利明细</h4>
+        <table>
+            <thead>
+            <tr>
+            <th>序号</th>
+            <th>申请公布日</th>
+            <th>申请公布号</th>
+            <th>专利名称</th>
+            <th>专利类型</th>
+            <th>权力状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list data.entHealthDetails.patentInformation.stdIaPartentList as stdIaPartent>
+            <tr>
+                <td>${stdIaPartent_index+1}</td>
+                <td>${stdIaPartent.pd}</td>
+                <td>${stdIaPartent.pns}</td>
+                <td>${stdIaPartent.tic}</td>
+                <td>${stdIaPartent.pdt}</td>
+                <td>${stdIaPartent.lssc}</td>
+            </tr>
+            </#list>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3>四、商标信息</h3>
+<div>
+    <div>
+        <h4>无效商标概况</h4>
+        <table>
+            <tbody>
+            <tr>
+                <td rowspan="2">无效商标总数</td>
+                <td rowspan="2">${data.entHealthDetails.brandInformation.invalidBrandNum}个</td>
+                <td rowspan="2">商标种类分布</td>
+                <td rowspan="2">${data.entHealthDetails.brandInformation.invalidBrandSpeciesDistribution}类</td>
+                <td>种类</td>
+                <td>数量</td>
+            </tr>
+            <tr>
+                <td>材料加工</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h4>有效商标概况</h4>
+        <table>
+            <tbody>
+            <tr>
+                <td rowspan="4">有效商标总数</td>
+                <td rowspan="4">${data.entHealthDetails.brandInformation.validBrandNum}个</td>
+                <td rowspan="4">商标种类分布</td>
+                <td rowspan="4">${data.entHealthDetails.brandInformation.validBrandSpeciesDistribution}类</td>
+                <td>种类</td>
+                <td>数量</td>
+            </tr>
+            <tr>
+                <td>材料加工</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h4>商标明细</h4>
+        <table>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>商标</th>
+                <th>商标名</th>
+                <th>尼斯分类</th>
+                <th>申请日期</th>
+                <th>注册号</th>
+                <th>状态</th>
+                <th>代理人</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list data.entHealthDetails.brandInformation.stdIaBrandList as stdIaBrand>
+                <tr>
+                    <td>${stdIaBrand_index+1}</td>
+                    <td><img src="${stdIaBrand.graph}"/></td>
+                    <td>${stdIaBrand.brandName}</td>
+                    <td>${stdIaBrand.niceClassify}</td>
+                    <td>${stdIaBrand.registrationDate}</td>
+                    <td>${stdIaBrand.applicationNumber}</td>
+                    <td>${stdIaBrand.authorityStatus}</td>
+                    <td>${stdIaBrand.agentName}</td>
+                </tr>
+            </#list>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3>五、软件著作权信息</h3>
+<div>
+    <div>
+        <h4>软件著作权概况</h4>
+        <table>
+            <tbody>
+            <tr>
+                <td>软件著作权总数</td>
+                <td>${data.entHealthDetails.copyrightInformation.softwareApplicationNum}</td>
+                <td>最近一笔软件著作权首次发表距今年份</td>
+                <td>${data.entHealthDetails.copyrightInformation.lastSoftwareApplicationPubYear}</td>
+                <td>最近一笔软件著作权登记距今年份</td>
+                <td>${data.entHealthDetails.copyrightInformation.lastSoftwareApplicationRegYear}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h4>软件著作权明细</h4>
+        <table>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>登记日期</th>
+                <th>软件全称</th>
+                <th>软件简称</th>
+                <th>著作权人</th>
+                <th>注册号</th>
+                <th>分类号</th>
+                <th>版本号</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list data.entHealthDetails.copyrightInformation.stdIaCopyrightList as stdIaCopyright>
+            <tr>
+                <td>${stdIaCopyright_index+1}</td>
+                <td>${stdIaCopyright.registerDate}</td>
+                <td>${stdIaCopyright.softwareFullName}</td>
+                <td>${stdIaCopyright.softwareAbbreviation}</td>
+                <td>${stdIaCopyright.copyrightowner}</td>
+                <td>${stdIaCopyright.registrationNumber}</td>
+                <td>${stdIaCopyright.classifyNumber}</td>
+                <td>${stdIaCopyright.versionsNumber}</td>
+            </tr>
+            </#list>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <h1>第二部分 企业风险详情</h1>
 <h3>一、企业经营异常详情</h3>
 <div>
@@ -576,15 +782,15 @@
             </thead>
             <tbody>
             <#list data.entHealthDetails.entAbnormalDetails.caseinfoList as caseinfo>
-                <tr>
-                    <td>${caseinfo.pendecno}</td>
-                    <td>${caseinfo.pendecissdate}</td>
-                    <td>${caseinfo.publicdate}</td>
-                    <td>${caseinfo.penauth}</td>
-                    <td>${caseinfo.illegfact}</td>
-                    <td>${caseinfo.pentype}</td>
-                    <td>${caseinfo.penresult}</td>
-                </tr>
+            <tr>
+                <td>${caseinfo.pendecno}</td>
+                <td>${caseinfo.pendecissdate}</td>
+                <td>${caseinfo.publicdate}</td>
+                <td>${caseinfo.penauth}</td>
+                <td>${caseinfo.illegfact}</td>
+                <td>${caseinfo.pentype}</td>
+                <td>${caseinfo.penresult}</td>
+            </tr>
             </#list>
             </tbody>
         </table>
@@ -608,17 +814,17 @@
             </thead>
             <tbody>
             <#list data.entHealthDetails.entAbnormalDetails.entSharesfrostList as entSharesfrost>
-                <tr>
-                    <td>${entSharesfrost_index+1}</td>
-                    <td>${entSharesfrost.frodocno}</td>
-                    <td>${entSharesfrost.froauth}</td>
-                    <td>${entSharesfrost.frofrom}</td>
-                    <td>${entSharesfrost.froto}</td>
-                    <td>${entSharesfrost.thawdate}</td>
-                    <td>${entSharesfrost.froam}</td>
-                    <td>${entSharesfrost.thawdocno}</td>
-                    <td>${entSharesfrost.thawcomment}</td>
-                </tr>
+            <tr>
+                <td>${entSharesfrost_index+1}</td>
+                <td>${entSharesfrost.frodocno}</td>
+                <td>${entSharesfrost.froauth}</td>
+                <td>${entSharesfrost.frofrom}</td>
+                <td>${entSharesfrost.froto}</td>
+                <td>${entSharesfrost.thawdate}</td>
+                <td>${entSharesfrost.froam}</td>
+                <td>${entSharesfrost.thawdocno}</td>
+                <td>${entSharesfrost.thawcomment}</td>
+            </tr>
             </#list>
             </tbody>
         </table>
@@ -668,15 +874,15 @@
             </thead>
             <tbody>
             <#list data.entHealthDetails.entAbnormalDetails.entLiquidationList as entLiquidation>
-                 <tr>
-                     <td>${entLiquidation_index+1}</td>
-                     <td>${entLiquidation.ligprincipal}</td>
-                     <td>${entLiquidation.liqmen}</td>
-                     <td>${entLiquidation.ligst}</td>
-                     <td>${entLiquidation.ligenddate}</td>
-                     <td>${entLiquidation.debttranee}</td>
-                     <td>${entLiquidation.claimtranee}</td>
-                 </tr>
+            <tr>
+                <td>${entLiquidation_index+1}</td>
+                <td>${entLiquidation.ligprincipal}</td>
+                <td>${entLiquidation.liqmen}</td>
+                <td>${entLiquidation.ligst}</td>
+                <td>${entLiquidation.ligenddate}</td>
+                <td>${entLiquidation.debttranee}</td>
+                <td>${entLiquidation.claimtranee}</td>
+            </tr>
             </#list>
             </tbody>
         </table>

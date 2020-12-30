@@ -25,7 +25,7 @@ public class StdIaCopyrightServiceTest extends ApplicationTest {
 
     @Test
     public void test1(){
-        final String reqId = "a083dadb-8f4c-47eb-b889-5233c901638c";
+        final String reqId = "8a0e2ab6-3a18-49c3-bf6b-7f2b75c4f89a";
         List<StdIaCopyright> byReqId = stdIaCopyrightService.findByReqId(reqId);
         List<StdIaPartent> byReqId1 = stdIaPartentService.findByReqId(reqId);
         List<StdIaBrand> byReqId2 = stdIaBrandService.findByReqId(reqId);
