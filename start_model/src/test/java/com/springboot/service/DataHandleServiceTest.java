@@ -286,7 +286,7 @@ public class DataHandleServiceTest extends ApplicationTest {
 
     @Test
     public void testGetEntHealthReportVo() {
-        String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
+        String reqId = "f228853f-161f-41d8-a31c-a00707f7cfeb";
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.SCIENCE_OFFICE);
         System.out.println(entHealthReportVo);
     }
