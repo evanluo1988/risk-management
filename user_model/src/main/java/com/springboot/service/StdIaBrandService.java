@@ -2,6 +2,7 @@ package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.risk.StdIaBrand;
+import com.springboot.vo.risk.BrandVarietyVo;
 
 import java.util.List;
 
@@ -18,4 +19,9 @@ public interface StdIaBrandService extends IService<StdIaBrand> {
      * @return
      */
     List<StdIaBrand> findByReqId(String reqId);
+
+    /**
+     * 商标种类和数量
+     */
+    List<BrandVarietyVo> getBrandVariety(String reqId, boolean valid);
 }

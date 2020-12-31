@@ -1,5 +1,6 @@
 package com.springboot;
 
+import com.springboot.enums.OrgEnum;
 import com.springboot.service.DataHandleService;
 import com.springboot.util.FreemarkerUtils;
 import com.springboot.util.ITextUtils;
@@ -25,7 +26,7 @@ public class PdfTest extends ApplicationTest{
     @Test
     public void test() throws FileNotFoundException {
         String reqId = "3e9e0594-15d9-409a-8c7d-fafe83098c6d";
-        EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId);
+        EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.SCIENCE_OFFICE);
         HashMap data = new HashMap();
         data.put("data",entHealthReportVo);
 

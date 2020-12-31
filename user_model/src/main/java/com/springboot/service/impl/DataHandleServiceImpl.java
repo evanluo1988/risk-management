@@ -2,6 +2,7 @@ package com.springboot.service.impl;
 
 import com.google.common.collect.Lists;
 import com.springboot.domain.risk.*;
+import com.springboot.enums.OrgEnum;
 import com.springboot.model.QuotaModel;
 import com.springboot.model.StdGsEntInfoModel;
 import com.springboot.service.*;
@@ -37,32 +38,37 @@ public class DataHandleServiceImpl implements DataHandleService {
 
 
     @Override
-    public String handelData(String entName) throws Exception {
+    public String handelData(String entName, OrgEnum org) throws Exception {
         //工商司法
         String reqId = industrialJusticeService.handelData(entName);
-        //知识产权
-        intellectualPropertyService.handelData(entName);
+
+        if(org == OrgEnum.SCIENCE_OFFICE) {
+            //知识产权
+            intellectualPropertyService.handelData(entName);
+        }
 
         return reqId;
     }
 
     @Override
-    public void culQuotas(String reqId) {
+    public void culQuotas(String reqId, OrgEnum org) {
         industrialJusticeService.culQuotas(reqId,"QUOTA");
         industrialJusticeService.culQuotas(reqId, "MODEL");
-        intellectualPropertyService.culQuotas(reqId, "QUOTA");
-        intellectualPropertyService.culQuotas(reqId, "MODEL");
+        if(org == OrgEnum.SCIENCE_OFFICE) {
+            intellectualPropertyService.culQuotas(reqId, "QUOTA");
+            intellectualPropertyService.culQuotas(reqId, "MODEL");
+        }
     }
 
     @Override
-    public EntHealthReportVo getEntHealthReportVo(String reqId) {
+    public EntHealthReportVo getEntHealthReportVo(String reqId, OrgEnum org) {
         List<QuotaModel> quotaModelList = quotaValueService.getQuotaList(reqId);
         StdGsEntInfoModel stdGsEntInfo = stdDataService.getStdGsEntInfo(reqId);
         EntHealthReportVo entHealthReportVo = new EntHealthReportVo();
         //企业健康评价
-        entHealthReportVo.setEntHealthAssessment(getEntHealthAssessment(quotaModelList));
+        entHealthReportVo.setEntHealthAssessment(getEntHealthAssessment(quotaModelList, org));
         //企业健康详情
-        entHealthReportVo.setEntHealthDetails(getEntHealthDetails(reqId, quotaModelList, stdGsEntInfo));
+        entHealthReportVo.setEntHealthDetails(getEntHealthDetails(reqId, quotaModelList, stdGsEntInfo, org));
         return entHealthReportVo;
     }
 
@@ -70,10 +76,10 @@ public class DataHandleServiceImpl implements DataHandleService {
      * 企业健康评价
      * @return
      */
-    private EntHealthAssessmentVo getEntHealthAssessment(List<QuotaModel> quotaModelList) {
+    private EntHealthAssessmentVo getEntHealthAssessment(List<QuotaModel> quotaModelList, OrgEnum org) {
         EntHealthAssessmentVo entHealthAssessment = new EntHealthAssessmentVo();
         entHealthAssessment.setEntHealthDetectionRadar(getEntHealthDetectionRadar(quotaModelList));
-        entHealthAssessment.setEntHealthDialysis(getEntHealthDialysis(quotaModelList));
+        entHealthAssessment.setEntHealthDialysis(getEntHealthDialysis(quotaModelList, org));
         return entHealthAssessment;
     }
 
@@ -111,7 +117,7 @@ public class DataHandleServiceImpl implements DataHandleService {
     /**
      * 企业健康检测透析
      */
-    private EntHealthDialysisVo getEntHealthDialysis(List<QuotaModel> quotaModelList) {
+    private EntHealthDialysisVo getEntHealthDialysis(List<QuotaModel> quotaModelList, OrgEnum org) {
         EntHealthDialysisVo entHealthDialysis = new EntHealthDialysisVo();
         FiveDRaderVo fiveDRader = new FiveDRaderVo();
         List<FiveDRaderItemVo> fiveDRaderItemList = Lists.newArrayList();
@@ -141,6 +147,14 @@ public class DataHandleServiceImpl implements DataHandleService {
                     //5维雷达透析
                     fiveDRaderItemList.add(createFiveDRaderItemVo(quotaModel));
                     break;
+                case "ZS_PATENT_VAL":
+                case "ZS_TRADEMARK_VAL":
+                case "ZS_SOFTWARE_COPYRIGHT_VAL":
+                    if(org == OrgEnum.SCIENCE_OFFICE){
+                        //5维雷达透析
+                        fiveDRaderItemList.add(createFiveDRaderItemVo(quotaModel));
+                    }
+                    break;
                 case "GS_ENT_ESTABLISH_PERIOD" :
                 case "GS_NUM_MANAGE_CHANGE" :
                 case "GS_NUM_INVESTOR_WITHDRAW":
@@ -165,7 +179,9 @@ public class DataHandleServiceImpl implements DataHandleService {
                 case "ZS_NUM_EFFECT_SOFTWORKS_CUR":
                 case "ZS_NUM_SOFTWORK_YEARS":
                     //知识产权价值度透析
-                    intellectualPropertyList.add(createDialysisVo(quotaModel));
+                    if(org == OrgEnum.SCIENCE_OFFICE){
+                        intellectualPropertyList.add(createDialysisVo(quotaModel));
+                    }
                     break;
                 case "GS_ENT_ABNORMAL_STATE":
                 case "GS_NUM_COMMERCIAL_PENALTIES":
@@ -186,7 +202,7 @@ public class DataHandleServiceImpl implements DataHandleService {
                     break;
             }
         }
-        culFiveDRader(fiveDRader, quotaModelList);
+        culFiveDRader(fiveDRader, quotaModelList, org);
 
         return entHealthDialysis;
     }
@@ -195,13 +211,15 @@ public class DataHandleServiceImpl implements DataHandleService {
      * 企业健康详情
      * @return
      */
-    private EntHealthDetailsVo getEntHealthDetails(String reqId, List<QuotaModel> quotaModelList, StdGsEntInfoModel stdGsEntInfo) {
+    private EntHealthDetailsVo getEntHealthDetails(String reqId, List<QuotaModel> quotaModelList, StdGsEntInfoModel stdGsEntInfo, OrgEnum org) {
         EntHealthDetailsVo entHealthDetails = new EntHealthDetailsVo();
         entHealthDetails.setEntRegInformation(getEntRegInformation(quotaModelList, stdGsEntInfo));
         entHealthDetails.setEntAlterList(getEntAlter(stdGsEntInfo));
-        entHealthDetails.setPatentInformation(getPatentInformation(reqId, quotaModelList));
-        entHealthDetails.setBrandInformation(getBrandInformation(reqId, quotaModelList));
-        entHealthDetails.setCopyrightInformation(getCopyrightInformation(reqId, quotaModelList));
+        if(org == OrgEnum.SCIENCE_OFFICE) {
+            entHealthDetails.setPatentInformation(getPatentInformation(reqId, quotaModelList));
+            entHealthDetails.setBrandInformation(getBrandInformation(reqId, quotaModelList));
+            entHealthDetails.setCopyrightInformation(getCopyrightInformation(reqId, quotaModelList));
+        }
         entHealthDetails.setEntAbnormalDetails(getEntAbnormalDetails(stdGsEntInfo));
         //涉诉案件列表
         entHealthDetails.setLitigaCaseList(stdLegalService.getLitigaCase(reqId));
@@ -514,8 +532,11 @@ public class DataHandleServiceImpl implements DataHandleService {
      * 计算5维雷达综合得分
      * @param fiveDRader
      */
-    private void culFiveDRader(FiveDRaderVo fiveDRader, List<QuotaModel> quotaModelList) {
-        List<Long> firstLevelIds = Arrays.asList(new Long[] {10L,11L,12L,13L});
+    private void culFiveDRader(FiveDRaderVo fiveDRader, List<QuotaModel> quotaModelList, OrgEnum org) {
+        List<Long> firstLevelIds = Arrays.asList(new Long[] {10L,12L,13L});
+        if(org == OrgEnum.SCIENCE_OFFICE) {
+            firstLevelIds.add(11L);
+        }
         Map<Long, List<QuotaModel>> quotaModelMap = quotaModelList.stream()
                 .filter(item -> (firstLevelIds.contains(item.getFirstLevelId()) && "QUOTA".equals(item.getQuotaType()) && !"Y".equals(item.getIdealInterval())))
                 .collect(Collectors.groupingBy(QuotaModel::getFirstLevelId));

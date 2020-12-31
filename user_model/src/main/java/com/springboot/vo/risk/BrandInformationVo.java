@@ -18,6 +18,10 @@ public class BrandInformationVo {
      */
     private String invalidBrandSpeciesDistribution;
     /**
+     * 无效商标种类和数量
+     */
+    private List<BrandVarietyVo> invalidBrandVarietyList;
+    /**
      * 有效商标总数
      */
     private String validBrandNum;
@@ -25,6 +29,10 @@ public class BrandInformationVo {
      * 有效商标种类分布
      */
     private String validBrandSpeciesDistribution;
+    /**
+     * 有效商标种类和数量
+     */
+    private List<BrandVarietyVo> validBrandVarietyList;
     /**
      * 商标明细
      */

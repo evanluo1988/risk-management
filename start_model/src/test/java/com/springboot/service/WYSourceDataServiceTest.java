@@ -21,7 +21,7 @@ public class WYSourceDataServiceTest extends ApplicationTest {
 
     @Test
     public void testGetPatentData() {
-        List<IaAsPartentModel> res =  wySourceDataService.getPatentData("北大方正集团有限公司");
+        List<IaAsPartentModel> res =  wySourceDataService.getPatentData("广西南宁卓信商贸有限公司");
         System.out.println(res);
     }
 
@@ -33,7 +33,7 @@ public class WYSourceDataServiceTest extends ApplicationTest {
 
     @Test
     public void testGetCopyrightData() {
-        List<IaAsCopyright> res =  wySourceDataService.getCopyrightData("北大方正集团有限公司");
+        List<IaAsCopyright> res =  wySourceDataService.getCopyrightData("广西南宁卓信商贸有限公司");
         System.out.println(res);
 
     }

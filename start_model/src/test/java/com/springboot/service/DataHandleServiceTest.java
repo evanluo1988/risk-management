@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.springboot.ApplicationTest;
 import com.springboot.domain.risk.*;
+import com.springboot.enums.OrgEnum;
 import com.springboot.mapper.*;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.vo.risk.EntHealthReportVo;
@@ -67,7 +68,7 @@ public class DataHandleServiceTest extends ApplicationTest {
     @Test
     public void testHandelData(){
         try {
-                dataHandleService.handelData("广西南宁卓信商贸有限公司");
+                dataHandleService.handelData("广西南宁卓信商贸有限公司", OrgEnum.SCIENCE_OFFICE);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -279,14 +280,14 @@ public class DataHandleServiceTest extends ApplicationTest {
     @Test
     public void testCulQuotas() {
         String reqId = "3e9e0594-15d9-409a-8c7d-fafe83098c6d";
-        dataHandleService.culQuotas(reqId);
+        dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
         //dataHandleService.culModels(reqId);
     }
 
     @Test
     public void testGetEntHealthReportVo() {
         String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
-        EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId);
+        EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.SCIENCE_OFFICE);
         System.out.println(entHealthReportVo);
     }
 }

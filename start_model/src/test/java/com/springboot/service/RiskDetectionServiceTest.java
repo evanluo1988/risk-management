@@ -1,6 +1,7 @@
 package com.springboot.service;
 
 import com.springboot.ApplicationTest;
+import com.springboot.enums.OrgEnum;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,6 +11,6 @@ public class RiskDetectionServiceTest extends ApplicationTest {
 
     @Test
     public void testCheckByEntName() {
-        riskDetectionService.checkByEntName("广西南宁卓信商贸有限公司");
+        riskDetectionService.checkByEntName("广西南宁卓信商贸有限公司", OrgEnum.SCIENCE_OFFICE);
     }
 }

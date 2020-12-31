@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.mapper.StdIaBrandMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.springboot.domain.risk.StdIaBrand">
+    <result column="id" property="id" />
+        <result column="brandtype" property="brandType" />
+        <result column="graph" property="graph" />
+        <result column="registrationnumber" property="registrationNumber" />
+        <result column="graphthumbnail" property="graphThumbnail" />
+        <result column="registrationdate" property="registrationDate" />
+        <result column="applicationnumber" property="applicationNumber" />
+        <result column="applicationdate" property="applicationDate" />
+        <result column="applicationname" property="applicationName" />
+        <result column="agentname" property="agentName" />
+        <result column="brandid" property="brandId" />
+        <result column="brandname" property="brandName" />
+        <result column="niceclassify" property="niceClassify" />
+        <result column="authoritystatus" property="authorityStatus" />
+
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <resultMap id="BrandVarietyResultMap" type="com.springboot.vo.risk.BrandVarietyVo">
+        <result column="niceclassify" property="niceClassify" />
+        <result column="num" property="num" />
+    </resultMap>
+
+
+    <select id="findBrandVarietyList" resultMap="BrandVarietyResultMap" parameterMap="map">
+        select niceclassify, count(1) from std_ia_brand
+        where authoritystatus in ('待审中', '已注册', '已初审')
+        and applicationname like '%#{entname}%'
+        and req_id = #{reqId}
+        GROUP BY niceclassify
+    </select>
+
+</mapper>
