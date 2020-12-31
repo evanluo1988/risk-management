@@ -533,7 +533,7 @@ public class DataHandleServiceImpl implements DataHandleService {
      * @param fiveDRader
      */
     private void culFiveDRader(FiveDRaderVo fiveDRader, List<QuotaModel> quotaModelList, OrgEnum org) {
-        List<Long> firstLevelIds = Arrays.asList(new Long[] {10L,12L,13L});
+        List<Long> firstLevelIds = Lists.newArrayList(10L,12L,13L);
         if(org == OrgEnum.SCIENCE_OFFICE) {
             firstLevelIds.add(11L);
         }

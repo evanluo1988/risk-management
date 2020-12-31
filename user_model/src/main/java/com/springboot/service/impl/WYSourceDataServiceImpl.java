@@ -200,5 +200,4 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         CustomerIntellectualPropertyResponse customerBrandResponse = wyRemoteService.customerBrandDataCollection(intellectualPropertyRequest);
         return customerBrandResponse.getData();
     }
-
 }
