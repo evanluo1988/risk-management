@@ -33,6 +33,8 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
     private String appKey;
     @Value("${wy.aeskey}")
     private String aesKey;
+    @Value("${wy.max.page}")
+    private Integer maxPage;
 
     @Autowired
     private WYRemoteService wyRemoteService;
@@ -166,13 +168,14 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         return iaAsCopyrightList;
     }
 
-
-    public Integer getTotalPage(String pageMsg) {
+    private Integer getTotalPage(String pageMsg) {
         String regEx = "[共]\\d+[页]";
         Pattern c = Pattern.compile(regEx);
         Matcher mc=c.matcher(pageMsg);
         if(mc.find()){
             String s = mc.group(0);
+            int totalPage = Integer.valueOf(s.substring(1,s.length()-1));
+            totalPage = (maxPage != null && maxPage < totalPage ? maxPage : totalPage);
             return Integer.valueOf(s.substring(1,s.length()-1));
         }
         return null;
