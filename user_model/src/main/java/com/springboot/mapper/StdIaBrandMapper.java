@@ -13,5 +13,5 @@ import java.util.Map;
  * @Version 1.0
  */
 public interface StdIaBrandMapper extends BaseMapper<StdIaBrand> {
-    public List<BrandVarietyVo> findBrandVarietyList(Map map);
+    //public List<BrandVarietyVo> findBrandVarietyList(Map map);
 }

@@ -30,7 +30,7 @@
         <result column="num" property="num" />
     </resultMap>
 
-
+<!--
     <select id="findBrandVarietyList" resultMap="BrandVarietyResultMap" parameterMap="map">
         select niceclassify, count(1) from std_ia_brand
         where authoritystatus in ('待审中', '已注册', '已初审')
@@ -38,5 +38,6 @@
         and req_id = #{reqId}
         GROUP BY niceclassify
     </select>
+    -->
 
 </mapper>
