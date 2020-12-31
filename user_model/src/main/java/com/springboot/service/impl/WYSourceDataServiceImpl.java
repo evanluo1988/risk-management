@@ -176,7 +176,7 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
             String s = mc.group(0);
             int totalPage = Integer.valueOf(s.substring(1,s.length()-1));
             totalPage = (maxPage != null && maxPage < totalPage ? maxPage : totalPage);
-            return Integer.valueOf(s.substring(1,s.length()-1));
+            return totalPage;
         }
         return null;
     }
