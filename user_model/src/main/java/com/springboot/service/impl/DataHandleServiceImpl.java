@@ -288,9 +288,21 @@ public class DataHandleServiceImpl implements DataHandleService {
             }
         }
         //无效商标种类数量
-        brandInformationVo.setInvalidBrandVarietyList(stdIaBrandService.getBrandVariety(reqId, false));
+        List<DicTable> dicTableList = ServerCacheUtils.getDicTableListByType("NICECLASSIFY");
+        List<BrandVarietyVo> invalidBrandVarietyList = stdIaBrandService.getBrandVariety(reqId, false);
+        for(BrandVarietyVo brandVarietyVo : invalidBrandVarietyList) {
+            DicTable dicTable = dicTableList.stream().filter(item -> item.getDicValue().equals(brandVarietyVo.getNiceClassify())).findFirst().get();
+            brandVarietyVo.setNiceClassifyName(dicTable.getDicName());
+        }
+        brandInformationVo.setInvalidBrandVarietyList(invalidBrandVarietyList);
+
         //有效商标种类数量
-        brandInformationVo.setValidBrandVarietyList(stdIaBrandService.getBrandVariety(reqId, true));
+        List<BrandVarietyVo> validBrandVarietyList = stdIaBrandService.getBrandVariety(reqId, true);
+        for(BrandVarietyVo brandVarietyVo : validBrandVarietyList) {
+            DicTable dicTable = dicTableList.stream().filter(item -> item.getDicValue().equals(brandVarietyVo.getNiceClassify())).findFirst().get();
+            brandVarietyVo.setNiceClassifyName(dicTable.getDicName());
+        }
+        brandInformationVo.setValidBrandVarietyList(validBrandVarietyList);
         //商标明细
         List<StdIaBrandVo> stdIaBrandVoList = Lists.newArrayList();
         brandInformationVo.setStdIaBrandList(stdIaBrandVoList);
