@@ -30,6 +30,8 @@ public class ServerCacheLoader implements CommandLineRunner {
     private QuotaDimensionService quotaDimensionService;
     @Autowired
     private LegalDataAddColumnService legalDataAddColumnService;
+    @Autowired
+    private DicTableService dicTableService;
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
@@ -55,5 +57,8 @@ public class ServerCacheLoader implements CommandLineRunner {
         ServerCacheUtils.setQuotaDimensionList(quotaDimensionService.getAllQuotaDimensions());
         log.info("loading analysis of justice data......");
         legalDataAddColumnService.initAnalysisJudicialEngine();
+        log.info("loading dic table data......");
+        ServerCacheUtils.setDicTable(dicTableService.getDicTableList());
+
     }
 }

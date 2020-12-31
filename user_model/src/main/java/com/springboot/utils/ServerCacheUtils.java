@@ -3,10 +3,7 @@ package com.springboot.utils;
 import com.google.common.collect.Maps;
 import com.springboot.domain.Area;
 import com.springboot.domain.Menu;
-import com.springboot.domain.risk.EtlTranRule;
-import com.springboot.domain.risk.Quota;
-import com.springboot.domain.risk.QuotaDimension;
-import com.springboot.domain.risk.QuotaGrand;
+import com.springboot.domain.risk.*;
 import com.springboot.model.RolePerm;
 import com.springboot.model.StdTable;
 
@@ -57,33 +54,17 @@ public class ServerCacheUtils {
     private static List<QuotaDimension> quotaDimensionList;
 
     /**
-     * 司法解析数据
+     * 字典表数据
      */
-//    private static Map<String, Object> judicialAnalysisMap = Maps.newHashMap();
-//
-//    public static String getSAJE_UNIT() {
-//        return (String)ServerCacheUtils.judicialAnalysisMap.get("SAJE_UNIT");
-//    }
-//
-//    public static String getSAJE_TARGET() {
-//        return (String)ServerCacheUtils.judicialAnalysisMap.get("SAJE_TARGET");
-//    }
-//
-//    public static Map<String, String> getREGEXMAP_ROLE() {
-//        return (Map<String, String>)ServerCacheUtils.judicialAnalysisMap.get("REGEXMAP_ROLE");
-//    }
-//
-//    public static Map<String, String> getREGEXMAP_SLJG() {
-//        return (Map<String, String>)ServerCacheUtils.judicialAnalysisMap.get("REGEXMAP_SLJG");
-//    }
-//
-//    public static Map<String, String> getREGEXMAP_SAJE() {
-//        return (Map<String, String>)ServerCacheUtils.judicialAnalysisMap.get("REGEXMAP_SAJE");
-//    }
-//
-//    public static void setJudicialAnalysisData(Map<String,Object> map) {
-//        ServerCacheUtils.judicialAnalysisMap = map;
-//    }
+    private static Map<String, List<DicTable>> dicTableMap;
+
+    public static void setDicTable(List<DicTable> dicTableList) {
+        dicTableMap = dicTableList.stream().collect(Collectors.groupingBy(DicTable::getDicType));
+    }
+
+    public static List<DicTable> getDicTableListByType(String type) {
+        return dicTableMap.get(type);
+    }
 
     public static void setQuotaDimensionList(List<QuotaDimension> quotaDimensionList) {
         ServerCacheUtils.quotaDimensionList = quotaDimensionList;
