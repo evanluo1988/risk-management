@@ -52,6 +52,10 @@ public class DataHandleServiceImpl implements DataHandleService {
 
     @Override
     public void culQuotas(String reqId, OrgEnum org) {
+        /**
+         * 司法预处理
+         */
+        stdLegalService.preStdSsDatas(reqId);
         industrialJusticeService.culQuotas(reqId,"QUOTA");
         industrialJusticeService.culQuotas(reqId, "MODEL");
         if(org == OrgEnum.SCIENCE_OFFICE) {
