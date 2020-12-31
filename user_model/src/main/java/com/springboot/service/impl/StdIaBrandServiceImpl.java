@@ -42,6 +42,7 @@ public class StdIaBrandServiceImpl extends ServiceImpl<StdIaBrandMapper, StdIaBr
         Map paramMap = Maps.newHashMap();
         paramMap.put("reqId", reqId);
         paramMap.put("valid", valid);
-        return stdIaBrandMapper.findBrandVarietyList(paramMap);
+
+        return null;
     }
 }
