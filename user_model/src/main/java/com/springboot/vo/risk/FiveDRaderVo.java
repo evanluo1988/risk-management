@@ -21,7 +21,7 @@ public class FiveDRaderVo {
     /**
      * 法律风险综合得分
      */
-    private double LegalRiskScore;
+    private double legalRiskScore;
 
     private List<FiveDRaderItemVo> fiveDRaderItemList;
 }
