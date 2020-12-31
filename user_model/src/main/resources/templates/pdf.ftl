@@ -421,14 +421,14 @@
             <tr>
                 <td>注册地址</td>
                 <td>${data.entHealthDetails.entRegInformation.entBasicInformation.address}</td>
-                <td>组织机构代码</td>
-                <td>${data.entHealthDetails.entRegInformation.entBasicInformation.orgCode}</td>
+                <td>登记机关</td>
+                <td>${data.entHealthDetails.entRegInformation.entBasicInformation.regOrg}</td>
             </tr>
             <tr>
                 <td>经营范围</td>
                 <td>${data.entHealthDetails.entRegInformation.entBasicInformation.operateScope}</td>
-                <td>登记机关</td>
-                <td>${data.entHealthDetails.entRegInformation.entBasicInformation.regOrg}</td>
+                <td></td>
+                <td></td>
             </tr>
             </tbody>
         </table>
