@@ -8,6 +8,7 @@ import com.springboot.domain.risk.StdIaBrand;
 import com.springboot.mapper.StdIaBrandMapper;
 import com.springboot.service.StdEntBasicService;
 import com.springboot.service.StdIaBrandService;
+import com.springboot.util.Utils;
 import com.springboot.vo.risk.BrandVarietyVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,7 @@ public class StdIaBrandServiceImpl extends ServiceImpl<StdIaBrandMapper, StdIaBr
 
     @Override
     public List<BrandVarietyVo> getBrandVariety(String reqId, boolean valid) {
-        Map paramMap = Maps.newHashMap();
-        paramMap.put("reqId", reqId);
-        paramMap.put("valid", valid);
-
-        return null;
+        StdEntBasic stdEntBasic = stdEntBasicService.getStdEntBasicByReqId(reqId);
+        return Utils.getList(stdIaBrandMapper.findBrandVarietyList(reqId, valid, stdEntBasic.getEntName()));
     }
 }

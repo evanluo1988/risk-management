@@ -30,14 +30,22 @@
         <result column="num" property="num" />
     </resultMap>
 
-<!--
-    <select id="findBrandVarietyList" resultMap="BrandVarietyResultMap" parameterMap="map">
-        select niceclassify, count(1) from std_ia_brand
-        where authoritystatus in ('待审中', '已注册', '已初审')
-        and applicationname like '%#{entname}%'
+
+    <select id="findBrandVarietyList" resultMap="BrandVarietyResultMap" parameterType="java.util.Map">
+        select niceclassify as niceclassify, count(1) as num from std_ia_brand
+        <where>
+        <choose>
+            <when test="valid == true">
+                authoritystatus in ('待审中', '已注册', '已初审')
+            </when>
+            <otherwise>
+                authoritystatus in ('已驳回', '已销亡')
+            </otherwise>
+        </choose>
+        and applicationname like '%${entname}%'
         and req_id = #{reqId}
         GROUP BY niceclassify
+        </where>
     </select>
-    -->
 
 </mapper>
