@@ -132,7 +132,7 @@
                 <td scope="row">综合得分</td>
                 <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.businessStabilityScore}</td>
                 <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.businessRiskScore}</td>
-                <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.LegalRiskScore}</td>
+                <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.legalRiskScore}</td>
             </tr>
             <tr>
                 <td rowspan="4">评价维度&amp;风险关注项</td>

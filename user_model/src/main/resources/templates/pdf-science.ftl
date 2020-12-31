@@ -152,7 +152,7 @@
                 <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.businessStabilityScore}</td>
                 <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.intellectualPropertyScore}</td>
                 <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.businessRiskScore}</td>
-                <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.LegalRiskScore}</td>
+                <td colspan="2">${data.entHealthAssessment.entHealthDialysis.fiveDRader.legalRiskScore}</td>
             </tr>
             <tr>
                 <td rowspan="4">评价维度&amp;风险关注项</td>
@@ -645,16 +645,16 @@
         <table>
             <tbody>
             <tr>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size}">无效商标总数</td>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size}">${data.entHealthDetails.brandInformation.invalidBrandNum}个</td>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size}">商标种类分布</td>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size}">${data.entHealthDetails.brandInformation.invalidBrandSpeciesDistribution}类</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">无效商标总数</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.invalidBrandNum}个</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">商标种类分布</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.invalidBrandSpeciesDistribution}类</td>
                 <td>种类</td>
                 <td>数量</td>
             </tr>
             <#list data.entHealthDetails.brandInformation.invalidBrandVarietyList as invalidBrandVariety>
                 <tr>
-                    <td>${invalidBrandVariety.niceClassify}</td>
+                    <td>${invalidBrandVariety.niceClassifyName}</td>
                     <td>${invalidBrandVariety.num}</td>
                 </tr>
             </#list>
@@ -667,17 +667,19 @@
         <table>
             <tbody>
             <tr>
-                <td rowspan="4">有效商标总数</td>
-                <td rowspan="4">${data.entHealthDetails.brandInformation.validBrandNum}个</td>
-                <td rowspan="4">商标种类分布</td>
-                <td rowspan="4">${data.entHealthDetails.brandInformation.validBrandSpeciesDistribution}类</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.validBrandVarietyList?size+1}">有效商标总数</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.validBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.validBrandNum}个</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.validBrandVarietyList?size+1}">商标种类分布</td>
+                <td rowspan="${data.entHealthDetails.brandInformation.validBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.validBrandSpeciesDistribution}类</td>
                 <td>种类</td>
                 <td>数量</td>
             </tr>
-            <tr>
-                <td>材料加工</td>
-                <td></td>
-            </tr>
+            <#list data.entHealthDetails.brandInformation.validBrandVarietyList as validBrandVariety>
+                <tr>
+                    <td>${validBrandVariety.niceClassifyName}</td>
+                    <td>${validBrandVariety.num}</td>
+                </tr>
+            </#list>
             </tbody>
         </table>
     </div>

@@ -25,7 +25,7 @@ public class PdfTest extends ApplicationTest{
 
     @Test
     public void test() throws FileNotFoundException {
-        String reqId = "3e9e0594-15d9-409a-8c7d-fafe83098c6d";
+        String reqId = "f228853f-161f-41d8-a31c-a00707f7cfeb";
         //科技局 -- 全量
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.SCIENCE_OFFICE);
         HashMap data = new HashMap();
@@ -39,7 +39,7 @@ public class PdfTest extends ApplicationTest{
 
     @Test
     public void test1() throws FileNotFoundException {
-        String reqId = "3e9e0594-15d9-409a-8c7d-fafe83098c6d";
+        String reqId = "f228853f-161f-41d8-a31c-a00707f7cfeb";
         //金融办 -- 知识产权去掉
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.FINANCE_OFFICE);
         HashMap data = new HashMap();
