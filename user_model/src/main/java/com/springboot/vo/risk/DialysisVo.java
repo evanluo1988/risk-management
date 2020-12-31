@@ -40,7 +40,7 @@ public class DialysisVo {
     public String getActualValue() {
         if(quotaId == 49L) {
             return StrUtils.getRatioStr(actualValue);
-        }else if (quotaId == 20L){
+        }else if (quotaId == 21L){
             return StrUtils.getRatioStr(actualValue);
         }
         return actualValue;
