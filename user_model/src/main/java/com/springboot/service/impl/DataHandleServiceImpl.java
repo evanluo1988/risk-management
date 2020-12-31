@@ -556,10 +556,13 @@ public class DataHandleServiceImpl implements DataHandleService {
         Map<Long, List<QuotaModel>> quotaModelMap = quotaModelList.stream()
                 .filter(item -> (firstLevelIds.contains(item.getFirstLevelId()) && "QUOTA".equals(item.getQuotaType()) && !"Y".equals(item.getIdealInterval())))
                 .collect(Collectors.groupingBy(QuotaModel::getFirstLevelId));
-        for(Long key : quotaModelMap.keySet()) {
+        for(Long key : firstLevelIds) {
             double score = 100;
             for(QuotaModel quotaModel : Utils.getList(quotaModelMap.get(key))) {
                 score = score - quotaModel.getMinusPoints();
+            }
+            if(score < 0){
+                score = 0;
             }
             if(key == 10) {
                 fiveDRader.setBusinessStabilityScore(score);
