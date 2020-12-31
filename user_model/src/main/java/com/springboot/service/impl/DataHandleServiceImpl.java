@@ -287,6 +287,10 @@ public class DataHandleServiceImpl implements DataHandleService {
                     break;
             }
         }
+        //无效商标种类数量
+        brandInformationVo.setInvalidBrandVarietyList(stdIaBrandService.getBrandVariety(reqId, false));
+        //有效商标种类数量
+        brandInformationVo.setValidBrandVarietyList(stdIaBrandService.getBrandVariety(reqId, true));
         //商标明细
         List<StdIaBrandVo> stdIaBrandVoList = Lists.newArrayList();
         brandInformationVo.setStdIaBrandList(stdIaBrandVoList);
