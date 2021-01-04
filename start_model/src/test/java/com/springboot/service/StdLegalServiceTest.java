@@ -332,7 +332,7 @@ public class StdLegalServiceTest extends ApplicationTest {
 
     @Test
     public void testPreStdSsDatas(){
-        final String reqId = "1b20d84f-3e71-41c6-8430-abd41af63016";
+        final String reqId = "7885c8b5-19a0-42cf-82b8-de5f62c2179f";
         stdLegalServiceInSpring.preStdSsDatas(reqId);
     }
 

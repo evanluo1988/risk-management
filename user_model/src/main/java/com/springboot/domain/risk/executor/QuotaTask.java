@@ -98,16 +98,31 @@ public class QuotaTask implements Callable<QuotaValue> {
 
         //可以equals判断的指标
         final List<String> eqQuotaGrandCodes = Lists.newArrayList(
-                "MAX_QUALIFICATION_SHAREHOLDER",
-                "LITIGA_FREQUENCY",
-                "TENDENCY_JUDG_RESULT",
-                "LITIGA_INITIATIVE");
+                "MAX_QUALIFICATION_SHAREHOLDER"
+                );
 
         if (eqQuotaGrandCodes.contains(quota.getGrandCode())) {
             return quotaGrandList.stream()
                     .filter(quotaGrand -> quotaGrand.getQuotaValue().equalsIgnoreCase(val))
                     .findFirst()
                     .get();
+        }
+
+        // else逻辑
+        final List<String> elQuotaGrandCodes = Lists.newArrayList(
+                "LITIGA_FREQUENCY",
+                "TENDENCY_JUDG_RESULT",
+                "LITIGA_INITIATIVE");
+
+        if (elQuotaGrandCodes.contains(quota.getGrandCode())) {
+            return quotaGrandList.stream()
+                    .filter(quotaGrand -> quotaGrand.getQuotaValue().equalsIgnoreCase(val))
+                    .findFirst()
+                    .orElse(quotaGrandList
+                            .stream()
+                            .filter(quotaGrand -> quotaGrand.getQuotaValue().equalsIgnoreCase("else"))
+                            .findFirst()
+                            .get());
         }
 
         //需要contains判断的指标
