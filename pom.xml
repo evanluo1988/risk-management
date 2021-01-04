@@ -14,6 +14,7 @@
         <module>user_model</module>
         <module>inform_model</module>
         <module>examination_model</module>
+        <module>detect_model</module>
     </modules>
 
     <parent>
