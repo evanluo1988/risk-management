@@ -7,7 +7,7 @@ import com.springboot.model.QuotaModel;
 import com.springboot.model.StdGsEntInfoModel;
 import com.springboot.service.*;
 import com.springboot.util.Utils;
-import com.springboot.utils.ServerCacheUtils;
+import com.springboot.utils.DetectCacheUtils;
 import com.springboot.vo.risk.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -292,7 +292,7 @@ public class DataHandleServiceImpl implements DataHandleService {
             }
         }
         //无效商标种类数量
-        List<DicTable> dicTableList = ServerCacheUtils.getDicTableListByType("NICECLASSIFY");
+        List<DicTable> dicTableList = DetectCacheUtils.getDicTableListByType("NICECLASSIFY");
         List<BrandVarietyVo> invalidBrandVarietyList = stdIaBrandService.getBrandVariety(reqId, false);
         for(BrandVarietyVo brandVarietyVo : invalidBrandVarietyList) {
             DicTable dicTable = dicTableList.stream().filter(item -> item.getDicValue().equals(brandVarietyVo.getNiceClassify())).findFirst().get();
@@ -581,7 +581,7 @@ public class DataHandleServiceImpl implements DataHandleService {
     }
 
     private String getDimensionName(Long dimensionId) {
-        QuotaDimension quotaDimension = ServerCacheUtils.getQuotaDimensionById(dimensionId);
+        QuotaDimension quotaDimension = DetectCacheUtils.getQuotaDimensionById(dimensionId);
         return quotaDimension != null ? quotaDimension.getDimensionName() : null;
     }
 

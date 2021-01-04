@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class SqlSplicingUtils {
     public static String getInsertSql(String targetTable, HashMap row){
-        StdTable stdTable = ServerCacheUtils.getStdTable(targetTable);
+        StdTable stdTable = DetectCacheUtils.getStdTable(targetTable);
         //通过targetTable找stdTable，如果没找到说明都按字符串规则拼接
 
         StringBuilder sb = new StringBuilder();

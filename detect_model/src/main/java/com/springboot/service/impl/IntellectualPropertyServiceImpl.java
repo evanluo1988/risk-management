@@ -7,7 +7,7 @@ import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.service.*;
 import com.springboot.util.Utils;
-import com.springboot.utils.ServerCacheUtils;
+import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.SqlSplicingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +67,7 @@ public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements 
     public void culQuotas(String reqId, String quotaType) {
         //通过reqId先查找企业指标值是否存在，如果存在直接获取，如果不存在就通过标准表重新计算
         //指标列表
-        List<Quota> quotaList = ServerCacheUtils.getQuotaList();
+        List<Quota> quotaList = DetectCacheUtils.getQuotaList();
         //过滤知识产权指标
         quotaList = quotaList.stream().filter(item -> !StringUtils.isEmpty(item.getQuotaCode()) && item.getQuotaCode().startsWith("ZS_")).collect(Collectors.toList());
         if(CollectionUtils.isEmpty(quotaList)){
@@ -113,7 +113,7 @@ public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements 
      */
     public void createStdData(String reqId) {
         //从缓存获取执行sql
-        List<EtlTranRule> etlTranRuleList = ServerCacheUtils.getEtlTranRuleListCache();
+        List<EtlTranRule> etlTranRuleList = DetectCacheUtils.getEtlTranRuleListCache();
         //过滤知识产权转换规则
         etlTranRuleList = etlTranRuleList.stream().filter(item -> "7".equals(item.getType())).collect(Collectors.toList());
         for(EtlTranRule etlTranRule : etlTranRuleList){

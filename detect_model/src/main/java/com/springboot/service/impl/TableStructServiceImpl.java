@@ -5,7 +5,7 @@ import com.springboot.domain.risk.EtlTranRule;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.StdTable;
 import com.springboot.service.TableStructService;
-import com.springboot.utils.ServerCacheUtils;
+import com.springboot.utils.DetectCacheUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,7 +21,7 @@ public class TableStructServiceImpl implements TableStructService {
 
     @Override
     public Map<String, StdTable> getStdTableStruct() {
-        List<EtlTranRule> etlTranRuleList = ServerCacheUtils.getEtlTranRuleListCache();
+        List<EtlTranRule> etlTranRuleList = DetectCacheUtils.getEtlTranRuleListCache();
         Map<String, StdTable> stdTableMap = Maps.newHashMap();
         String exeSql = "select column_name as COLUMN_NAME ,data_type as DATA_TYPE from information_schema.columns where table_name= ?";
         for(EtlTranRule etlTranRule : etlTranRuleList){

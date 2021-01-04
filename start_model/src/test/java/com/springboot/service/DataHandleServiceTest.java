@@ -279,7 +279,7 @@ public class DataHandleServiceTest extends ApplicationTest {
 
     @Test
     public void testCulQuotas() {
-        String reqId = "3e9e0594-15d9-409a-8c7d-fafe83098c6d";
+        String reqId = "48504acf-c859-439b-a6a7-22c4be79084f";
         dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
         //dataHandleService.culModels(reqId);
     }

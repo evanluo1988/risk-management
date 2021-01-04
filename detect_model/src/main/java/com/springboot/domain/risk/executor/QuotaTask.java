@@ -5,7 +5,7 @@ import com.springboot.domain.risk.Quota;
 import com.springboot.domain.risk.QuotaGrand;
 import com.springboot.domain.risk.QuotaValue;
 import com.springboot.exception.ServiceException;
-import com.springboot.utils.ServerCacheUtils;
+import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.SpringContextUtil;
 import lombok.Data;
 import org.springframework.util.ObjectUtils;
@@ -84,7 +84,7 @@ public class QuotaTask implements Callable<QuotaValue> {
      */
     private QuotaGrand getQuotaGrand(String val) {
         //通过分档码得到分档列表
-        List<QuotaGrand> quotaGrandList = ServerCacheUtils.getQuotaGrandListByCode(quota.getGrandCode());
+        List<QuotaGrand> quotaGrandList = DetectCacheUtils.getQuotaGrandListByCode(quota.getGrandCode());
         //通过指标值计算出属于那个分档并返回
 
         if (val == null) {

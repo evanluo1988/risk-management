@@ -1,6 +1,7 @@
 package com.springboot.cache;
 
 import com.springboot.service.*;
+import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.ServerCacheUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,19 +47,19 @@ public class ServerCacheLoader implements CommandLineRunner {
         log.info("loading area ......");
         ServerCacheUtils.setAreas(areaService.list());
         log.info("loading etl tran rule list......");
-        ServerCacheUtils.setEtlTranRuleListCache(etlTranRuleService.findEnableRules());
+        DetectCacheUtils.setEtlTranRuleListCache(etlTranRuleService.findEnableRules());
         log.info("loading std table struct......");
-        ServerCacheUtils.setStdTableMap(tableStructService.getStdTableStruct());
+        DetectCacheUtils.setStdTableMap(tableStructService.getStdTableStruct());
         log.info("loading quota list......");
-        ServerCacheUtils.setQuotaList(quotaRuleService.findEnableQuotaRules());
+        DetectCacheUtils.setQuotaList(quotaRuleService.findEnableQuotaRules());
         log.info("loading quota grand list......");
-        ServerCacheUtils.setQuotaGrandList(quotaGrandService.findQuotaGrandList());
+        DetectCacheUtils.setQuotaGrandList(quotaGrandService.findQuotaGrandList());
         log.info("loading quota dimensions......");
-        ServerCacheUtils.setQuotaDimensionList(quotaDimensionService.getAllQuotaDimensions());
+        DetectCacheUtils.setQuotaDimensionList(quotaDimensionService.getAllQuotaDimensions());
         log.info("loading analysis of justice data......");
         legalDataAddColumnService.initAnalysisJudicialEngine();
         log.info("loading dic table data......");
-        ServerCacheUtils.setDicTable(dicTableService.getDicTableList());
+        DetectCacheUtils.setDicTable(dicTableService.getDicTableList());
 
     }
 }

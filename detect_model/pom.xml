@@ -11,5 +11,17 @@
 
     <artifactId>detect_model</artifactId>
 
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.springboot</groupId>
+            <artifactId>common</artifactId>
+            <version>${version}</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
