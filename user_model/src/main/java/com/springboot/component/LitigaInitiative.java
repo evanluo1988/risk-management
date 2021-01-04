@@ -25,9 +25,9 @@ public class LitigaInitiative implements QuotaComponent{
         }
         List<LitigaInitiativeModel> plaintiff = litigaInitiativeModelList.stream().filter(item -> item.getPlaintiff() != null).collect(Collectors.toList());
         if(CollectionUtils.isEmpty(plaintiff)) {
-            return "else";
+            return "偏被动";
         }
         float m = (float) plaintiff.size()/litigaInitiativeModelList.size();
-        return m > 0.5 ? "else" : "偏被动";
+        return m > 0.5 ? "偏主动" : "偏被动";
     }
 }

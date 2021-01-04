@@ -60,14 +60,14 @@ public class LitigaFrequency implements QuotaComponent{
                     caseMap.get(yearNow-1) != null && caseMap.get(yearNow-2) != null) {
                 return "频繁";
             }else{
-                return "else";
+                return "偶尔";
             }
         }else{
             if(caseMap.get(yearNow) != null && caseMap.get(yearNow-1) != null
                     && caseMap.get(yearNow-2) != null && caseMap.get(yearNow-3) != null) {
                 return "频繁";
             }else{
-                return "else";
+                return "偶尔";
             }
         }
     }

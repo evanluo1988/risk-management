@@ -33,6 +33,12 @@ public class TendencyJudgResult implements QuotaComponent{
         if(count3 > count2 && count3 > count1) {
             return "败诉";
         }
-        return "else";
+        if(count2 > count3 && count2 > count1) {
+            return "胜诉";
+        }
+        if(count1 > count2 && count1 > count3) {
+            return "未知";
+        }
+        return "未知";
     }
 }
