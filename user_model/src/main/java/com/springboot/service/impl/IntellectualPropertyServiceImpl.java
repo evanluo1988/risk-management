@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class IntellectualPropertyServiceImpl implements IntellectualPropertyService {
+public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements IntellectualPropertyService {
     @Autowired
     private CloudInfoTimelinessService cloudInfoTimelinessService;
     @Autowired
@@ -83,19 +83,6 @@ public class IntellectualPropertyServiceImpl implements IntellectualPropertyServ
 
         //save all quota values
         quotaValueService.saveQuotaValues(quotaValueList);
-    }
-
-    private List<QuotaValue> culQuotaTasks(List<QuotaTask> quotaTaskList) {
-        //执行任务
-        List<QuotaValue> quotaValueList = Lists.newArrayList();
-        try {
-            for(QuotaTask quotaTask : quotaTaskList){
-                quotaValueList.add(quotaTask.call());
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return quotaValueList;
     }
 
     /**

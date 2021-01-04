@@ -24,7 +24,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class IndustrialJusticeServiceImpl implements IndustrialJusticeService {
+public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements IndustrialJusticeService {
     @Autowired
     private CloudInfoTimelinessService cloudInfoTimelinessService;
     @Autowired
@@ -132,19 +132,6 @@ public class IndustrialJusticeServiceImpl implements IndustrialJusticeService {
 
         //save all quota values
         quotaValueService.saveQuotaValues(quotaValueList);
-    }
-
-    private List<QuotaValue> culQuotaTasks(List<QuotaTask> quotaTaskList) {
-        //执行任务
-        List<QuotaValue> quotaValueList = Lists.newArrayList();
-        try {
-            for(QuotaTask quotaTask : quotaTaskList){
-                quotaValueList.add(quotaTask.call());
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return quotaValueList;
     }
 
     /**
