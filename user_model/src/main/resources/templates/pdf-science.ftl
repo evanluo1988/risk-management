@@ -166,7 +166,11 @@
                 </td>
                 <td>专利强度</td>
                 <td>
-
+                    <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
+                        <#if fiveDrader.quotaCode == "ZS_PATENT_VAL">
+                            ${fiveDrader.quotaValue}
+                        </#if>
+                    </#list>
                 </td>
                 <td>工商异常</td>
                 <td>
@@ -196,7 +200,11 @@
                 </td>
                 <td>商标强度</td>
                 <td>
-
+                    <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
+                        <#if fiveDrader.quotaCode == "ZS_TRADEMARK_VAL">
+                            ${fiveDrader.quotaValue}
+                        </#if>
+                    </#list>
                 </td>
                 <td>经营异常</td>
                 <td>
@@ -226,7 +234,11 @@
                 </td>
                 <td>软件著作权强度</td>
                 <td>
-
+                    <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
+                        <#if fiveDrader.quotaCode == "ZS_SOFTWARE_COPYRIGHT_VAL">
+                            ${fiveDrader.quotaValue}
+                        </#if>
+                    </#list>
                 </td>
                 <td>行政处罚</td>
                 <td>
