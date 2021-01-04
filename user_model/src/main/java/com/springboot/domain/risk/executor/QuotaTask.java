@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -116,10 +117,12 @@ public class QuotaTask implements Callable<QuotaValue> {
 
         if (elQuotaGrandCodes.contains(quota.getGrandCode())) {
             return quotaGrandList.stream()
+                    .filter(quotaGrand -> Objects.nonNull(quotaGrand.getQuotaValue()))
                     .filter(quotaGrand -> quotaGrand.getQuotaValue().equalsIgnoreCase(val))
                     .findFirst()
                     .orElse(quotaGrandList
                             .stream()
+                            .filter(quotaGrand -> Objects.nonNull(quotaGrand.getQuotaValue()))
                             .filter(quotaGrand -> quotaGrand.getQuotaValue().equalsIgnoreCase("else"))
                             .findFirst()
                             .get());
