@@ -319,7 +319,7 @@ public class DataHandleServiceImpl implements DataHandleService {
             StdIaBrandVo stdIaBrandVo = new StdIaBrandVo();
             final String type = "NICECLASSIFY";
             DicTable dicTableByTypeAndDicValue = DetectCacheUtils.getDicTableByTypeAndDicValue(type, stdIaBrand.getNiceClassify());
-            stdIaBrandVo.setNiceClassifyName(Optional.ofNullable(dicTableByTypeAndDicValue).orElse(new DicTable()).getDicMark());
+            stdIaBrandVo.setNiceClassifyName(Optional.ofNullable(dicTableByTypeAndDicValue).orElse(new DicTable()).getDicName());
             BeanUtils.copyProperties(stdIaBrand, stdIaBrandVo);
             stdIaBrandVoList.add(stdIaBrandVo);
         }
