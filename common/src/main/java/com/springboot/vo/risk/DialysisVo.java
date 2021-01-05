@@ -42,6 +42,8 @@ public class DialysisVo {
             return StrUtils.getRatioStr(actualValue);
         }else if (quotaId == 21L){
             return StrUtils.getRatioStr(actualValue);
+        }else if (quotaId == 24L){
+            return StrUtils.getIntStr(actualValue);
         }
         return actualValue;
     }

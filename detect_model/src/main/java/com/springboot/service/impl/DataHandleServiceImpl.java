@@ -313,6 +313,9 @@ public class DataHandleServiceImpl implements DataHandleService {
         List<StdIaBrand> stdIaBrandList = stdIaBrandService.findByReqId(reqId);
         for(StdIaBrand stdIaBrand : Utils.getList(stdIaBrandList)) {
             StdIaBrandVo stdIaBrandVo = new StdIaBrandVo();
+            final String type = "NICECLASSIFY";
+            DicTable dicTableByTypeAndDicValue = DetectCacheUtils.getDicTableByTypeAndDicValue(type, stdIaBrand.getNiceClassify());
+            stdIaBrandVo.setNiceClassifyName(Optional.ofNullable(dicTableByTypeAndDicValue).orElse(new DicTable()).getDicMark());
             BeanUtils.copyProperties(stdIaBrand, stdIaBrandVo);
             stdIaBrandVoList.add(stdIaBrandVo);
         }

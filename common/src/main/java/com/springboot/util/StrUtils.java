@@ -115,4 +115,11 @@ public class StrUtils {
         System.out.println(StrUtils.getRatioStr("0.5140"));
     }
 
+    public static String getIntStr(String ratio) {
+        if(ratio == null){
+            return null;
+        }
+        BigDecimal bRatio = new BigDecimal(ratio);
+        return String.valueOf(bRatio.intValue());
+    }
 }

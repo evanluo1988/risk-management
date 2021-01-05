@@ -164,7 +164,7 @@
                         </#if>
                     </#list>
                 </td>
-                <td>专利强度</td>
+                <td>专利价值度</td>
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "ZS_PATENT_VAL">
@@ -198,7 +198,7 @@
                         </#if>
                     </#list>
                 </td>
-                <td>商标强度</td>
+                <td>商标价值度</td>
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "ZS_TRADEMARK_VAL">
@@ -232,7 +232,7 @@
                         </#if>
                     </#list>
                 </td>
-                <td>软件著作权强度</td>
+                <td>软件著作权价值度</td>
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "ZS_SOFTWARE_COPYRIGHT_VAL">
@@ -601,7 +601,7 @@
                 <td rowspan="2">转入专利数</td>
                 <td rowspan="2">${data.entHealthDetails.patentInformation.transferPatentNum}件</td>
                 <td>发明人总数</td>
-                <td>${data.entHealthDetails.patentInformation.inventorNum}件</td>
+                <td>${data.entHealthDetails.patentInformation.inventorNum}人</td>
             </tr>
             <tr>
                 <td>新型专利</td>
@@ -717,7 +717,7 @@
                     <td>${stdIaBrand_index+1}</td>
                     <td><img src="${stdIaBrand.graph}"/></td>
                     <td>${stdIaBrand.brandName}</td>
-                    <td>${stdIaBrand.niceClassify}</td>
+                    <td>${stdIaBrand.niceClassifyName}</td>
                     <td>${stdIaBrand.registrationDate}</td>
                     <td>${stdIaBrand.applicationNumber}</td>
                     <td>${stdIaBrand.authorityStatus}</td>

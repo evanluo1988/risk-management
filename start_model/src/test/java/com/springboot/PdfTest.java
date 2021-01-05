@@ -25,7 +25,7 @@ public class PdfTest extends ApplicationTest{
 
     @Test
     public void test() throws FileNotFoundException {
-        String reqId = "7885c8b5-19a0-42cf-82b8-de5f62c2179f";
+        String reqId = "1a76b2d3-e2ca-4803-8882-e06693c7e954";
         //科技局 -- 全量
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.SCIENCE_OFFICE);
         HashMap data = new HashMap();

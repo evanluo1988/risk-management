@@ -1,8 +1,10 @@
 package com.springboot.vo.risk;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * 商标明细
@@ -21,6 +23,8 @@ public class StdIaBrandVo {
      * 尼斯分类
      */
     private String niceClassify;
+
+    private String niceClassifyName;
     /**
      * 申请日期
      */
@@ -37,4 +41,9 @@ public class StdIaBrandVo {
      * 代理人
      */
     private String agentName;
+
+    public String getNiceClassifyName() {
+
+        return niceClassifyName;
+    }
 }

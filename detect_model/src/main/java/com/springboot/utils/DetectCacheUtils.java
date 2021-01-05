@@ -2,6 +2,8 @@ package com.springboot.utils;
 
 import com.springboot.domain.risk.*;
 import com.springboot.model.StdTable;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -48,16 +50,31 @@ public class DetectCacheUtils {
         return dicTableMap.get(type);
     }
 
+    public static DicTable getDicTableByTypeAndDicValue(String type, String dicValue) {
+        DicTable ret = null;
+        List<DicTable> dicTableListByType = getDicTableListByType(type);
+        if (!StringUtils.isEmpty(dicValue)
+                && !CollectionUtils.isEmpty(dicTableListByType)) {
+            ret = dicTableListByType
+                    .stream()
+                    .filter(dicTable -> dicTable.getDicValue().equalsIgnoreCase(dicValue))
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        return ret;
+    }
+
     public static void setQuotaDimensionList(List<QuotaDimension> quotaDimensionList) {
         DetectCacheUtils.quotaDimensionList = quotaDimensionList;
     }
 
     public static QuotaDimension getQuotaDimensionById(Long id) {
-        if(id == null) {
+        if (id == null) {
             return null;
         }
-        for(QuotaDimension quotaDimension : quotaDimensionList) {
-            if(id.equals(quotaDimension.getId())) {
+        for (QuotaDimension quotaDimension : quotaDimensionList) {
+            if (id.equals(quotaDimension.getId())) {
                 return quotaDimension;
             }
         }
@@ -65,10 +82,9 @@ public class DetectCacheUtils {
     }
 
     /**
-     *
      * @param quotaGrandList
      */
-    public static void setQuotaGrandList(List<QuotaGrand> quotaGrandList){
+    public static void setQuotaGrandList(List<QuotaGrand> quotaGrandList) {
         DetectCacheUtils.quotaGrandMap = quotaGrandList.stream().collect(Collectors.groupingBy(QuotaGrand::getGrandCode));
     }
 
@@ -76,7 +92,7 @@ public class DetectCacheUtils {
         return quotaGrandMap.get(grandCode);
     }
 
-    public static void setQuotaList(List<Quota> quotaList){
+    public static void setQuotaList(List<Quota> quotaList) {
         DetectCacheUtils.quotaList = quotaList;
     }
 
@@ -84,12 +100,12 @@ public class DetectCacheUtils {
         return quotaList;
     }
 
-    public static void setStdTableMap(Map<String, StdTable> stdTableMap){
+    public static void setStdTableMap(Map<String, StdTable> stdTableMap) {
         DetectCacheUtils.stdTableMap = stdTableMap;
     }
 
-    public static StdTable getStdTable(String tableName){
-        return stdTableMap != null ? stdTableMap.get(tableName):null;
+    public static StdTable getStdTable(String tableName) {
+        return stdTableMap != null ? stdTableMap.get(tableName) : null;
     }
 
     public static List<EtlTranRule> getEtlTranRuleListCache() {
