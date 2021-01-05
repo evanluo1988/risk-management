@@ -652,27 +652,27 @@
 
 <h3>四、商标信息</h3>
 <div>
-    <div>
-        <h4>无效商标概况</h4>
-        <table>
-            <tbody>
-            <tr>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">无效商标总数</td>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.invalidBrandNum}个</td>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">商标种类分布</td>
-                <td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.invalidBrandSpeciesDistribution}类</td>
-                <td>种类</td>
-                <td>数量</td>
-            </tr>
-            <#list data.entHealthDetails.brandInformation.invalidBrandVarietyList as invalidBrandVariety>
-                <tr>
-                    <td>${invalidBrandVariety.niceClassifyName}</td>
-                    <td>${invalidBrandVariety.num}</td>
-                </tr>
-            </#list>
-            </tbody>
-        </table>
-    </div>
+    <#--<div>-->
+        <#--<h4>无效商标概况</h4>-->
+        <#--<table>-->
+            <#--<tbody>-->
+            <#--<tr>-->
+                <#--<td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">无效商标总数</td>-->
+                <#--<td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.invalidBrandNum}个</td>-->
+                <#--<td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">商标种类分布</td>-->
+                <#--<td rowspan="${data.entHealthDetails.brandInformation.invalidBrandVarietyList?size+1}">${data.entHealthDetails.brandInformation.invalidBrandSpeciesDistribution}类</td>-->
+                <#--<td>种类</td>-->
+                <#--<td>数量</td>-->
+            <#--</tr>-->
+            <#--<#list data.entHealthDetails.brandInformation.invalidBrandVarietyList as invalidBrandVariety>-->
+                <#--<tr>-->
+                    <#--<td>${invalidBrandVariety.niceClassifyName}</td>-->
+                    <#--<td>${invalidBrandVariety.num}</td>-->
+                <#--</tr>-->
+            <#--</#list>-->
+            <#--</tbody>-->
+        <#--</table>-->
+    <#--</div>-->
 
     <div>
         <h4>有效商标概况</h4>
@@ -908,8 +908,6 @@
 <div>
     <div>
         <h4>涉诉案件列表</h4>
-        <#list data.entHealthDetails.litigaCaseList as litigaCase>
-            <h5>案件编号：${litigaCase_index+1}</h5>
         <table>
             <thead>
             <tr>
@@ -925,20 +923,21 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>${litigaCase.caseCode}</td>
-                <td>${litigaCase.docClass}</td>
-                <td>${litigaCase.caseReason}</td>
-                <td>${litigaCase.lawStatus}</td>
-                <td>${litigaCase.intervalYear}</td>
-                <td>${litigaCase.payment}</td>
-                <td>${litigaCase.courtLevel}</td>
-                <td>${litigaCase.sentenceBrief}</td>
-                <td>${litigaCase.sentenceEffect}</td>
-            </tr>
+            <#list data.entHealthDetails.litigaCaseList as litigaCase>
+                <tr>
+                    <td>${litigaCase.caseCode}</td>
+                    <td>${litigaCase.docClass}</td>
+                    <td>${litigaCase.caseReason}</td>
+                    <td>${litigaCase.lawStatus}</td>
+                    <td>${litigaCase.intervalYear}</td>
+                    <td>${litigaCase.payment}</td>
+                    <td>${litigaCase.courtLevel}</td>
+                    <td>${litigaCase.sentenceBrief}</td>
+                    <td>${litigaCase.sentenceEffect}</td>
+                </tr>
+            </#list>
             </tbody>
         </table>
-        </#list>
     </div>
 </div>
 

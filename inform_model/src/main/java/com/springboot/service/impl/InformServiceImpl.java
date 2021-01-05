@@ -3,7 +3,6 @@ package com.springboot.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,7 +17,6 @@ import com.springboot.mapper.InformDao;
 import com.springboot.model.InformPageModel;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
-import com.springboot.service.remote.GeoRemoteService;
 import com.springboot.util.ConvertUtils;
 import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.UserAuthInfoContext;
@@ -28,10 +26,8 @@ import com.springboot.vo.InformPageVo;
 import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -104,7 +100,8 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public void export() {
+    public void export(Set<Long> ids) {
+
         HttpServletResponse response = HttpServletLocalThread.getResponse();
     }
 

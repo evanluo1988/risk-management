@@ -71,8 +71,8 @@ public class InformController {
     }
 
     @GetMapping("/export")
-    public void export(){
-        informService.export();
+    public void export(Set<Long> ids){
+        informService.export(ids);
     }
 
     @PutMapping("/dispatcher/{id}")

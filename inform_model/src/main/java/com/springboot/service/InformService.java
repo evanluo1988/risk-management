@@ -1,7 +1,6 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.springboot.domain.Area;
 import com.springboot.domain.Inform;
 import com.springboot.page.Pagination;
 import com.springboot.vo.InformImportVo;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * <p>
@@ -37,8 +37,9 @@ public interface InformService extends IService<Inform> {
 
     /**
      * 导出
+     * @param ids
      */
-    void export();
+    void export(Set<Long> ids);
 
     /**
      * 分派
