@@ -560,21 +560,28 @@ public class DataHandleServiceImpl implements DataHandleService {
         if(org == OrgEnum.SCIENCE_OFFICE) {
             firstLevelIds.add(11L);
         }
+
         Map<Long, List<QuotaModel>> quotaModelMap = quotaModelList.stream()
-                .filter(item -> (firstLevelIds.contains(item.getFirstLevelId()) && "QUOTA".equals(item.getQuotaType()) && !"Y".equals(item.getIdealInterval())))
+                .filter(item -> (firstLevelIds.contains(item.getFirstLevelId()) && "QUOTA".equals(item.getQuotaType())))
                 .collect(Collectors.groupingBy(QuotaModel::getFirstLevelId));
         for(Long key : firstLevelIds) {
             double score = 100;
+            double intellectualPropertyScore = 0;
             for(QuotaModel quotaModel : Utils.getList(quotaModelMap.get(key))) {
-                score = score - quotaModel.getMinusPoints();
+                //对于知识产权价值度，用加分计算
+                if(key == 11) {
+                    intellectualPropertyScore = intellectualPropertyScore + quotaModel.getMinusPoints();
+                } else {
+                    score = score - quotaModel.getMinusPoints();
+                }
             }
             if(score < 0){
                 score = 0;
             }
             if(key == 10) {
                 fiveDRader.setBusinessStabilityScore(score);
-            } else if(key == 11) {
-                fiveDRader.setIntellectualPropertyScore(score);
+            } else if (key == 11) {
+                fiveDRader.setIntellectualPropertyScore(intellectualPropertyScore);
             } else if(key == 12) {
                 fiveDRader.setBusinessRiskScore(score);
             } else if(key == 13) {
