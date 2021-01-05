@@ -34,6 +34,7 @@ public class InformOverDueConverter implements Converter<Boolean> {
 
     @Override
     public CellData convertToExcelData(Boolean aBoolean, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(aBoolean);
+        InformOverDueEnum informOverDueEnum = InformOverDueEnum.codeOf(aBoolean);
+        return new CellData(Objects.isNull(informOverDueEnum)?null:informOverDueEnum.getDesc());
     }
 }

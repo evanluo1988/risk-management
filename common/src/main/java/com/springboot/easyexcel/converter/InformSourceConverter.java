@@ -34,6 +34,7 @@ public class InformSourceConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        InformSourceEnum informSourceEnum = InformSourceEnum.valueOf(s);
+        return new CellData(Objects.isNull(informSourceEnum)?null:informSourceEnum.getDesc());
     }
 }

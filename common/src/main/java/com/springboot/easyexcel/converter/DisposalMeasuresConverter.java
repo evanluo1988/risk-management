@@ -34,6 +34,7 @@ public class DisposalMeasuresConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        DisposalMeasuresEnum disposalMeasuresEnum = DisposalMeasuresEnum.valueOf(s);
+        return new CellData(Objects.isNull(disposalMeasuresEnum) ? null : disposalMeasuresEnum.getDesc());
     }
 }

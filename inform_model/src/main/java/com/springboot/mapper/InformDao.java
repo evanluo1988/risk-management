@@ -3,11 +3,14 @@ package com.springboot.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.domain.Inform;
+import com.springboot.model.InformExportModel;
 import com.springboot.model.InformPageModel;
 import com.springboot.vo.InformPageVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -47,4 +50,6 @@ public interface InformDao extends BaseMapper<Inform> {
                                      @Param("checkTimeEnd") LocalDate checkTimeEnd,
                                      @Param("areaId") Long areaId,
                                      Page<Inform> informPage);
+
+    List<InformExportModel> listInformByIds(@Param("ids") List<Long> ids);
 }

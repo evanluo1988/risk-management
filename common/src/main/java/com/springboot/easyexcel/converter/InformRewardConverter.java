@@ -34,6 +34,7 @@ public class InformRewardConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        InformRewardEnum informRewardEnum = InformRewardEnum.valueOf(s);
+        return new CellData(Objects.isNull(informRewardEnum) ? null : informRewardEnum.getDesc());
     }
 }

@@ -34,6 +34,7 @@ public class InformCheckStatusConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        CheckStatusEnum checkStatusEnum = CheckStatusEnum.codeOf(s);
+        return new CellData(Objects.isNull(checkStatusEnum)?null: checkStatusEnum.getDesc());
     }
 }

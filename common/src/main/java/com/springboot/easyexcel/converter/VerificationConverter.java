@@ -34,6 +34,7 @@ public class VerificationConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        VerificationEnum verificationEnum = VerificationEnum.valueOf(s);
+        return new CellData(Objects.isNull(verificationEnum)?null:verificationEnum.getDesc());
     }
 }

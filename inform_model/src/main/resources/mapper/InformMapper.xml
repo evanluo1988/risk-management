@@ -45,6 +45,48 @@
 	  ir.reward_content
     </sql>
 
+    <sql id="Inform_Export_Column">
+      i.id,
+    i.clue_number AS clueNumber,
+    i.`source`,
+    i.anonymous,
+    DATE_FORMAT(i.inform_time,'%Y-%m-%d') AS informTime,
+    i.inform_name AS informName,
+    i.inform_type AS informType,
+    DATE_FORMAT(i.crime_time,'%Y-%m-%d') AS crimeTime,
+    i.crime_region AS crimeRegion,
+    i.crime_address AS crimeAddress,
+    i.involved_amount AS involvedAmount,
+    i.inform_content AS informContent,
+    i.assignment,
+    i.area_id AS areaId,
+    i.check_status AS checkStatus,
+    i.attachment,
+    DATE_FORMAT(i.expire_time,'%Y-%m-%d') AS expireTime,
+    ip.person_name AS personName,
+    ip.identity_card AS identityCard,
+    ip.contact_way AS contactWay,
+    ip.address,
+    ic.check_unit AS checkUnit,
+    DATE_FORMAT(ic.check_time,'%Y-%m-%d') AS checkTime,
+    ic.enterprise_name AS enterpriseName,
+    ic.check_place AS checkPlace,
+    ic.overdue,
+    ic.industry,
+    ic.verification,
+    ic.check_details AS checkDetails,
+    ic.check_enterprise_name AS checkEnterpriseName,
+    ic.disposal_measures AS disposalMeasures,
+    ic.transfer,
+    ic.transfer_unit AS transferUnit,
+    ic.transfer_reason AS transferReason,
+    ic.attachment as checkAtta,
+    ire.reward_content AS rewardContent,
+    ire.reward_amount AS rewardAmount,
+    DATE_FORMAT(ire.reward_time,'%Y-%m-%d') AS rewardTime,
+    ir.reason
+    </sql>
+
     <select id="informPage" parameterType="Map" resultType="com.springboot.model.InformPageModel">
         SELECT <include refid="Inform_Page_Column"/>
         FROM informs i
@@ -85,5 +127,18 @@
         <if test="areaId != null">
             AND ic.check_unit = #{areaId}
         </if>
+    </select>
+
+    <select id="listInformByIds" parameterType="java.util.List" resultType="com.springboot.model.InformExportModel">
+        SELECT <include refid="Inform_Export_Column"/>
+        FROM informs i
+        LEFT JOIN inform_persons ip ON i.inform_person_id = ip.id
+        LEFT JOIN inform_checks ic ON i.id = ic.inform_id
+        LEFT JOIN inform_refunds ir ON i.id = ir.inform_id
+        LEFT JOIN inform_rewards ire ON i.id = ire.inform_id
+        WHERE i.id IN 
+        <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
     </select>
 </mapper>

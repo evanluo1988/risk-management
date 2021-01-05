@@ -34,6 +34,7 @@ public class InformTransferConverter implements Converter<Boolean> {
 
     @Override
     public CellData convertToExcelData(Boolean aBoolean, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(aBoolean);
+        InformTransferEnum informTransferEnum = InformTransferEnum.codeOf(aBoolean);
+        return new CellData(Objects.isNull(informTransferEnum)?null:informTransferEnum.getDesc());
     }
 }

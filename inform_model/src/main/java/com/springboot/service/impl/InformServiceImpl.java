@@ -14,6 +14,7 @@ import com.springboot.enums.AssignmentEnum;
 import com.springboot.enums.CheckStatusEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.InformDao;
+import com.springboot.model.InformExportModel;
 import com.springboot.model.InformPageModel;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
@@ -21,10 +22,7 @@ import com.springboot.util.ConvertUtils;
 import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.utils.ServerCacheUtils;
-import com.springboot.vo.InformImportVo;
-import com.springboot.vo.InformPageVo;
-import com.springboot.vo.InformViewVo;
-import com.springboot.vo.InformVo;
+import com.springboot.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -100,9 +99,20 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public void export(Set<Long> ids) {
+    public void export(List<Long> ids) throws IOException {
+        if (CollectionUtils.isEmpty(ids)){
+            return ;
+        }
+
+        List<InformExportModel> informs = informDao.listInformByIds(ids);
+        List<InformExportVo> informExportVos = ConvertUtils.sourceToTarget(informs, InformExportVo.class);
 
         HttpServletResponse response = HttpServletLocalThread.getResponse();
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode("举报", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(),InformExportVo.class).sheet("1").doWrite(informExportVos);
     }
 
     @Override

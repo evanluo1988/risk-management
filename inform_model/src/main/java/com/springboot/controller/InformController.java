@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +72,7 @@ public class InformController {
     }
 
     @GetMapping("/export")
-    public void export(Set<Long> ids){
+    public void export(@RequestParam List<Long> ids) throws IOException {
         informService.export(ids);
     }
 

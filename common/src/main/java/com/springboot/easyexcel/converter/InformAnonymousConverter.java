@@ -34,6 +34,7 @@ public class InformAnonymousConverter implements Converter<Boolean> {
 
     @Override
     public CellData convertToExcelData(Boolean s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        InformAnonymousEnum informAnonymousEnum = InformAnonymousEnum.codeOf(s);
+        return new CellData(Objects.isNull(informAnonymousEnum)?null:informAnonymousEnum.getDesc());
     }
 }

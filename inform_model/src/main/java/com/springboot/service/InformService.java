@@ -9,8 +9,10 @@ import com.springboot.vo.InformViewVo;
 import com.springboot.vo.InformVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -39,7 +41,7 @@ public interface InformService extends IService<Inform> {
      * 导出
      * @param ids
      */
-    void export(Set<Long> ids);
+    void export(List<Long> ids) throws IOException;
 
     /**
      * 分派
