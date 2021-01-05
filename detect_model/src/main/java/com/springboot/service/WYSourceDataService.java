@@ -1,7 +1,7 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.IaAsBrand;
-import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.domain.IaAsBrand;
+import com.springboot.domain.IaAsCopyright;
 import com.springboot.model.IaAsPartentModel;
 
 import java.util.List;

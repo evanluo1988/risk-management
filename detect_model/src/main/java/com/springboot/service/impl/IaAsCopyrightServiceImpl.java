@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.domain.IaAsCopyright;
 import com.springboot.mapper.IaAsCopyrightMapper;
 import com.springboot.service.IaAsCopyrightService;
 import org.springframework.stereotype.Service;

@@ -2,9 +2,8 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.common.collect.Maps;
-import com.springboot.domain.risk.StdEntBasic;
-import com.springboot.domain.risk.StdIaBrand;
+import com.springboot.domain.StdEntBasic;
+import com.springboot.domain.StdIaBrand;
 import com.springboot.mapper.StdIaBrandMapper;
 import com.springboot.service.StdEntBasicService;
 import com.springboot.service.StdIaBrandService;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author 刘宏飞

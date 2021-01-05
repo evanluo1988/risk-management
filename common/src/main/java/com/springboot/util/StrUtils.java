@@ -1,6 +1,7 @@
 package com.springboot.util;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -99,6 +100,13 @@ public class StrUtils {
         return date.replace("-", "/");
     }
 
+    public static String getDataStr(LocalDate date) {
+        if(date == null) {
+            return null;
+        }
+        return date.toString().replace("-", "/");
+    }
+
     /**
      * 百分比
      * @param ratio
@@ -112,7 +120,7 @@ public class StrUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(StrUtils.getRatioStr("0.5140"));
+        System.out.println(StrUtils.getDataStr(LocalDate.now()));
     }
 
     public static String getIntStr(String ratio) {

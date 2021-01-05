@@ -1,7 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.StdLegalCasemedian;
-import com.springboot.domain.risk.StdLegalCasemedianTemp;
+import com.springboot.domain.StdLegalCasemedian;
 
 import java.util.List;
 

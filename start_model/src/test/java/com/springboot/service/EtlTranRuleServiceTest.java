@@ -1,7 +1,7 @@
 package com.springboot.service;
 
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.EtlTranRule;
+import com.springboot.domain.EtlTranRule;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

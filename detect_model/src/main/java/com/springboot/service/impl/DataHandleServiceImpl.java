@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.google.common.collect.Lists;
-import com.springboot.domain.risk.*;
+import com.springboot.domain.*;
 import com.springboot.enums.OrgEnum;
 import com.springboot.model.QuotaModel;
 import com.springboot.model.StdGsEntInfoModel;
@@ -26,6 +26,8 @@ public class DataHandleServiceImpl implements DataHandleService {
     private StdLegalService stdLegalService;
     @Autowired
     private QuotaValueService quotaValueService;
+    @Autowired
+    private StdEntBasicService stdEntBasicService;
 
     @Autowired
     private StdDataService stdDataService;
@@ -70,7 +72,7 @@ public class DataHandleServiceImpl implements DataHandleService {
         StdGsEntInfoModel stdGsEntInfo = stdDataService.getStdGsEntInfo(reqId);
         EntHealthReportVo entHealthReportVo = new EntHealthReportVo();
         //企业健康评价
-        entHealthReportVo.setEntHealthAssessment(getEntHealthAssessment(quotaModelList, org));
+        entHealthReportVo.setEntHealthAssessment(getEntHealthAssessment(reqId, quotaModelList, org));
         //企业健康详情
         entHealthReportVo.setEntHealthDetails(getEntHealthDetails(reqId, quotaModelList, stdGsEntInfo, org));
         return entHealthReportVo;
@@ -80,9 +82,9 @@ public class DataHandleServiceImpl implements DataHandleService {
      * 企业健康评价
      * @return
      */
-    private EntHealthAssessmentVo getEntHealthAssessment(List<QuotaModel> quotaModelList, OrgEnum org) {
+    private EntHealthAssessmentVo getEntHealthAssessment(String reqId, List<QuotaModel> quotaModelList, OrgEnum org) {
         EntHealthAssessmentVo entHealthAssessment = new EntHealthAssessmentVo();
-        entHealthAssessment.setEntHealthDetectionRadar(getEntHealthDetectionRadar(quotaModelList));
+        entHealthAssessment.setEntHealthDetectionRadar(getEntHealthDetectionRadar(reqId, quotaModelList));
         entHealthAssessment.setEntHealthDialysis(getEntHealthDialysis(quotaModelList, org));
         return entHealthAssessment;
     }
@@ -91,8 +93,10 @@ public class DataHandleServiceImpl implements DataHandleService {
      * 企业健康检测雷达
      * @return
      */
-    private EntHealthDetectionRadarVo getEntHealthDetectionRadar(List<QuotaModel> quotaModelList) {
+    private EntHealthDetectionRadarVo getEntHealthDetectionRadar(String reqId, List<QuotaModel> quotaModelList) {
         EntHealthDetectionRadarVo entHealthDetectionRadarVo = new EntHealthDetectionRadarVo();
+        StdEntBasic stdEntBasic = stdEntBasicService.getStdEntBasicByReqId(reqId);
+        entHealthDetectionRadarVo.setEntName(stdEntBasic.getEntName());
         for(QuotaModel quotaModel : quotaModelList) {
             switch(quotaModel.getQuotaCode().trim()){
                 case "GS_ENT_INDUSTRY":
@@ -315,7 +319,7 @@ public class DataHandleServiceImpl implements DataHandleService {
             StdIaBrandVo stdIaBrandVo = new StdIaBrandVo();
             final String type = "NICECLASSIFY";
             DicTable dicTableByTypeAndDicValue = DetectCacheUtils.getDicTableByTypeAndDicValue(type, stdIaBrand.getNiceClassify());
-            stdIaBrandVo.setNiceClassifyName(Optional.ofNullable(dicTableByTypeAndDicValue).orElse(new DicTable()).getDicMark());
+            stdIaBrandVo.setNiceClassifyName(Optional.ofNullable(dicTableByTypeAndDicValue).orElse(new DicTable()).getDicName());
             BeanUtils.copyProperties(stdIaBrand, stdIaBrandVo);
             stdIaBrandVoList.add(stdIaBrandVo);
         }
@@ -560,21 +564,28 @@ public class DataHandleServiceImpl implements DataHandleService {
         if(org == OrgEnum.SCIENCE_OFFICE) {
             firstLevelIds.add(11L);
         }
+
         Map<Long, List<QuotaModel>> quotaModelMap = quotaModelList.stream()
-                .filter(item -> (firstLevelIds.contains(item.getFirstLevelId()) && "QUOTA".equals(item.getQuotaType()) && !"Y".equals(item.getIdealInterval())))
+                .filter(item -> (firstLevelIds.contains(item.getFirstLevelId()) && "QUOTA".equals(item.getQuotaType())))
                 .collect(Collectors.groupingBy(QuotaModel::getFirstLevelId));
         for(Long key : firstLevelIds) {
             double score = 100;
+            double intellectualPropertyScore = 0;
             for(QuotaModel quotaModel : Utils.getList(quotaModelMap.get(key))) {
-                score = score - quotaModel.getMinusPoints();
+                //对于知识产权价值度，用加分计算
+                if(key == 11) {
+                    intellectualPropertyScore = intellectualPropertyScore + quotaModel.getMinusPoints();
+                } else {
+                    score = score - quotaModel.getMinusPoints();
+                }
             }
             if(score < 0){
                 score = 0;
             }
             if(key == 10) {
                 fiveDRader.setBusinessStabilityScore(score);
-            } else if(key == 11) {
-                fiveDRader.setIntellectualPropertyScore(score);
+            } else if (key == 11) {
+                fiveDRader.setIntellectualPropertyScore(intellectualPropertyScore);
             } else if(key == 12) {
                 fiveDRader.setBusinessRiskScore(score);
             } else if(key == 13) {

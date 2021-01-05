@@ -1,6 +1,6 @@
 package com.springboot.model;
 
-import com.springboot.domain.risk.StdLegalEnterpriseExecuted;
+import com.springboot.domain.StdLegalEnterpriseExecuted;
 import lombok.Data;
 
 @Data

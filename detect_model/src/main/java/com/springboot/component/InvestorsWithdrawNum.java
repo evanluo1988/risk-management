@@ -1,6 +1,6 @@
 package com.springboot.component;
 
-import com.springboot.domain.risk.StdEntAlter;
+import com.springboot.domain.StdEntAlter;
 import com.springboot.mapper.StdEntAlterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

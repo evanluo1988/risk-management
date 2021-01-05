@@ -1,6 +1,6 @@
 package com.springboot;
 
-import com.springboot.domain.risk.*;
+import com.springboot.domain.*;
 import lombok.Data;
 
 import java.util.List;

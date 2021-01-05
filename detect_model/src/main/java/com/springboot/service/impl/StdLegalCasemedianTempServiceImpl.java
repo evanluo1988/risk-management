@@ -2,7 +2,7 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.StdLegalCasemedianTemp;
+import com.springboot.domain.StdLegalCasemedianTemp;
 import com.springboot.mapper.StdLegalCasemedianTempMapper;
 import com.springboot.service.StdLegalCasemedianTempService;
 import org.springframework.stereotype.Service;

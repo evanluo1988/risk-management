@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.StdEntAlter;
+import com.springboot.domain.StdEntAlter;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

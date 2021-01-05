@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.Quota;
+import com.springboot.domain.Quota;
 
 import java.util.List;
 

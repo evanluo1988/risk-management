@@ -2,7 +2,7 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.StdLegalEnterpriseExecuted;
+import com.springboot.domain.StdLegalEnterpriseExecuted;
 import com.springboot.mapper.StdLegalEnterpriseExecutedMapper;
 import com.springboot.service.StdLegalEnterpriseExecutedService;
 import org.springframework.beans.factory.annotation.Autowired;

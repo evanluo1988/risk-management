@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.springboot.domain.risk.*;
+import com.springboot.domain.*;
 import com.springboot.mapper.*;
 import com.springboot.model.*;
 import com.springboot.service.StdDataService;

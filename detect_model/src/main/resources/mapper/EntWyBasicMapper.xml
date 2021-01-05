@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.EntWyBasicMapper" >
+
+    <resultMap id="BaseResultMap" type="com.springboot.domain.EntWyBasic" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="req_id" property="reqId" jdbcType="VARCHAR" />
+        <result column="businessid" property="businessId" jdbcType="VARCHAR" />
+        <result column="enterprisename" property="enterpriseName" jdbcType="BIGINT" />
+        <result column="creditcode" property="creditCode" jdbcType="VARCHAR" />
+        <result column="frname" property="frName" jdbcType="VARCHAR" />
+        <result column="regno" property="regNo" jdbcType="VARCHAR" />
+        <result column="regcap" property="regCap" jdbcType="VARCHAR" />
+        <result column="regcapcur" property="regCapCur" jdbcType="VARCHAR" />
+        <result column="esdate" property="esDate" jdbcType="VARCHAR" />
+        <result column="openfrom" property="openFrom" jdbcType="VARCHAR" />
+        <result column="opento" property="openTo" jdbcType="VARCHAR" />
+        <result column="enterprisetype" property="enterpriseType" jdbcType="VARCHAR" />
+        <result column="enterprisestatus" property="enterpriseStatus" jdbcType="VARCHAR" />
+        <result column="canceldate" property="cancelDate" jdbcType="VARCHAR" />
+        <result column="revokedate" property="revokeDate" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="abuitem" property="abuItem" jdbcType="VARCHAR" />
+        <result column="operatescope" property="operateScope" jdbcType="VARCHAR" />
+        <result column="regorg" property="regOrg" jdbcType="VARCHAR" />
+        <result column="ancheyear" property="anCheYear" jdbcType="VARCHAR" />
+        <result column="industryphycode" property="industryPhyCode" jdbcType="VARCHAR" />
+        <result column="industryphyname" property="industryPhyName" jdbcType="VARCHAR" />
+        <result column="industrycode" property="industryCode" jdbcType="VARCHAR" />
+        <result column="industryname" property="industryName" jdbcType="VARCHAR" />
+        <result column="reccap" property="recCap" jdbcType="VARCHAR" />
+        <result column="oriregno" property="oriRegNo" jdbcType="VARCHAR" />
+        <result column="apprdate" property="apprDate" jdbcType="VARCHAR" />
+
+
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    </resultMap>
+
+</mapper>

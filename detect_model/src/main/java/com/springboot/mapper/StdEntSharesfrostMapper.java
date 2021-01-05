@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.springboot.domain.risk.StdEntSharesfrost;
+import com.springboot.domain.StdEntSharesfrost;
 
 /**
  * @Author 刘宏飞

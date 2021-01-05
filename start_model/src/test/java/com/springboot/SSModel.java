@@ -1,6 +1,6 @@
 package com.springboot;
 
-import com.springboot.domain.risk.LegalWySsjghsj;
+import com.springboot.domain.LegalWySsjghsj;
 import lombok.Data;
 
 import java.util.List;

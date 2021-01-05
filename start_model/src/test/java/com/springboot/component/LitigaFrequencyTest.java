@@ -1,7 +1,7 @@
 package com.springboot.component;
 
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.StdLegalDataStructuredTemp;
+import com.springboot.domain.StdLegalDataStructuredTemp;
 import com.springboot.mapper.StdLegalDataStructuredTempMapper;
 import com.springboot.mapper.StdLegalEntUnexecutedTempMapper;
 import com.springboot.mapper.StdLegalEnterpriseExecutedTempMapper;

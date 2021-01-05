@@ -1,10 +1,9 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.StdLegalDataAdded;
-import com.springboot.domain.risk.StdLegalDataStructured;
+import com.springboot.domain.StdLegalDataAdded;
+import com.springboot.domain.StdLegalDataStructured;
 
 import java.util.List;
-import java.util.Map;
 
 public interface LegalDataAddColumnService {
     /**

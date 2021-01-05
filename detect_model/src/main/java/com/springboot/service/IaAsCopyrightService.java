@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.domain.IaAsCopyright;
 
 import java.util.List;
 

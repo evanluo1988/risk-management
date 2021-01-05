@@ -1,8 +1,8 @@
 package com.springboot.service;
 
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.IaAsBrand;
-import com.springboot.domain.risk.IaAsCopyright;
+import com.springboot.domain.IaAsBrand;
+import com.springboot.domain.IaAsCopyright;
 import com.springboot.model.IaAsPartentModel;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

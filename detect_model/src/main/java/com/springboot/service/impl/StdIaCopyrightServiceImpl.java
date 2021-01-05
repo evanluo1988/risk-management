@@ -2,8 +2,8 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.StdEntBasic;
-import com.springboot.domain.risk.StdIaCopyright;
+import com.springboot.domain.StdEntBasic;
+import com.springboot.domain.StdIaCopyright;
 import com.springboot.mapper.StdIaCopyrightMapper;
 import com.springboot.service.StdEntBasicService;
 import com.springboot.service.StdIaCopyrightService;

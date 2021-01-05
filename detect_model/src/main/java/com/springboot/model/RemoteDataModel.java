@@ -1,8 +1,7 @@
 package com.springboot.model;
 
-import com.springboot.domain.risk.*;
+import com.springboot.domain.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 

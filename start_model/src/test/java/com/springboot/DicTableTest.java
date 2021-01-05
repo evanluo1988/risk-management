@@ -1,17 +1,12 @@
 package com.springboot;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.metadata.CellExtra;
-import com.alibaba.excel.read.listener.ReadListener;
 import com.google.common.collect.Lists;
-import com.springboot.domain.risk.DicTable;
+import com.springboot.domain.DicTable;
 import com.springboot.service.DicTableService;
 import com.springboot.util.ConvertUtils;
-import lombok.Data;
-import org.assertj.core.util.Files;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

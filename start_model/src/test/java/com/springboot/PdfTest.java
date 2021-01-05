@@ -25,7 +25,7 @@ public class PdfTest extends ApplicationTest{
 
     @Test
     public void test() throws FileNotFoundException {
-        String reqId = "1a76b2d3-e2ca-4803-8882-e06693c7e954";
+        String reqId = "b43c1c67-15cf-478a-a357-46004286f306";
         //科技局 -- 全量
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.SCIENCE_OFFICE);
         HashMap data = new HashMap();
@@ -33,13 +33,13 @@ public class PdfTest extends ApplicationTest{
 
         File file = new File(this.getClass().getResource("/templates").getFile());
         String html = FreemarkerUtils.loadFtlHtml(file, "pdf-science.ftl",data);
-        FileOutputStream out = new FileOutputStream("c:/pdf-science.pdf");
+        FileOutputStream out = new FileOutputStream("d:/pdf-science.pdf");
         ITextUtils.convertHtmlToPdf(out,html);
     }
 
     @Test
     public void test1() throws FileNotFoundException {
-        String reqId = "f228853f-161f-41d8-a31c-a00707f7cfeb";
+        String reqId = "b43c1c67-15cf-478a-a357-46004286f306";
         //金融办 -- 知识产权去掉
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.FINANCE_OFFICE);
         HashMap data = new HashMap();
@@ -47,7 +47,7 @@ public class PdfTest extends ApplicationTest{
 
         File file = new File(this.getClass().getResource("/templates").getFile());
         String html = FreemarkerUtils.loadFtlHtml(file, "pdf-finance.ftl",data);
-        FileOutputStream out = new FileOutputStream("c:/pdf-finance.pdf");
+        FileOutputStream out = new FileOutputStream("d:/pdf-finance.pdf");
         ITextUtils.convertHtmlToPdf(out,html);
     }
 }

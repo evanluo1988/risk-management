@@ -1,8 +1,8 @@
 package com.springboot.service.impl;
 
 import com.google.common.collect.Lists;
-import com.springboot.domain.risk.QuotaValue;
-import com.springboot.domain.risk.executor.QuotaTask;
+import com.springboot.domain.QuotaValue;
+import com.springboot.executor.QuotaTask;
 import com.springboot.threadpool.ThreadPoolUtil;
 
 import java.util.List;

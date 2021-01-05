@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.springboot.domain.risk.StdLegalCasemedianTemp;
+import com.springboot.domain.StdLegalCasemedianTemp;
 
 /**
  * @Author 刘宏飞

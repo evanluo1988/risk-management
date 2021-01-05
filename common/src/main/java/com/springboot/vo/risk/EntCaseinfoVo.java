@@ -46,4 +46,8 @@ public class EntCaseinfoVo {
     public String getPublicdate() {
         return StrUtils.getDataStr(publicdate);
     }
+
+    public String getPendecissdate() {
+        return StrUtils.getDataStr(pendecissdate);
+    }
 }

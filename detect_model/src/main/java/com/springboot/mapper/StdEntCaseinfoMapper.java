@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.springboot.domain.risk.StdEntCaseinfo;
+import com.springboot.domain.StdEntCaseinfo;
 
 /**
  * @Author 刘宏飞

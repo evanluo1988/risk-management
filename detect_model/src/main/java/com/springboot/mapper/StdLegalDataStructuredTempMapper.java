@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.springboot.domain.risk.StdLegalDataStructuredTemp;
+import com.springboot.domain.StdLegalDataStructuredTemp;
 import com.springboot.model.LitigaInitiativeModel;
 import com.springboot.model.VerdictResultModel;
 

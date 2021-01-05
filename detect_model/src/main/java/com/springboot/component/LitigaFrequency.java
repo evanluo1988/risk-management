@@ -1,9 +1,9 @@
 package com.springboot.component;
 
 import com.google.common.collect.Maps;
-import com.springboot.domain.risk.StdLegalDataStructuredTemp;
-import com.springboot.domain.risk.StdLegalEntUnexecutedTemp;
-import com.springboot.domain.risk.StdLegalEnterpriseExecutedTemp;
+import com.springboot.domain.StdLegalDataStructuredTemp;
+import com.springboot.domain.StdLegalEntUnexecutedTemp;
+import com.springboot.domain.StdLegalEnterpriseExecutedTemp;
 import com.springboot.mapper.StdLegalDataStructuredTempMapper;
 import com.springboot.mapper.StdLegalEntUnexecutedTempMapper;
 import com.springboot.mapper.StdLegalEnterpriseExecutedTempMapper;
