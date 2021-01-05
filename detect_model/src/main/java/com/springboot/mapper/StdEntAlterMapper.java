@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.springboot.domain.risk.StdEntAlter;
+import com.springboot.domain.StdEntAlter;
 
 import java.util.List;
 

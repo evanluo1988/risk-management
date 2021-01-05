@@ -1,8 +1,8 @@
 package com.springboot.component;
 
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.StdEntBasic;
-import com.springboot.domain.risk.StdIaPartent;
+import com.springboot.domain.StdEntBasic;
+import com.springboot.domain.StdIaPartent;
 import com.springboot.service.StdEntBasicService;
 import com.springboot.service.StdIaPartentService;
 import org.assertj.core.util.Lists;

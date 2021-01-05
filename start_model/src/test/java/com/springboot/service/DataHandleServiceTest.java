@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.*;
+import com.springboot.domain.*;
 import com.springboot.enums.OrgEnum;
 import com.springboot.mapper.*;
 import com.springboot.model.RemoteDataModel;
@@ -279,14 +279,14 @@ public class DataHandleServiceTest extends ApplicationTest {
 
     @Test
     public void testCulQuotas() {
-        String reqId = "48504acf-c859-439b-a6a7-22c4be79084f";
+        String reqId = "b43c1c67-15cf-478a-a357-46004286f306";
         dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
         //dataHandleService.culModels(reqId);
     }
 
     @Test
     public void testGetEntHealthReportVo() {
-        String reqId = "f228853f-161f-41d8-a31c-a00707f7cfeb";
+        String reqId = "a9cb0a6c-d179-4d67-ac63-f9389b6a35c7";
         EntHealthReportVo entHealthReportVo = dataHandleService.getEntHealthReportVo(reqId, OrgEnum.SCIENCE_OFFICE);
         System.out.println(entHealthReportVo);
     }

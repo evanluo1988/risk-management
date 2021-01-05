@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.DicTable;
+import com.springboot.domain.DicTable;
 import com.springboot.mapper.DicTableMapper;
 import com.springboot.service.DicTableService;
 import org.springframework.stereotype.Service;

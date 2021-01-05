@@ -3,7 +3,7 @@
 <mapper namespace="com.springboot.mapper.QuotaValueMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.springboot.domain.risk.QuotaValue">
+    <resultMap id="BaseResultMap" type="com.springboot.domain.QuotaValue">
     <result column="id" property="id" />
         <result column="req_id" property="reqId" />
         <result column="quota_id" property="quotaId" />

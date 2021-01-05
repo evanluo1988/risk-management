@@ -1,8 +1,8 @@
 package com.springboot.service.impl;
 
 import com.google.common.collect.Lists;
-import com.springboot.domain.risk.*;
-import com.springboot.domain.risk.executor.QuotaTask;
+import com.springboot.domain.*;
+import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.service.*;

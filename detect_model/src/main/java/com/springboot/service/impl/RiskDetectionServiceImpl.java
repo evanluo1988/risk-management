@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
-import com.springboot.domain.risk.CloudInfoTimeliness;
-import com.springboot.domain.risk.EntWyBasic;
+import com.springboot.domain.CloudInfoTimeliness;
+import com.springboot.domain.EntWyBasic;
 import com.springboot.enums.OrgEnum;
 import com.springboot.service.*;
 import com.springboot.vo.risk.EntHealthReportVo;

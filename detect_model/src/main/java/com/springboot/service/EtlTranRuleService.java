@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.EtlTranRule;
+import com.springboot.domain.EtlTranRule;
 
 import java.util.List;
 

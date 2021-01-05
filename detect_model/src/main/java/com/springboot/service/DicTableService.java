@@ -1,7 +1,7 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.springboot.domain.risk.DicTable;
+import com.springboot.domain.DicTable;
 
 import java.util.List;
 

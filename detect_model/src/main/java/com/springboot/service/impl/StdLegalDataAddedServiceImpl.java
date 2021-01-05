@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.StdLegalDataAdded;
+import com.springboot.domain.StdLegalDataAdded;
 import com.springboot.mapper.StdLegalDataAddedMapper;
 import com.springboot.service.StdLegalDataAddedService;
 import org.springframework.stereotype.Service;

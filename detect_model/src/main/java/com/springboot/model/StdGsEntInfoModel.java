@@ -1,7 +1,6 @@
 package com.springboot.model;
 
-import com.springboot.domain.risk.*;
-import lombok.AllArgsConstructor;
+import com.springboot.domain.*;
 import lombok.Builder;
 import lombok.Data;
 

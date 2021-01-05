@@ -1,9 +1,9 @@
 package com.springboot.service;
 
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.StdIaBrand;
-import com.springboot.domain.risk.StdIaCopyright;
-import com.springboot.domain.risk.StdIaPartent;
+import com.springboot.domain.StdIaBrand;
+import com.springboot.domain.StdIaCopyright;
+import com.springboot.domain.StdIaPartent;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.QuotaDimension;
+import com.springboot.domain.QuotaDimension;
 
 import java.util.List;
 

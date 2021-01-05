@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.StdLegalDataAdded;
+import com.springboot.domain.StdLegalDataAdded;
 
 import java.util.List;
 

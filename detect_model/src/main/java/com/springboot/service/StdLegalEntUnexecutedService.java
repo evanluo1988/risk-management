@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.StdLegalEntUnexecuted;
+import com.springboot.domain.StdLegalEntUnexecuted;
 
 import java.util.List;
 

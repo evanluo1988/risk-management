@@ -2,7 +2,7 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.CloudInfoTimeliness;
+import com.springboot.domain.CloudInfoTimeliness;
 import com.springboot.mapper.CloudInfoTimelinessMapper;
 import com.springboot.service.CloudInfoTimelinessService;
 import org.springframework.beans.factory.annotation.Autowired;

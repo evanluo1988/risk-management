@@ -1,7 +1,7 @@
 package com.springboot.service;
 
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.executor.QuotaSqlExector;
+import com.springboot.executor.QuotaSqlExector;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

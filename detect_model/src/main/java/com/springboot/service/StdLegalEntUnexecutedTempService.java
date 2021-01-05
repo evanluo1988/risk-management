@@ -1,8 +1,7 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.springboot.domain.risk.StdLegalEntUnexecutedTemp;
-import com.springboot.domain.risk.StdLegalEnterpriseExecutedTemp;
+import com.springboot.domain.StdLegalEntUnexecutedTemp;
 
 import java.util.List;
 

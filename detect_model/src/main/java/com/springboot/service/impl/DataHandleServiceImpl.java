@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.google.common.collect.Lists;
-import com.springboot.domain.risk.*;
+import com.springboot.domain.*;
 import com.springboot.enums.OrgEnum;
 import com.springboot.model.QuotaModel;
 import com.springboot.model.StdGsEntInfoModel;

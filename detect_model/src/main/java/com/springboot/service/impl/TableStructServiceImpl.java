@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.google.common.collect.Maps;
-import com.springboot.domain.risk.EtlTranRule;
+import com.springboot.domain.EtlTranRule;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.StdTable;
 import com.springboot.service.TableStructService;

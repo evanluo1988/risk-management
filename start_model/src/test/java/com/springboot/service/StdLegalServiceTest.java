@@ -1,9 +1,11 @@
 package com.springboot.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.springboot.ApplicationTest;
-import com.springboot.domain.risk.*;
+import com.springboot.domain.StdLegalDataStructured;
+import com.springboot.domain.StdLegalDataStructuredTemp;
+import com.springboot.domain.StdLegalEntUnexecutedTemp;
+import com.springboot.domain.StdLegalEnterpriseExecutedTemp;
 import com.springboot.mapper.StdLegalCasemedianMapper;
 import com.springboot.mapper.StdLegalDataStructuredMapper;
 import com.springboot.service.impl.StdLegalServiceImpl;

@@ -1,8 +1,8 @@
 package com.springboot.service.impl;
 
 import com.google.common.collect.Maps;
-import com.springboot.domain.risk.StdLegalDataAdded;
-import com.springboot.domain.risk.StdLegalDataStructured;
+import com.springboot.domain.StdLegalDataAdded;
+import com.springboot.domain.StdLegalDataStructured;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.JudgeAnynasisMapper;
 import com.springboot.service.LegalDataAddColumnService;

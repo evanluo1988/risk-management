@@ -1,12 +1,11 @@
 package com.springboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.springboot.domain.risk.StdIaBrand;
+import com.springboot.domain.StdIaBrand;
 import com.springboot.vo.risk.BrandVarietyVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author 刘宏飞

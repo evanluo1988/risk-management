@@ -3,7 +3,7 @@
 <mapper namespace="com.springboot.mapper.StdLegalDataStructuredTempMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.springboot.domain.risk.StdLegalDataStructuredTemp">
+    <resultMap id="BaseResultMap" type="com.springboot.domain.StdLegalDataStructuredTemp">
     <result column="id" property="id" />
         <result column="req_id" property="reqId" />
         <result column="std_legal_data_structured_id" property="stdLegalDataStructuredId" />

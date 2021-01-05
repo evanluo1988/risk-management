@@ -1,7 +1,7 @@
 package com.springboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.springboot.domain.risk.EntWyMortgagecan;
+import com.springboot.domain.EntWyMortgagecan;
 
 /**
  * @Author 刘宏飞

@@ -1,6 +1,6 @@
 package com.springboot.utils;
 
-import com.springboot.domain.risk.*;
+import com.springboot.domain.*;
 import com.springboot.model.StdTable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

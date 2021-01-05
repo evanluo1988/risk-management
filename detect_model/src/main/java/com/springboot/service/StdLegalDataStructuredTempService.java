@@ -1,8 +1,7 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.springboot.domain.risk.StdLegalDataStructuredTemp;
-import com.springboot.domain.risk.StdLegalEnterpriseExecutedTemp;
+import com.springboot.domain.StdLegalDataStructuredTemp;
 
 import java.util.List;
 

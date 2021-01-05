@@ -1,7 +1,7 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.springboot.domain.risk.StdIaBrand;
+import com.springboot.domain.StdIaBrand;
 import com.springboot.vo.risk.BrandVarietyVo;
 
 import java.util.List;

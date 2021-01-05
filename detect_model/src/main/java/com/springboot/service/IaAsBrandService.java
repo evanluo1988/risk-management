@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.IaAsBrand;
+import com.springboot.domain.IaAsBrand;
 
 import java.util.List;
 

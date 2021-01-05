@@ -1,7 +1,7 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.springboot.domain.risk.StdIaCopyright;
+import com.springboot.domain.StdIaCopyright;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.domain.risk.CloudInfoTimeliness;
+import com.springboot.domain.CloudInfoTimeliness;
 
 public interface CloudInfoTimelinessService {
     /**

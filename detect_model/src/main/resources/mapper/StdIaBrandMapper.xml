@@ -3,7 +3,7 @@
 <mapper namespace="com.springboot.mapper.StdIaBrandMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.springboot.domain.risk.StdIaBrand">
+    <resultMap id="BaseResultMap" type="com.springboot.domain.StdIaBrand">
     <result column="id" property="id" />
         <result column="brandtype" property="brandType" />
         <result column="graph" property="graph" />

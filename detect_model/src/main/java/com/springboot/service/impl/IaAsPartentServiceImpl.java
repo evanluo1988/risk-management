@@ -1,8 +1,8 @@
 package com.springboot.service.impl;
 
-import com.springboot.domain.risk.IaAsPartent;
-import com.springboot.domain.risk.IaAsPartentCatalog;
-import com.springboot.domain.risk.IaAsPartentDetail;
+import com.springboot.domain.IaAsPartent;
+import com.springboot.domain.IaAsPartentCatalog;
+import com.springboot.domain.IaAsPartentDetail;
 import com.springboot.mapper.IaAsPartentCatalogMapper;
 import com.springboot.mapper.IaAsPartentDetailMapper;
 import com.springboot.mapper.IaAsPartentMapper;

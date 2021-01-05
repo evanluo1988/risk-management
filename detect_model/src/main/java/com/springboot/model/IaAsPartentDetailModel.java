@@ -1,7 +1,7 @@
 package com.springboot.model;
 
-import com.springboot.domain.risk.IaAsPartentCatalog;
-import com.springboot.domain.risk.IaAsPartentDetail;
+import com.springboot.domain.IaAsPartentCatalog;
+import com.springboot.domain.IaAsPartentDetail;
 import lombok.Data;
 
 @Data

@@ -2,7 +2,7 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.Quota;
+import com.springboot.domain.Quota;
 import com.springboot.mapper.QuotaMapper;
 import com.springboot.service.QuotaRuleService;
 import org.springframework.beans.factory.annotation.Autowired;

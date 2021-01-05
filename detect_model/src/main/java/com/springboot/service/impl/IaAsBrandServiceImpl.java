@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.IaAsBrand;
+import com.springboot.domain.IaAsBrand;
 import com.springboot.mapper.IaAsBrandMapper;
 import com.springboot.service.IaAsBrandService;
 import org.springframework.stereotype.Service;

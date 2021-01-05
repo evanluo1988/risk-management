@@ -3,7 +3,7 @@
 <mapper namespace="com.springboot.mapper.StdEntAlterMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.springboot.domain.risk.StdEntAlter">
+    <resultMap id="BaseResultMap" type="com.springboot.domain.StdEntAlter">
     <result column="id" property="id" />
         <result column="altdate" property="altdate" />
         <result column="altitem" property="altitem" />

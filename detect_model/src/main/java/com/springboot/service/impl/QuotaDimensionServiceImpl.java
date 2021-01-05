@@ -1,7 +1,7 @@
 package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.QuotaDimension;
+import com.springboot.domain.QuotaDimension;
 import com.springboot.mapper.QuotaDimensionMapper;
 import com.springboot.service.QuotaDimensionService;
 import org.springframework.beans.factory.annotation.Autowired;

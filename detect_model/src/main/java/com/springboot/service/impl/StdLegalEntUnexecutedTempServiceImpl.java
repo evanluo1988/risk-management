@@ -2,8 +2,7 @@ package com.springboot.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.springboot.domain.risk.StdLegalEntUnexecutedTemp;
-import com.springboot.domain.risk.StdLegalEnterpriseExecutedTemp;
+import com.springboot.domain.StdLegalEntUnexecutedTemp;
 import com.springboot.mapper.StdLegalEntUnexecutedTempMapper;
 import com.springboot.service.StdLegalEntUnexecutedTempService;
 import org.springframework.stereotype.Service;
