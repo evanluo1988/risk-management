@@ -61,7 +61,7 @@ public class StdIaCopyright extends BaseDomain {
      * 版本号
      */
     @TableField(value = "versionsnumber")
-    private String versionSnNumber;
+    private String versionsNumber;
     /**
      * 著作权人
      */

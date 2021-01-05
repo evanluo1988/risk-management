@@ -2,6 +2,8 @@ package com.springboot.vo.risk;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 /**
  * 软件著作权明细
  */
@@ -10,7 +12,7 @@ public class StdIaCopyrightVo {
     /**
      * 登记日期
      */
-    private String registerDate;
+    private LocalDate registerDate;
     /**
      * 软件全称
      */
@@ -22,7 +24,7 @@ public class StdIaCopyrightVo {
     /**
      * 著作权人
      */
-    private String copyrightowner;
+    private String copyrightOwner;
     /**
      * 注册号
      */
