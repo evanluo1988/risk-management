@@ -1,5 +1,6 @@
 package com.springboot.vo.risk;
 
+import com.springboot.util.StrUtils;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -38,4 +39,7 @@ public class StdIaCopyrightVo {
      */
     private String versionsNumber;
 
+    public String getRegisterDate() {
+        return StrUtils.getDataStr(registerDate);
+    }
 }
