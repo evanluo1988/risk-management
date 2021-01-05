@@ -26,6 +26,8 @@ public class DataHandleServiceImpl implements DataHandleService {
     private StdLegalService stdLegalService;
     @Autowired
     private QuotaValueService quotaValueService;
+    @Autowired
+    private StdEntBasicService stdEntBasicService;
 
     @Autowired
     private StdDataService stdDataService;
@@ -70,7 +72,7 @@ public class DataHandleServiceImpl implements DataHandleService {
         StdGsEntInfoModel stdGsEntInfo = stdDataService.getStdGsEntInfo(reqId);
         EntHealthReportVo entHealthReportVo = new EntHealthReportVo();
         //企业健康评价
-        entHealthReportVo.setEntHealthAssessment(getEntHealthAssessment(quotaModelList, org));
+        entHealthReportVo.setEntHealthAssessment(getEntHealthAssessment(reqId, quotaModelList, org));
         //企业健康详情
         entHealthReportVo.setEntHealthDetails(getEntHealthDetails(reqId, quotaModelList, stdGsEntInfo, org));
         return entHealthReportVo;
@@ -80,9 +82,9 @@ public class DataHandleServiceImpl implements DataHandleService {
      * 企业健康评价
      * @return
      */
-    private EntHealthAssessmentVo getEntHealthAssessment(List<QuotaModel> quotaModelList, OrgEnum org) {
+    private EntHealthAssessmentVo getEntHealthAssessment(String reqId, List<QuotaModel> quotaModelList, OrgEnum org) {
         EntHealthAssessmentVo entHealthAssessment = new EntHealthAssessmentVo();
-        entHealthAssessment.setEntHealthDetectionRadar(getEntHealthDetectionRadar(quotaModelList));
+        entHealthAssessment.setEntHealthDetectionRadar(getEntHealthDetectionRadar(reqId, quotaModelList));
         entHealthAssessment.setEntHealthDialysis(getEntHealthDialysis(quotaModelList, org));
         return entHealthAssessment;
     }
@@ -91,8 +93,10 @@ public class DataHandleServiceImpl implements DataHandleService {
      * 企业健康检测雷达
      * @return
      */
-    private EntHealthDetectionRadarVo getEntHealthDetectionRadar(List<QuotaModel> quotaModelList) {
+    private EntHealthDetectionRadarVo getEntHealthDetectionRadar(String reqId, List<QuotaModel> quotaModelList) {
         EntHealthDetectionRadarVo entHealthDetectionRadarVo = new EntHealthDetectionRadarVo();
+        StdEntBasic stdEntBasic = stdEntBasicService.getStdEntBasicByReqId(reqId);
+        entHealthDetectionRadarVo.setEntName(stdEntBasic.getEntName());
         for(QuotaModel quotaModel : quotaModelList) {
             switch(quotaModel.getQuotaCode().trim()){
                 case "GS_ENT_INDUSTRY":
