@@ -36,6 +36,11 @@ public interface InformService extends IService<Inform> {
     void importInforms0(Collection<InformImportVo> data);
 
     /**
+     * 导出
+     */
+    void export();
+
+    /**
      * 分派
      * @param id
      */

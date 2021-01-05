@@ -70,6 +70,11 @@ public class InformController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    @GetMapping("/export")
+    public void export(){
+        informService.export();
+    }
+
     @PutMapping("/dispatcher/{id}")
     public ReturnT dispatcher(@PathVariable("id") Long id) {
         informService.dispatcher(id);

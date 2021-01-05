@@ -140,7 +140,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "GS_BUSINESS_CONTINUITY">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -148,7 +148,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "GS_BUSINESS_ANOMALIES">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -156,7 +156,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "SF_CASE_RISK">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -166,7 +166,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "GS_BUSINESS_CHANGE">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -174,7 +174,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "GS_MANAGE_ANOMALIES">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -182,7 +182,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "SF_LITIGATION_RELATED_BEHAVIOR">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -192,7 +192,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "GS_CONTROL_STABILITY">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -200,7 +200,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "GS_ADMINISTRATIVE_SANCTION">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>
@@ -212,7 +212,7 @@
                 <td>
                     <#list data.entHealthAssessment.entHealthDialysis.fiveDRader.fiveDRaderItemList as fiveDrader>
                         <#if fiveDrader.quotaCode == "GS_INVESTOR_CAPACITY">
-                            ${fiveDrader.quotaValue}
+                            ${fiveDrader.quotaValue}项
                         </#if>
                     </#list>
                 </td>

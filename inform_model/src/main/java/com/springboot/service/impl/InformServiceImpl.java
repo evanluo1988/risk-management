@@ -20,6 +20,7 @@ import com.springboot.page.Pagination;
 import com.springboot.service.*;
 import com.springboot.service.remote.GeoRemoteService;
 import com.springboot.util.ConvertUtils;
+import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.vo.InformImportVo;
@@ -36,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -99,6 +101,11 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             informReward.setInformId(inform.getId());
             informRewardService.save(informReward);
         }
+    }
+
+    @Override
+    public void export() {
+        HttpServletResponse response = HttpServletLocalThread.getResponse();
     }
 
     @Override

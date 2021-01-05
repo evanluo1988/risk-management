@@ -3,6 +3,7 @@ package com.springboot.vo.risk;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class StdIaPartentVo {
@@ -36,5 +37,9 @@ public class StdIaPartentVo {
             return "在审";
         }
         return lssc;
+    }
+
+    public String getPd() {
+        return pd.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 }

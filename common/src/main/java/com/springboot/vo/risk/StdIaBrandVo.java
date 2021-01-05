@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 /**
@@ -43,7 +44,10 @@ public class StdIaBrandVo {
     private String agentName;
 
     public String getNiceClassifyName() {
-
         return niceClassifyName;
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 }
