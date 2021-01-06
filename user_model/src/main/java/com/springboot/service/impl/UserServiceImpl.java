@@ -20,10 +20,7 @@ import com.springboot.service.RoleService;
 import com.springboot.service.UserRoleService;
 import com.springboot.service.UserService;
 import com.springboot.util.ConvertUtils;
-import com.springboot.utils.HttpServletLocalThread;
-import com.springboot.utils.ReturnTUtils;
-import com.springboot.utils.RoleUtils;
-import com.springboot.utils.UserAuthInfoContext;
+import com.springboot.utils.*;
 import com.springboot.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.internal.guava.Sets;
@@ -118,6 +115,11 @@ public class UserServiceImpl implements UserService {
 
         if (hasDataPermission(user.getAreaId())){
             BeanUtils.copyProperties(user, userVo);
+            Area area = ServerCacheUtils.getAreaById(user.getAreaId());
+            if(Objects.isNull(area)) {
+                throw new ServiceException("区域信息不存在");
+            }
+            userVo.setAreaName(area.getAreaName());
         }
         return userVo;
     }
