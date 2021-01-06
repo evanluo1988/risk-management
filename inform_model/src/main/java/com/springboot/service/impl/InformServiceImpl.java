@@ -165,9 +165,14 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("已核查不允许退回");
         }
 
+        Area parentId = ServerCacheUtils.getAreaById(ServerCacheUtils.getAreaById(informById.getAreaId()).getParentId());
+        if (Objects.isNull(parentId)){
+            throw new ServiceException("找不到父级区域，撤回失败");
+        }
+
         LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
                 .set(Inform::getAssignment, AssignmentEnum.RETURNED.getCode())
-                .set(Inform::getAreaId, null)
+                .set(Inform::getAreaId, parentId.getId())
                 .set(Inform::getUpdateBy, UserAuthInfoContext.getUserName())
                 .set(Inform::getUpdateTime, LocalDateTime.now())
                 .eq(Inform::getId, id)
@@ -274,9 +279,14 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("已核查不能撤回");
         }
 
+        Area parentArea = ServerCacheUtils.getAreaById(ServerCacheUtils.getAreaById(informById.getAreaId()).getParentId());
+        if (Objects.isNull(parentArea)){
+            throw new ServiceException("找不到父级区域，撤回失败");
+        }
+
         LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
                 .set(Inform::getAssignment, AssignmentEnum.REVOKE.getCode())
-                .set(Inform::getAreaId, null)
+                .set(Inform::getAreaId, parentArea.getId())
                 .set(Inform::getUpdateBy, UserAuthInfoContext.getUserName())
                 .set(Inform::getUpdateTime, new Date())
                 .eq(Inform::getId, informById.getId());
