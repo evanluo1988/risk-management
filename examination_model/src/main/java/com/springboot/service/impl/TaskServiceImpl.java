@@ -216,7 +216,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
         }else {
             taskCheckById.setAssignment(AssignmentEnum.ASSIGNED.getCode())
-                    .setAreaId(area.getId());
+                    .setAreaId(area.getId())
+                    .setCheckRegion(area.getAreaName());
             taskCheckById.setUpdateTime(new Date());
             taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
         }

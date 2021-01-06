@@ -123,7 +123,7 @@ public class TaskImportVo {
 
     public TaskCheck toTaskCheck() {
         TaskCheck taskCheck = ConvertUtils.sourceToTarget(this, TaskCheck.class);
-        taskCheck.setAreaId(ServerCacheUtils.getAreaByName("江北区").getId());
+        taskCheck.setAreaId(ServerCacheUtils.getAreaByName(this.getCheckRegion()).getId());
         taskCheck.setExpireTime(Objects.isNull(expireTimeStr) ? null : expireTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         taskCheck.setCreateBy(UserAuthInfoContext.getUserName());
         taskCheck.setCreateTime(new Date());
