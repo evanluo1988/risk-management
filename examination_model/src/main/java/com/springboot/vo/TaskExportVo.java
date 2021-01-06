@@ -1,21 +1,18 @@
 package com.springboot.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.springboot.domain.*;
-import com.springboot.easyexcel.converter.*;
-import com.springboot.util.ConvertUtils;
-import com.springboot.util.DateUtils;
-import com.springboot.utils.UserAuthInfoContext;
+import com.springboot.easyexcel.converter.DisposalStageConverter;
+import com.springboot.easyexcel.converter.InvolveInternetConverter;
+import com.springboot.easyexcel.converter.RiskLevelConverter;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Objects;
-
+/**
+ * @author lhf
+ * @version 1.0
+ * @date 2021/1/6 10:17
+ */
 @Data
-public class TaskImportVo {
-
+public class TaskExportVo {
     @ExcelProperty(value = {"单号"}, index = 0)
     private String taskNumber;
 
@@ -26,7 +23,7 @@ public class TaskImportVo {
     private String checkRegion;
 
     @ExcelProperty(value = {"创建时间"}, index = 3)
-    private Date startTimeStr;
+    private String startTime;
 
     @ExcelProperty(value = {"风险等级"}, index = 4, converter = RiskLevelConverter.class)
     private String riskLevel;
@@ -37,8 +34,8 @@ public class TaskImportVo {
     @ExcelProperty(value = {"法人代表人姓名"}, index = 6)
     private String legalPerson;
 
-    @ExcelProperty(value = {"开业日期"}, index = 7, converter = TaskEstablishedTimeConverter.class)
-    private LocalDateTime establishedTime;
+    @ExcelProperty(value = {"开业日期"}, index = 7)
+    private String establishedTime;
 
     @ExcelProperty(value = {"注册资本"}, index = 8)
     private String registrationAmount;
@@ -80,28 +77,28 @@ public class TaskImportVo {
     private String riskDetails;
 
     @ExcelProperty(value = {"警署约谈"}, index = 21)
-    private Date warnInterviewTime;
+    private String warnInterviewTime;
 
     @ExcelProperty(value = {"责令整改"}, index = 22)
-    private Date orderRectificationTime;
+    private String orderRectificationTime;
 
     @ExcelProperty(value = {"停业整顿"}, index = 23)
-    private Date stopRectificationTime;
+    private String stopRectificationTime;
 
     @ExcelProperty(value = {"查封、冻结资金"}, index = 24)
-    private Date freezingFundsTime;
+    private String freezingFundsTime;
 
     @ExcelProperty(value = {"其他"}, index = 25)
-    private Date otherTime;
+    private String otherTime;
 
-    @ExcelProperty(value = {"司法立案"}, index = 26 ,converter = JudicialCaseConverter.class)
-    private Integer judicialCase;
+    @ExcelProperty(value = {"司法立案"}, index = 26)
+    private String judicialCase;
 
     @ExcelProperty(value = {"立案地区"}, index = 27)
     private String casePlace;
 
     @ExcelProperty(value = {"立案时间"}, index = 28)
-    private Date caseTime;
+    private String caseTime;
 
     @ExcelProperty(value = {"行政处罚"}, index = 29)
     private String punishment;
@@ -110,35 +107,5 @@ public class TaskImportVo {
     private String relatedClues;
 
     @ExcelProperty(value = {"逾期时间"},index = 31)
-    private Date expireTimeStr;
-
-    public Task toTask() {
-        Task task = ConvertUtils.sourceToTarget(this, Task.class);
-        task.setStartTime(DateUtils.dateToLocalDateTime(this.startTimeStr));
-        task.setCreateBy(UserAuthInfoContext.getUserName());
-        task.setCreateTime(new Date());
-        return task;
-    }
-
-    public TaskCheck toTaskCheck() {
-        TaskCheck taskCheck = ConvertUtils.sourceToTarget(this, TaskCheck.class);
-        taskCheck.setExpireTime(Objects.isNull(expireTimeStr) ? null : expireTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        taskCheck.setCreateBy(UserAuthInfoContext.getUserName());
-        taskCheck.setCreateTime(new Date());
-        return taskCheck;
-    }
-
-    public Enterprise toEnterprise() {
-        Enterprise enterprise = ConvertUtils.sourceToTarget(this, Enterprise.class);
-        enterprise.setCreateBy(UserAuthInfoContext.getUserName());
-        enterprise.setCreateTime(new Date());
-        return enterprise;
-    }
-
-    public TaskDisposition toTaskDisposition() {
-        TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(this, TaskDisposition.class);
-        taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
-        taskDisposition.setCreateTime(new Date());
-        return taskDisposition;
-    }
+    private String expireTime;
 }

@@ -34,6 +34,7 @@ public class InvolveInternetConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        InvolveInternetEnum involveInternetEnum = InvolveInternetEnum.codeOf(s);
+        return new CellData(Objects.isNull(involveInternetEnum) ? null : involveInternetEnum.getDesc());
     }
 }

@@ -31,6 +31,16 @@ public enum InvolveInternetEnum {
         return null;
     }
 
+    public static InvolveInternetEnum codeOf(String code) {
+        InvolveInternetEnum[] values = InvolveInternetEnum.values();
+        for (InvolveInternetEnum value : values) {
+            if (value.getCode().equalsIgnoreCase(code)){
+                return value;
+            }
+        }
+        return null;
+    }
+
     public String getCode() {
         return code;
     }

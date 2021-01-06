@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.domain.Task;
+import com.springboot.model.TaskExportModel;
 import com.springboot.model.TaskModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface TaskMapper extends BaseMapper<Task> {
@@ -18,4 +21,6 @@ public interface TaskMapper extends BaseMapper<Task> {
                               @Param("assignment") String assignment,
                               @Param("checkRegion") String checkRegion,
                               Page<Task> page);
+
+    List<TaskExportModel> listTaskByIds(@Param("ids") List<Long> ids);
 }

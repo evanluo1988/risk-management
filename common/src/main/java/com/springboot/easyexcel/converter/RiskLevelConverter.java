@@ -34,6 +34,7 @@ public class RiskLevelConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        RiskLevelEnum riskLevelEnum = RiskLevelEnum.codeOf(s);
+        return new CellData(Objects.isNull(riskLevelEnum)?null:riskLevelEnum.getDesc());
     }
 }

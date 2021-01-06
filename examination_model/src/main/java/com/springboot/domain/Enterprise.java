@@ -42,7 +42,7 @@ public class Enterprise extends BaseDomain {
     /**
      * 是否司立案
      */
-    private Boolean judicialCase;
+    private Integer judicialCase;
     /**
      * 立案地区
      */
