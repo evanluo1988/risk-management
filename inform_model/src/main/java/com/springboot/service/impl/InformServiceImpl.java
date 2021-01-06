@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -323,7 +324,22 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             }
             //检查核查单位是否合法
             checkUnitCorrect(data);
+            checkInformTimeNonNull(data);
             informService.importInforms0(data);
+        }
+
+        private void checkInformTimeNonNull(Collection<InformImportVo> data) {
+            boolean hasNull = false;
+            for (InformImportVo informImportVo : data) {
+                if (StringUtils.isEmpty(informImportVo.getInformTimeStr())){
+                    hasNull = true;
+                    break;
+                }
+            }
+
+            if (hasNull){
+                throw new ServiceException("举报时间不能为空");
+            }
         }
 
         private void checkUnitCorrect(Collection<InformImportVo> data) {

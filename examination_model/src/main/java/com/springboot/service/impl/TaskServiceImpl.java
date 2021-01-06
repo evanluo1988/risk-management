@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -101,7 +102,23 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             if (!CollectionUtils.isEmpty(tasks)){
                 throw new ServiceException("任务编号数据库已经存在！"+Arrays.toString(tasks.stream().map(Task::getTaskNumber).collect(Collectors.toSet()).toArray()));
             }
+
+            checkStartTimeNonNull(data);
             taskService.importTasks0(data);
+        }
+
+        private void checkStartTimeNonNull(List<TaskImportVo> data) {
+            boolean hasNull = false;
+            for (TaskImportVo taskImportVo : data) {
+                if (StringUtils.isEmpty(taskImportVo.getStartTimeStr())){
+                    hasNull = true;
+                    break;
+                }
+            }
+
+            if (hasNull){
+                throw new ServiceException("创建时间不能为空");
+            }
         }
     }
 
