@@ -12,6 +12,7 @@ import com.springboot.domain.*;
 import com.springboot.enums.EnableEnum;
 import com.springboot.enums.AssignmentEnum;
 import com.springboot.enums.CheckStatusEnum;
+import com.springboot.enums.RoleEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.InformDao;
 import com.springboot.model.InformExportModel;
@@ -20,6 +21,7 @@ import com.springboot.page.Pagination;
 import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
 import com.springboot.utils.HttpServletLocalThread;
+import com.springboot.utils.RoleUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.vo.*;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -117,7 +120,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void dispatcher(Long id) {
+    public void dispatcher(Long id, Long areaId) {
         Inform inform = getInformById(id);
         if (Objects.isNull(inform)) {
             throw new ServiceException("举报信息不存在");
@@ -127,7 +130,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("已分派的不能分派");
         }
 
-        Area area = areaService.getArea(inform.getInformName());
+        Area area = null;
+        if(Objects.isNull(areaId)) {
+             area = areaService.getArea(inform.getInformName());
+        } else {
+             area = ServerCacheUtils.getAreaById(areaId);
+        }
 
         if (Objects.isNull(area)) {
             inform.setAssignment(AssignmentEnum.ASSIGNED_FAIL.getCode());
@@ -275,6 +283,9 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         Inform informById = getInformById(id);
         if (Objects.isNull(informById)){
             throw new ServiceException("举报信息不存在");
+        }
+        if (!CheckStatusEnum.CHECKED.getCode().equals(informById.getCheckStatus())) {
+            throw new ServiceException("该条举报信息还未核查");
         }
 
         informById.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());

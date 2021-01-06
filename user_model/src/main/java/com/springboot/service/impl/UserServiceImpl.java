@@ -232,6 +232,8 @@ public class UserServiceImpl implements UserService {
 
         if (hasDataPermission(byId.getAreaId())){
             userMapper.disableById(id);
+        } else {
+            throw new ServiceException("无权限注销此用户");
         }
     }
 

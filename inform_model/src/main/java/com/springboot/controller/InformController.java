@@ -107,8 +107,9 @@ public class InformController {
      * @return
      */
     @PutMapping("/dispatcher/{id}")
-    public ReturnT dispatcher(@PathVariable("id") Long id) {
-        informService.dispatcher(id);
+    @Validated({InformVo.DispatcherGroup.class})
+    public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid InformVo informVo) {
+        informService.dispatcher(id, informVo.getAreaId());
         return ReturnTUtils.newCorrectReturnT();
     }
 
@@ -121,7 +122,7 @@ public class InformController {
     public ReturnT dispatcherBatch(@RequestBody Set<Long> ids){
         for (Long id : ids) {
             try{
-                informService.dispatcher(id);
+                informService.dispatcher(id, null);
             }catch (Exception e){
                 log.error("下发异常",e);
             }
