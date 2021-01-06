@@ -15,14 +15,17 @@ import com.springboot.enums.CheckStatusEnum;
 import com.springboot.enums.EnableEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.TaskMapper;
+import com.springboot.model.TaskExportModel;
 import com.springboot.model.TaskModel;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
+import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.TaskDetailVo;
+import com.springboot.vo.TaskExportVo;
 import com.springboot.vo.TaskImportVo;
 import com.springboot.vo.TaskVo;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +36,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -280,6 +285,22 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         LambdaQueryWrapper<Task> queryWrapper = new LambdaQueryWrapper<Task>()
                 .in(Task::getTaskNumber, taskNumbers);
         return this.list(queryWrapper);
+    }
+
+    @Override
+    public void export(List<Long> ids) throws IOException {
+        if (CollectionUtils.isEmpty(ids)){
+            return ;
+        }
+
+        List<TaskExportModel> exportModelList = taskMapper.listTaskByIds(ids);
+        List<TaskExportVo> taskExportVos = ConvertUtils.sourceToTarget(exportModelList, TaskExportVo.class);
+        HttpServletResponse response = HttpServletLocalThread.getResponse();
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode("任务", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(), TaskExportVo.class).sheet("1").doWrite(taskExportVos);
     }
 
     private Task getTaskById(Long id) {

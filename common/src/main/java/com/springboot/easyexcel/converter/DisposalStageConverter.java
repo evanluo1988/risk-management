@@ -34,6 +34,7 @@ public class DisposalStageConverter implements Converter<String> {
 
     @Override
     public CellData convertToExcelData(String s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        return new CellData(s);
+        DisposalStageEnum disposalStageEnum = DisposalStageEnum.codeOf(s);
+        return new CellData(Objects.isNull(disposalStageEnum)?null:disposalStageEnum.getDesc());
     }
 }

@@ -46,4 +46,14 @@ public enum RiskLevelEnum {
         }
         return null;
     }
+
+    public static RiskLevelEnum codeOf(String code){
+        RiskLevelEnum[] values = RiskLevelEnum.values();
+        for (RiskLevelEnum value : values) {
+            if (value.getCode().equals(code)){
+                return value;
+            }
+        }
+        return null;
+    }
 }

@@ -50,6 +50,49 @@
         tc.assignment
     </sql>
 
+    <sql id="TaskExport">
+        tc.check_region AS checkRegion,
+        tc.related_clues AS relatedClues,
+        tc.check_status AS checkStatus,
+        tc.overdue,
+        tc.assignment,
+        tc.area_id AS areaId,
+        DATE_FORMAT(tc.expire_time,'%Y-%m-%d') AS expireTime,
+        e.enterprise_name AS enterpriseName,
+        UNIX_TIMESTAMP(e.established_time) AS establishedTime,
+        e.management_status AS managementStatus,
+        e.legal_person AS legalPerson,
+        e.registration_amount AS registrationAmount,
+        e.registration_address AS registrationAddress,
+        e.registration_number AS registrationNumber,
+        e.judicial_case AS judicialCase,
+        e.case_place AS casePlace,
+        DATE_FORMAT(e.case_time,'%Y-%m-%d') AS caseTime,
+        e.industry,
+        e.business_address AS businessAddress,
+        e.punishment,
+        e.risk_level AS riskLevel,
+        e.disposal_stage AS disposalStage,
+        t.task_number AS taskNumber,
+        t.task_name AS taskName,
+        DATE_FORMAT(t.start_time,'%Y-%m-%d') AS startTime,
+        td.involve_people AS involvePeople,
+        td.money,
+        td.employees_number AS employeesNumber,
+        td.fund_raising_mode AS fundRaisingMode,
+        td.outstanding_fund AS outstandingFund,
+        td.withdrawal_fund AS withdrawalFund,
+        td.involve_internet AS involveInternet,
+        td.regional_scale AS regionalScale,
+        td.involve_area AS involveArea,
+        td.risk_details AS riskDetails,
+        DATE_FORMAT(td.warn_interview_time,'%Y-%m-%d') AS warnInterviewTime,
+        DATE_FORMAT(td.order_rectification_time,'%Y-%m-%d') AS orderRectificationTime,
+        DATE_FORMAT(td.stop_rectification_time,'%Y-%m-%d') AS stopRectificationTime,
+        DATE_FORMAT(td.freezing_funds_time,'%Y-%m-%d') AS freezingFundsTime,
+        DATE_FORMAT(td.other_time,'%Y-%m-%d') AS otherTime
+    </sql>
+
     <select id="findPageTasks" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from tasks t
     </select>
@@ -78,4 +121,15 @@
         </if>
     </select>
 
+    <select id="listTaskByIds" parameterType="java.util.List" resultType="com.springboot.model.TaskExportModel">
+        SELECT <include refid="TaskExport"/>
+        FROM task_checks tc
+        LEFT JOIN enterprises e ON tc.enterprise_id = e.id
+        LEFT JOIN tasks t ON t.id = tc.task_id
+        LEFT JOIN task_dispositions td ON tc.id = td.task_check_id
+        WHERE tc.id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="id" index="index">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

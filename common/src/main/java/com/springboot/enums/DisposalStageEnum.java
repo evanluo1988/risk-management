@@ -33,6 +33,16 @@ public enum DisposalStageEnum {
         return null;
     }
 
+    public static DisposalStageEnum codeOf(String code) {
+        DisposalStageEnum[] values = DisposalStageEnum.values();
+        for (DisposalStageEnum value : values) {
+            if (value.getCode().equalsIgnoreCase(code)){
+                return value;
+            }
+        }
+        return null;
+    }
+
     public String getCode() {
         return code;
     }
