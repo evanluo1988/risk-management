@@ -113,28 +113,43 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("用户信息不存在");
         }
 
-        if (hasDataPermission(user.getAreaId())){
+        if (hasDataPermission(user.getAreaId(), id)){
             BeanUtils.copyProperties(user, userVo);
             Area area = ServerCacheUtils.getAreaById(user.getAreaId());
             if(Objects.isNull(area)) {
                 throw new ServiceException("区域信息不存在");
             }
             userVo.setAreaName(area.getAreaName());
+        } else {
+            throw new ServiceException("用户信息不存在");
         }
         return userVo;
     }
 
+    private boolean hasDataPermission(Long areaId, Long userId) {
+        return hasDataPermission(areaId) || selfDataPermission(areaId, userId);
+    }
+
     private boolean hasDataPermission(Long areaId) {
         List<Long> permissionAreaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
-        return permissionAreaIds.contains(areaId)
-                || (RoleEnum.SYS_ADMIN.getName().equalsIgnoreCase(RoleUtils.getHighestLevelRole(UserAuthInfoContext.getRolePerms()).getRoleName()) && Objects.isNull(areaId));
+        return permissionAreaIds.contains(areaId) || isSystemAdmin(areaId);
+    }
+
+    private boolean isSystemAdmin(Long areaId) {
+        return RoleEnum.SYS_ADMIN.getName().equalsIgnoreCase(RoleUtils.getHighestLevelRole(UserAuthInfoContext.getRolePerms()).getRoleName()) && Objects.isNull(areaId);
+    }
+
+    private boolean selfDataPermission(Long areaId, Long userId) {
+        List<Long> permissionAreaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        permissionAreaIds.add(UserAuthInfoContext.getAreaId());
+        return permissionAreaIds.contains(areaId) && userId.equals(UserAuthInfoContext.getUserId());
     }
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void update(RegUserVo regUserVo) {
-        if(!hasDataPermission(regUserVo.getAreaId())) {
-            throw new ServiceException("当前用户无修改此用户权限");
+        if(!hasDataPermission(regUserVo.getAreaId(), regUserVo.getId())) {
+            throw new ServiceException("当前用户不存在");
         }
 
         User oldUser = userMapper.selectById(regUserVo.getId());
