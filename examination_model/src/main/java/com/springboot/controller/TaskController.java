@@ -102,7 +102,7 @@ public class TaskController {
     }
 
     /**
-     * 核查撤回
+     * 任务退回（由街道办主动退回）
      * @param id
      * @param taskVo
      * @return
@@ -116,7 +116,7 @@ public class TaskController {
     }
 
     /**
-     * 任务撤回
+     * 任务撤回（由区级主动撤回）
      * @param id
      * @return
      */
