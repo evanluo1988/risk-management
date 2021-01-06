@@ -228,7 +228,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
                                                LocalDate checkTimeStart, LocalDate checkTimeEnd,
                                                Long areaId, Integer pageNo, Integer pageSize) {
 
-        Page<InformPageModel> page = informDao.informPage(source, checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaId, new Page(pageNo, pageSize));
+        if(Objects.isNull(areaId)) {
+            areaId = UserAuthInfoContext.getAreaId();
+        }
+        List<Long> areaIds = areaService.findAreaIdsById(areaId);
+        areaIds.add(areaId);
+        Page<InformPageModel> page = informDao.informPage(source, checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
     }
 
@@ -271,7 +276,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("举报信息不存在");
         }
 
-        if(!AssignmentEnum.NOT_ASSIGNED.getCode().equals(informById.getAssignment())) {
+        if(!AssignmentEnum.ASSIGNED.getCode().equals(informById.getAssignment())) {
             throw new ServiceException("未分派不能撤回");
         }
 

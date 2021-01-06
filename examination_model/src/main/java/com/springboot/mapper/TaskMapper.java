@@ -19,7 +19,7 @@ public interface TaskMapper extends BaseMapper<Task> {
                               @Param("checkStatus") String checkStatus,
                               @Param("disposalStage") String disposalStage,
                               @Param("assignment") String assignment,
-                              @Param("checkRegion") String checkRegion,
+                              @Param("areaIds") List<Long> areaIds,
                               Page<Task> page);
 
     List<TaskExportModel> listTaskByIds(@Param("ids") List<Long> ids);

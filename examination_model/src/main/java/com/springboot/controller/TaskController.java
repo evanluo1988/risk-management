@@ -39,7 +39,7 @@ public class TaskController {
 
     @GetMapping("/list")
     public ReturnT page(String enterpriseName, String checkStatus, String disposalStage,
-                        String assignment, String checkRegion, Integer pageNo, Integer pageSize){
+                        String assignment, Long areaId, Integer pageNo, Integer pageSize){
 //        Pagination<TaskVo> taskModelPagination = taskService.pageTasks(
 //                taskVo.getEnterpriseName(),
 //                taskVo.getCheckStatus(),
@@ -49,7 +49,7 @@ public class TaskController {
 //                pageIn.getPageNo(),
 //                pageIn.getPageSize());
         Pagination<TaskVo> taskModelPagination = taskService.pageTasks(enterpriseName, checkStatus, disposalStage,
-                assignment, checkRegion, pageNo, pageSize);
+                assignment, areaId, pageNo, pageSize);
         return ReturnTUtils.getReturnT(taskModelPagination);
     }
 

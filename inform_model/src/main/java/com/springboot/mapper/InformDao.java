@@ -35,6 +35,7 @@ public interface InformDao extends BaseMapper<Inform> {
      * @param checkTimeStart    核查时间
      * @param checkTimeEnd  核查时间
      * @param areaId    涉及地区
+     * @param areaIds   可以查询的地区
      * @param informPage 分页
      * @return  分页的投诉举报
      */
@@ -48,7 +49,7 @@ public interface InformDao extends BaseMapper<Inform> {
                                      @Param("overdue") Boolean overdue,
                                      @Param("checkTimeStart") LocalDate checkTimeStart,
                                      @Param("checkTimeEnd") LocalDate checkTimeEnd,
-                                     @Param("areaId") Long areaId,
+                                     @Param("areaIds") List<Long> areaIds,
                                      Page<Inform> informPage);
 
     List<InformExportModel> listInformByIds(@Param("ids") List<Long> ids);

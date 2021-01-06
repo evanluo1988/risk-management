@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("task_refund")
+@TableName("task_refunds")
 public class TaskRefund extends BaseDomain {
 
     private static final long serialVersionUID = 1L;

@@ -103,7 +103,11 @@
         LEFT JOIN tasks t ON tc.task_id = t.id
         LEFT JOIN task_dispositions td ON td.task_check_id = tc.id
         LEFT JOIN enterprises e ON tc.enterprise_id = e.id
-        WHERE 1=1
+        WHERE tc.enable = 'Y' and
+        tc.area_id in
+        <foreach collection="areaIds" item="id" index="i" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
         <if test="enterpriseName!=null and enterpriseName!=''">
             AND e.enterprise_name = #{enterpriseName}
         </if>
@@ -116,9 +120,11 @@
         <if test="assignment!=null and assignment!=''">
             AND tc.assignment = #{assignment}
         </if>
-        <if test="checkRegion!=null and checkRegion!=''">
-            AND tc.check_region = #{checkRegion}
+        <!--
+        <if test="areaId!=null and areaId!=''">
+            AND tc.area_id = #{areaId}
         </if>
+        -->
     </select>
 
     <select id="listTaskByIds" parameterType="java.util.List" resultType="com.springboot.model.TaskExportModel">

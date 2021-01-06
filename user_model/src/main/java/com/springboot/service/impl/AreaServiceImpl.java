@@ -120,6 +120,9 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
     }
 
     private Collection<Area> listAreaByParentIds(Set<Long> parentIds) {
+        if(CollectionUtils.isEmpty(parentIds)) {
+            return Lists.newArrayList();
+        }
         LambdaQueryWrapper<Area> queryWrapper = new LambdaQueryWrapper<Area>()
                 .in(!CollectionUtils.isEmpty(parentIds), Area::getParentId, parentIds)
                 .isNull(CollectionUtils.isEmpty(parentIds), Area::getParentId)

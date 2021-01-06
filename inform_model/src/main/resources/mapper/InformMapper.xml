@@ -94,6 +94,10 @@
             LEFT JOIN inform_rewards ir ON i.id = ir.inform_id
             LEFT JOIN areas a ON i.area_id = a.id
         WHERE i.enable = 'Y'
+        and i.area_id in
+        <foreach collection="areaIds" item="id" index="i" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
         <if test="source != null and source != '' ">
             AND i.source = #{source}
         </if>
@@ -124,9 +128,11 @@
         <if test="checkTimeEnd != null">
             AND ic.check_time &lt;= #{checkTimeEnd}' 23:59:59'
         </if>
+        <!--
         <if test="areaId != null">
             AND ic.check_unit = #{areaId}
         </if>
+        -->
     </select>
 
     <select id="listInformByIds" parameterType="java.util.List" resultType="com.springboot.model.InformExportModel">

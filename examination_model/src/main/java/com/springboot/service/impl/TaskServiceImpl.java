@@ -160,8 +160,15 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Override
     public Pagination<TaskVo> pageTasks(String enterpriseName, String checkStatus, String disposalStage,
-                                        String assignment, String checkRegion, Integer pageNo, Integer pageSize) {
-        Page<TaskModel> page = taskMapper.pageTasks(enterpriseName, checkStatus, disposalStage, assignment, checkRegion, new Page<>(pageNo, pageSize));
+                                        String assignment, Long areaId, Integer pageNo, Integer pageSize) {
+
+        if(Objects.isNull(areaId)) {
+            areaId = UserAuthInfoContext.getAreaId();
+        }
+        Area area = ServerCacheUtils.getAreaById(areaId);
+        List<Long> areaIds = areaService.findAreaIdsById(area.getId());
+        areaIds.add(area.getId());
+        Page<TaskModel> page = taskMapper.pageTasks(enterpriseName, checkStatus, disposalStage, assignment, areaIds, new Page<>(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), TaskVo.class), page.getTotal());
     }
 
@@ -250,7 +257,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("任务不存在");
         }
 
-        if(!AssignmentEnum.NOT_ASSIGNED.getCode().equals(taskCheckById.getAssignment())) {
+        if(!AssignmentEnum.ASSIGNED.getCode().equals(taskCheckById.getAssignment())) {
             throw new ServiceException("未分派不能撤回");
         }
 

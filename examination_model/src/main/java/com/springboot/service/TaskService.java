@@ -22,7 +22,7 @@ public interface TaskService extends IService<Task> {
 
     void importTasks0(List<TaskImportVo> data);
 
-    Pagination<TaskVo> pageTasks(String enterpriseName, String checkStatus, String disposalStage, String assignment, String checkRegion, Integer pageNo, Integer pageSize);
+    Pagination<TaskVo> pageTasks(String enterpriseName, String checkStatus, String disposalStage, String assignment, Long areaId, Integer pageNo, Integer pageSize);
 
     TaskDetailVo detail(Long id);
 
