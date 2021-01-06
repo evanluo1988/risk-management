@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-public class TaskVo extends PageIn {
+public class TaskVo {
     public interface DispatcherGroup{ }
     public interface RefundGroup{}
     /**

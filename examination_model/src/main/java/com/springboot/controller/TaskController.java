@@ -24,43 +24,71 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    /**
+     * 核查导入
+     * @param file
+     * @return
+     */
     @PostMapping("/import")
     public ReturnT importInforms(MultipartFile file){
         taskService.importTasks(file);
         return ReturnTUtils.newCorrectReturnT();
     }
 
-    @GetMapping("/page")
-    public ReturnT page(TaskVo taskVo){
-        Pagination<TaskVo> taskModelPagination = taskService.pageTasks(
-                taskVo.getEnterpriseName(),
-                taskVo.getCheckStatus(),
-                taskVo.getDisposalStage(),
-                taskVo.getAssignment(),
-                taskVo.getCheckRegion(),
-                taskVo.getPageNo(),
-                taskVo.getPageSize());
+    @GetMapping("/list")
+    public ReturnT page(String enterpriseName, String checkStatus, String disposalStage,
+                        String assignment, String checkRegion, Integer pageNo, Integer pageSize){
+//        Pagination<TaskVo> taskModelPagination = taskService.pageTasks(
+//                taskVo.getEnterpriseName(),
+//                taskVo.getCheckStatus(),
+//                taskVo.getDisposalStage(),
+//                taskVo.getAssignment(),
+//                taskVo.getCheckRegion(),
+//                pageIn.getPageNo(),
+//                pageIn.getPageSize());
+        Pagination<TaskVo> taskModelPagination = taskService.pageTasks(enterpriseName, checkStatus, disposalStage,
+                assignment, checkRegion, pageNo, pageSize);
         return ReturnTUtils.getReturnT(taskModelPagination);
     }
 
+    /**
+     * 核查查询
+     * @param id
+     * @return
+     */
     @GetMapping("/view/{id}")
     public ReturnT detail(@PathVariable("id") Long id){
         TaskDetailVo taskDetailVo = taskService.detail(id);
         return ReturnTUtils.getReturnT(taskDetailVo);
     }
 
+    /**
+     * 核查删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/del/{id}")
     public ReturnT del(@PathVariable("id") Long id){
         taskService.del(id);
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 核查分派(手动)
+     * @param id
+     * @return
+     */
     @PutMapping("/dispatcher/{id}")
     public ReturnT dispatcher(@PathVariable("id") Long id){
         taskService.dispatcher(id);
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 核查分派(自动批量)
+     * @param ids
+     * @return
+     */
     @PutMapping("/dispatcher/batch")
     public ReturnT dispatcher(@RequestBody Set<Long> ids){
         for (Long id : ids) {
@@ -73,6 +101,12 @@ public class TaskController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 核查撤回
+     * @param id
+     * @param taskVo
+     * @return
+     */
     @Validated(TaskVo.RefundGroup.class)
     @PutMapping("/return/{id}")
     public ReturnT goBack(@PathVariable("id") Long id,
@@ -81,19 +115,35 @@ public class TaskController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 任务撤回
+     * @param id
+     * @return
+     */
     @PutMapping("/revoke/{id}")
     public ReturnT revoke(@PathVariable("id") Long id){
         taskService.revoke(id);
         return ReturnTUtils.newCorrectReturnT();
     }
 
-    @PutMapping("/check/{id}")
+    /**
+     * 核查
+     * @param id
+     * @param taskVo
+     * @return
+     */
+    @PutMapping("/process/{id}")
     public ReturnT check(@PathVariable("id") Long id,
                          @RequestBody TaskVo taskVo) {
         taskService.check(id, taskVo);
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 重新核查
+     * @param id
+     * @return
+     */
     @PutMapping("/recheck/{id}")
     public ReturnT recheck(@PathVariable("id") Long id){
         taskService.recheck(id);
