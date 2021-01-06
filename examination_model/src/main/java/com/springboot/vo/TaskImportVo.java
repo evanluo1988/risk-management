@@ -5,6 +5,7 @@ import com.springboot.domain.*;
 import com.springboot.easyexcel.converter.*;
 import com.springboot.util.ConvertUtils;
 import com.springboot.util.DateUtils;
+import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import lombok.Data;
 
@@ -122,6 +123,7 @@ public class TaskImportVo {
 
     public TaskCheck toTaskCheck() {
         TaskCheck taskCheck = ConvertUtils.sourceToTarget(this, TaskCheck.class);
+        taskCheck.setAreaId(ServerCacheUtils.getAreaByName("江北区").getId());
         taskCheck.setExpireTime(Objects.isNull(expireTimeStr) ? null : expireTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         taskCheck.setCreateBy(UserAuthInfoContext.getUserName());
         taskCheck.setCreateTime(new Date());

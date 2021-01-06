@@ -204,6 +204,7 @@ public class InformImportVo {
 
     public Inform toInform() {
         Inform inform = ConvertUtils.sourceToTarget(this, Inform.class);
+        inform.setAreaId(ServerCacheUtils.getAreaByName("江北区").getId());
         inform.setAssignment(AssignmentEnum.NOT_ASSIGNED.getCode());
         inform.setAttachment(informAttachment);
         inform.setInformTime(Objects.isNull(informTimeStr) ? null : informTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
