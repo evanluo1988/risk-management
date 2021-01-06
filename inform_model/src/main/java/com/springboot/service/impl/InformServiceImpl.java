@@ -265,6 +265,10 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("举报信息不存在");
         }
 
+        if(!AssignmentEnum.NOT_ASSIGNED.getCode().equals(informById.getAssignment())) {
+            throw new ServiceException("未分派不能撤回");
+        }
+
         if (CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(informById.getCheckStatus())){
             throw new ServiceException("已核查不能撤回");
         }

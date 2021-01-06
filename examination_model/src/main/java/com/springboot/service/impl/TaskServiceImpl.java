@@ -232,6 +232,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("任务不存在");
         }
 
+        if(!AssignmentEnum.NOT_ASSIGNED.getCode().equals(taskCheckById.getAssignment())) {
+            throw new ServiceException("未分派不能撤回");
+        }
+
         if (CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(taskCheckById.getCheckStatus())) {
             throw new ServiceException("已核查不能撤回");
         }
