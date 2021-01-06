@@ -62,7 +62,7 @@
             <foreach collection="areaIds" item="areaId" index="index" separator=",">
                 #{areaId}
             </foreach>
-            ) OR u.area_id is null
+            )
         </where>
     </select>
 
