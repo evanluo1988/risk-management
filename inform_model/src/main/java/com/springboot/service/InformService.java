@@ -46,8 +46,9 @@ public interface InformService extends IService<Inform> {
     /**
      * 分派
      * @param id
+     * @param areaId
      */
-    void dispatcher(Long id);
+    void dispatcher(Long id, Long areaId);
 
     /**
      * 退回

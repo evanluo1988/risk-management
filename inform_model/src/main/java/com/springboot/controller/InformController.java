@@ -40,7 +40,12 @@ public class InformController {
     @Autowired
     private InformRefundService informRefundService;
 
-    @GetMapping("/page")
+    /**
+     * 举报列表
+     * @param informVo
+     * @return
+     */
+    @GetMapping("/list")
     public ReturnT page(InformVo informVo) {
         Pagination<InformPageVo> pagination = informService.informPage(
                 informVo.getSource(), informVo.getCheckStatus(),
@@ -53,40 +58,71 @@ public class InformController {
         return ReturnTUtils.getReturnT(pagination);
     }
 
+    /**
+     * 举报查看
+     * @param id
+     * @return
+     */
     @GetMapping("/view/{id}")
     public ReturnT view(@PathVariable("id") Long id){
         InformViewVo informViewVo = informService.view(id);
         return ReturnTUtils.getReturnT(informViewVo);
     }
 
+    /**
+     * 举报退回列表
+     * @param informId
+     * @return
+     */
     @GetMapping("/refund/list/{informId}")
     public ReturnT refundList(@PathVariable("informId")Long informId){
         List<InformRefund> refundList = informRefundService.listRefundByInformId(informId);
         return ReturnTUtils.getReturnT(refundList);
     }
 
+    /**
+     * 举报导入
+     * @param file
+     * @return
+     */
     @PostMapping("/import")
     public ReturnT importInforms(MultipartFile file) {
         informService.importInforms(file);
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 举报导出
+     * @param ids
+     * @throws IOException
+     */
     @GetMapping("/export")
     public void export(@RequestParam List<Long> ids) throws IOException {
         informService.export(ids);
     }
 
+    /**
+     * 举报分派（手动）
+     * @param id
+     * @return
+     */
     @PutMapping("/dispatcher/{id}")
-    public ReturnT dispatcher(@PathVariable("id") Long id) {
-        informService.dispatcher(id);
+    @Validated({InformVo.DispatcherGroup.class})
+    public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid InformVo informVo) {
+        informService.dispatcher(id, informVo.getAreaId());
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 举报分派（自动批量）
+     * @param ids
+     * @return
+     */
     @PutMapping("/dispatcher/batch")
     public ReturnT dispatcherBatch(@RequestBody Set<Long> ids){
         for (Long id : ids) {
             try{
-                informService.dispatcher(id);
+                informService.dispatcher(id, null);
             }catch (Exception e){
                 log.error("下发异常",e);
             }
@@ -94,6 +130,12 @@ public class InformController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 举报退回
+     * @param id
+     * @param informVo
+     * @return
+     */
     @Validated(InformVo.RefundGroup.class)
     @PutMapping("/return/{id}")
     public ReturnT goBack(@PathVariable("id") Long id,
@@ -102,25 +144,46 @@ public class InformController {
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 举报撤回
+     * @param id
+     * @return
+     */
     @PutMapping("/revoke/{id}")
     public ReturnT revoke(@PathVariable("id") Long id){
         informService.revoke(id);
         return ReturnTUtils.newCorrectReturnT();
     }
 
-    @PutMapping("/check/{id}")
+    /**
+     * 举报核查
+     * @param id
+     * @param informVo
+     * @return
+     */
+    @PutMapping("/process/{id}")
     public ReturnT check(@PathVariable("id") Long id,
                          @RequestBody InformVo informVo) {
         informService.check(id, informVo);
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 重新审核
+     * @param id
+     * @return
+     */
     @PutMapping("/recheck/{id}")
     public ReturnT recheck(@PathVariable("id") Long id){
         informService.recheck(id);
         return ReturnTUtils.newCorrectReturnT();
     }
 
+    /**
+     * 举报删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/del/{id}")
     public ReturnT del(@PathVariable("id") Long id){
         informService.del(id);

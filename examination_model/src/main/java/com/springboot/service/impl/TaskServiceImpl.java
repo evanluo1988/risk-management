@@ -193,7 +193,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public void dispatcher(Long id) {
+    public void dispatcher(Long id, Long areaId) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("任务不存在");
@@ -202,9 +202,14 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         if (AssignmentEnum.ASSIGNED.getCode().equalsIgnoreCase(taskCheckById.getAssignment())) {
             throw new ServiceException("已分派的不能分派");
         }
+        Area area = null;
+        if(Objects.isNull(areaId)) {
+            Enterprise enterpriseById = enterpriseService.getEnterpriseById(taskCheckById.getEnterpriseId());
+            area = areaService.getArea(enterpriseById.getEnterpriseName());
+        } else {
+            area = ServerCacheUtils.getAreaById(areaId);
+        }
 
-        Enterprise enterpriseById = enterpriseService.getEnterpriseById(taskCheckById.getEnterpriseId());
-        Area area = areaService.getArea(enterpriseById.getEnterpriseName());
         if (Objects.isNull(area)) {
             taskCheckById.setAssignment(AssignmentEnum.ASSIGNED_FAIL.getCode());
             taskCheckById.setUpdateTime(new Date());
@@ -242,6 +247,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         TaskCheck taskCheckById = taskCheckService.getById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("任务不存在");
+        }
+
+        if(!AssignmentEnum.NOT_ASSIGNED.getCode().equals(taskCheckById.getAssignment())) {
+            throw new ServiceException("未分派不能撤回");
         }
 
         if (CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(taskCheckById.getCheckStatus())) {
@@ -285,6 +294,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("核查不存在");
+        }
+        if(!CheckStatusEnum.CHECKED.getCode().equals(taskCheckById.getCheckStatus())) {
+            throw new ServiceException("该条任务信息还未核查");
         }
 
         taskCheckById.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());

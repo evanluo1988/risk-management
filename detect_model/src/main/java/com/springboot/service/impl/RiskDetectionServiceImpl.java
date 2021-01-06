@@ -24,9 +24,10 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
     @Override
     public EntHealthReportVo checkByEntName(String entName, OrgEnum org) {
         CloudInfoTimeliness cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
-        String reqId = cloudInfoTimeliness.getReqId();
+        String reqId = "";
         try{
             if(cloudInfoTimelinessService.checkTimeliness(cloudInfoTimeliness)) {
+                reqId = cloudInfoTimeliness.getReqId();
                 //查询指标值表，如果指标值存在直接返回
                 int count = quotaValueService.countQuotaValues(reqId);
                 if(count > 0) {
@@ -50,7 +51,7 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
     @Override
     public String getEntAddress(String entName) {
         CloudInfoTimeliness cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
-        String reqId = cloudInfoTimeliness.getReqId();
+        String reqId = "";
         if(!cloudInfoTimelinessService.checkTimeliness(cloudInfoTimeliness)) {
             //调用远程接口查询，入库，计算，后返回
             try {
@@ -58,6 +59,8 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
+        } else {
+            reqId = cloudInfoTimeliness.getReqId();
         }
 
         //查询数据库记录得到address后返回

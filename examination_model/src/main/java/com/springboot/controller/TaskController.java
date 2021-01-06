@@ -81,8 +81,9 @@ public class TaskController {
      * @return
      */
     @PutMapping("/dispatcher/{id}")
-    public ReturnT dispatcher(@PathVariable("id") Long id){
-        taskService.dispatcher(id);
+    @Validated(TaskVo.DispatcherGroup.class)
+    public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid TaskVo taskVo){
+        taskService.dispatcher(id, taskVo.getAreaId());
         return ReturnTUtils.newCorrectReturnT();
     }
 
@@ -100,7 +101,7 @@ public class TaskController {
     public ReturnT dispatcher(@RequestBody Set<Long> ids){
         for (Long id : ids) {
             try {
-                taskService.dispatcher(id);
+                taskService.dispatcher(id, null);
             }catch (Exception e){
                 log.error("下发异常：",e);
             }
