@@ -103,8 +103,23 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
                 throw new ServiceException("任务编号数据库已经存在！"+Arrays.toString(tasks.stream().map(Task::getTaskNumber).collect(Collectors.toSet()).toArray()));
             }
 
+            checkRegionNonNull(data);
             checkStartTimeNonNull(data);
             taskService.importTasks0(data);
+        }
+
+        private void checkRegionNonNull(List<TaskImportVo> data) {
+            boolean hasNull = false;
+            for (TaskImportVo taskImportVo : data) {
+                if (StringUtils.isEmpty(taskImportVo.getCheckRegion())){
+                    hasNull = true;
+                    break;
+                }
+            }
+
+            if (hasNull){
+                throw new ServiceException("核查区域不能为空");
+            }
         }
 
         private void checkStartTimeNonNull(List<TaskImportVo> data) {
