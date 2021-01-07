@@ -18,7 +18,7 @@ public class AreaServiceTest extends ApplicationTest {
 
     @Test
     public void testFindAreaIdsById(){
-        List<Long> areaIdsById = areaService.findAreaIdsById(null);
+        List<Long> areaIdsById = areaService.findAreaIdsById(101L);
         System.out.println(areaIdsById);
     }
 }
