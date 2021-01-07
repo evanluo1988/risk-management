@@ -72,7 +72,7 @@ public class StrUtils {
         }
         BigDecimal money = new BigDecimal(moneyStr);
 
-        return money.divide(BigDecimal.valueOf(10000)).stripTrailingZeros().toPlainString()+"万元";
+        return money.divide(BigDecimal.valueOf(10000)).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString()+"万元";
     }
 
     /**
@@ -120,7 +120,7 @@ public class StrUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(StrUtils.getDataStr(LocalDate.now()));
+        System.out.println(StrUtils.getMoneyText("45000", null));
     }
 
     public static String getIntStr(String ratio) {
