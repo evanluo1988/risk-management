@@ -969,8 +969,8 @@ public class StdLegalServiceImpl implements StdLegalService {
 
     public void cleanS1(List<StdLegalDataStructuredTemp> copyS1) {
         if (condition0(copyS1)) {
-            Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMap = copyS1.stream().collect(Collectors.groupingBy(StdLegalDataStructuredTemp::getCaseRiskLevel));
-            for (Map.Entry<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMapEntry : copyS1GroupByCaseRiskLevelMap.entrySet()) {
+            Map<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseNoAndCaseRiskLevelMap = copyS1.stream().collect(Collectors.groupingBy(stdLegalDataStructuredTemp -> stdLegalDataStructuredTemp.getCaseNo()+ stdLegalDataStructuredTemp.getCaseRiskLevel()));
+            for (Map.Entry<String, List<StdLegalDataStructuredTemp>> copyS1GroupByCaseRiskLevelMapEntry : copyS1GroupByCaseNoAndCaseRiskLevelMap.entrySet()) {
                 List<StdLegalDataStructuredTemp> v = copyS1GroupByCaseRiskLevelMapEntry.getValue();
                 //1 存在【PTYPE】=14 or 15 or 16的 至少两条案件记录，则优先保留顺序：16 > 15> 14
                 if (condition1(v)) {
