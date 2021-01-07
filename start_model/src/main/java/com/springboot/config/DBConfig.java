@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
  * Created by zx on 2020/7/23.
  */
 @Component
-@PropertySource(value = {"classpath:dataSource.properties"})
 @ConfigurationProperties(prefix = "spring.datasource.base")
 public class DBConfig {
     private String url;
