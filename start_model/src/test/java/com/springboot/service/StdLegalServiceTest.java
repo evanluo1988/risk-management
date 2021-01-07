@@ -312,19 +312,19 @@ public class StdLegalServiceTest extends ApplicationTest {
         copyS2.add(s23);
 
         stdLegalService.clearS2(copyS2);
-        Assert.assertTrue(copyS2.size()==1);
+        Assert.assertTrue(copyS2.size()==2);
 
         copyS2.clear();
-        s21.setCaseCreateTime(LocalDate.now());
+        s22.setCaseCreateTime(LocalDate.now());
         copyS2.add(s21);
         copyS2.add(s22);
         copyS2.add(s23);
         stdLegalService.clearS2(copyS2);
-        Assert.assertTrue(copyS2.size()==1);
+        Assert.assertTrue(copyS2.size()==3);
 
         copyS2.clear();
-        s21.setCaseCreateTime(LocalDate.now());
         s22.setCaseCreateTime(LocalDate.now());
+        s23.setCaseCreateTime(s22.getCaseCreateTime());
         copyS2.add(s21);
         copyS2.add(s22);
         copyS2.add(s23);

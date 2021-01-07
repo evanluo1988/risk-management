@@ -9,6 +9,8 @@ import com.springboot.mapper.StdLegalDataStructuredMapper;
 import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
 import com.springboot.util.DateUtils;
+import com.springboot.util.StrUtils;
+import com.springboot.util.Utils;
 import com.springboot.utils.CalculatUtil;
 import com.springboot.vo.risk.LitigaCaseVo;
 import org.apache.commons.lang.StringUtils;
@@ -831,6 +833,11 @@ public class StdLegalServiceImpl implements StdLegalService {
          * ③若set2或set3各自表内存在多个非空【案号】且【案件风险等级】均一致案件记录，处理规则如下：
          * else if 优先取各自表内【立案时间】有值的案件记录
          * else 随机保留一条"
+         *
+         * ③若set2或set3各自表内存在多个非空【案号】且【案件风险等级】均一致案件记录，处理规则如下：
+         * if优先取各自表内【立案时间】不为空的记录
+         * else if【立案时间】一致的多条案件记录，随机保留一条案件记录
+         * else 均保留案件记录
          */
         clearS2(copyS2);
         clearS3(copyS3);
@@ -924,44 +931,60 @@ public class StdLegalServiceImpl implements StdLegalService {
     }
 
     public void clearS3(List<StdLegalEntUnexecutedTemp> copyS3) {
-        Map<String, List<StdLegalEntUnexecutedTemp>> copyS3GroupByRiskLevel = copyS3.stream().collect(Collectors.groupingBy(StdLegalEntUnexecutedTemp::getCaseRiskLevel));
+        Map<String, List<StdLegalEntUnexecutedTemp>> copyS3GroupByRiskLevel = copyS3.stream().collect(Collectors.groupingBy(item -> item.getCaseCode() +"_"+ item.getCaseRiskLevel() + "_"+ StrUtils.getDataStr(item.getRegDate())));
         for (Map.Entry<String, List<StdLegalEntUnexecutedTemp>> entry : copyS3GroupByRiskLevel.entrySet()) {
             List<StdLegalEntUnexecutedTemp> v = entry.getValue();
             if (v.size() > 1) {
-                List<StdLegalEntUnexecutedTemp> nullCaseCreateTimeDatas = v.stream().filter(stdLegalEntUnexecutedTemp -> Objects.isNull(stdLegalEntUnexecutedTemp.getRegDate())).collect(Collectors.toList());
-                if (v.size() == nullCaseCreateTimeDatas.size()) {
-                    //随机保留一条
-                    v.remove(v.get(RandomUtils.nextInt(v.size())));
-                    if (!CollectionUtils.isEmpty(v)) {
-                        copyS3.removeAll(v);
-                    }
-                } else {
-                    // 优先取各自表内【立案时间】有值的案件记录
-                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)) {
-                        copyS3.removeAll(nullCaseCreateTimeDatas);
-                    }
+//                List<StdLegalEntUnexecutedTemp> nullCaseCreateTimeDatas = v.stream().filter(stdLegalEntUnexecutedTemp -> Objects.isNull(stdLegalEntUnexecutedTemp.getRegDate())).collect(Collectors.toList());
+//                if (v.size() == nullCaseCreateTimeDatas.size()) {
+//                    //随机保留一条
+//                    v.remove(v.get(RandomUtils.nextInt(v.size())));
+//                    if (!CollectionUtils.isEmpty(v)) {
+//                        copyS3.removeAll(v);
+//                    }
+//                } else {
+//                    // 优先取各自表内【立案时间】有值的案件记录
+//                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)) {
+//                        copyS3.removeAll(nullCaseCreateTimeDatas);
+//                    }
+//                }
+                //随机保留一条
+                v.remove(v.get(RandomUtils.nextInt(v.size())));
+                if (!CollectionUtils.isEmpty(v)) {
+                    copyS3.removeAll(v);
                 }
             }
         }
     }
 
     public void clearS2(List<StdLegalEnterpriseExecutedTemp> copyS2) {
-        Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2GroupByRiskLevel = copyS2.stream().collect(Collectors.groupingBy(StdLegalEnterpriseExecutedTemp::getCaseRiskLevel));
-        for (Map.Entry<String, List<StdLegalEnterpriseExecutedTemp>> entry : copyS2GroupByRiskLevel.entrySet()) {
+        //根据案号_风险等级分组
+        Map<String, List<StdLegalEnterpriseExecutedTemp>> copyS2Group = Utils.getList(copyS2).stream().collect(Collectors.groupingBy(item -> item.getCaseCode() + "_" + item.getCaseRiskLevel() + "_" + StrUtils.getDataStr(item.getCaseCreateTime())));
+        List<StdLegalEnterpriseExecutedTemp> removeCaseCreateTimeDatas = Lists.newArrayList();
+        for (Map.Entry<String, List<StdLegalEnterpriseExecutedTemp>> entry : copyS2Group.entrySet()) {
             List<StdLegalEnterpriseExecutedTemp> v = entry.getValue();
-            if (v.size() > 1) {
-                List<StdLegalEnterpriseExecutedTemp> nullCaseCreateTimeDatas = v.stream().filter(stdLegalEnterpriseExecutedTemp -> Objects.isNull(stdLegalEnterpriseExecutedTemp.getCaseCreateTime())).collect(Collectors.toList());
-                if (v.size() == nullCaseCreateTimeDatas.size()) {
-                    //随机保留一条
-                    v.remove(v.get(RandomUtils.nextInt(v.size())));
-                    if (!CollectionUtils.isEmpty(v)) {
-                        copyS2.removeAll(v);
-                    }
-                } else {
-                    // 优先取各自表内【立案时间】有值的案件记录
-                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)) {
-                        copyS2.removeAll(nullCaseCreateTimeDatas);
-                    }
+//            if (v.size() > 1) {
+//                List<StdLegalEnterpriseExecutedTemp> nullCaseCreateTimeDatas = v.stream().filter(stdLegalEnterpriseExecutedTemp -> Objects.isNull(stdLegalEnterpriseExecutedTemp.getCaseCreateTime())).collect(Collectors.toList());
+//                //过滤掉组内立案时间为空的记录，如果都为空随机保留一条
+//                if (v.size() == nullCaseCreateTimeDatas.size()) {
+//                    //随机保留一条
+//                    v.remove(v.get(RandomUtils.nextInt(v.size())));
+//                    if (!CollectionUtils.isEmpty(v)) {
+//                        copyS2.removeAll(v);
+//                    }
+//                } else {
+//                    // 优先取各自表内【立案时间】有值的案件记录
+//                    if (!CollectionUtils.isEmpty(nullCaseCreateTimeDatas)) {
+//                        copyS2.removeAll(nullCaseCreateTimeDatas);
+//                    }
+//                }
+//
+//            }
+            //随机保留一条记录
+            if(v.size() > 1) {
+                v.remove(v.get(RandomUtils.nextInt(v.size())));
+                if (!CollectionUtils.isEmpty(v)) {
+                    copyS2.removeAll(v);
                 }
             }
         }
