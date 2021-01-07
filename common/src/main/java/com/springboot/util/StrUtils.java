@@ -68,7 +68,7 @@ public class StrUtils {
      */
     public static String getMoneyText(String moneyStr, String regCapCur) {
         if(moneyStr == null) {
-            return null;
+            return "";
         }
         BigDecimal money = new BigDecimal(moneyStr);
 
@@ -82,7 +82,7 @@ public class StrUtils {
      */
     public static String getMoney(String moneyStr) {
         if(moneyStr == null) {
-            return null;
+            return "";
         }
         BigDecimal money = new BigDecimal(moneyStr);
         return money.stripTrailingZeros().toPlainString();
@@ -95,14 +95,14 @@ public class StrUtils {
      */
     public static String getDataStr(String date) {
         if(date == null) {
-            return null;
+            return "";
         }
         return date.replace("-", "/");
     }
 
     public static String getDataStr(LocalDate date) {
         if(date == null) {
-            return null;
+            return "";
         }
         return date.toString().replace("-", "/");
     }
@@ -113,7 +113,7 @@ public class StrUtils {
      */
     public static String getRatioStr(String ratio) {
         if(ratio == null){
-            return null;
+            return "";
         }
         BigDecimal bRatio = new BigDecimal(ratio);
         return bRatio.multiply(BigDecimal.valueOf(100)).stripTrailingZeros().toPlainString()+"%";
@@ -125,7 +125,7 @@ public class StrUtils {
 
     public static String getIntStr(String ratio) {
         if(ratio == null){
-            return null;
+            return "";
         }
         BigDecimal bRatio = new BigDecimal(ratio);
         return String.valueOf(bRatio.intValue());
