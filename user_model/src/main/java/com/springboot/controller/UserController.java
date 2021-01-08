@@ -1,12 +1,12 @@
 package com.springboot.controller;
 
-import com.springboot.domain.User;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.service.UserService;
 import com.springboot.ret.ReturnT;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.RegUserVo;
+import com.springboot.vo.UserPageVo;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 /**
@@ -28,8 +27,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/list")
-    public ReturnT<Pagination<UserVo>> findUsers(PageIn pageIn){
-        return ReturnTUtils.getReturnT(userService.findUsers(pageIn));
+    public ReturnT<Pagination<UserPageVo>> findUsers(UserVo userVo){
+        return ReturnTUtils.getReturnT(userService.findUsers(userVo));
     }
 
     @GetMapping("/view/{id}/role")

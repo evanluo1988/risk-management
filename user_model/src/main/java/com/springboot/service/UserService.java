@@ -5,6 +5,7 @@ import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.vo.RegUserVo;
+import com.springboot.vo.UserPageVo;
 import com.springboot.vo.UserVo;
 import com.springboot.vo.UserWithRoleVo;
 
@@ -18,7 +19,7 @@ public interface UserService {
      * 获取用户列表
      * @return
      */
-    public Pagination<UserVo> findUsers(PageIn pageIn);
+    public Pagination<UserPageVo> findUsers(UserVo userVo);
 
     /**
      * 通过用户ID获取带权限的用户信息

@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import com.springboot.model.UserRoleDomain;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author evan
@@ -55,12 +56,12 @@ public class UserServiceImpl implements UserService {
     private RoleService roleService;
 
     @Override
-    public Pagination<UserVo> findUsers(PageIn pageIn) {
+    public Pagination<UserPageVo> findUsers(UserVo userVo) {
         //根据当前权限过滤用户
         List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
-        IPage<UserInfo> userPage = userMapper.findAllUsersByAreaIds(areaIds, pageIn.convertPage());
+        IPage<UserInfo> userPage = userMapper.findAllUsersByAreaIds(userVo.getLoginName(), userVo.getUserName(), userVo.getAreaId(), areaIds, userVo.convertPage());
         List<UserInfo> users = userPage.getRecords();
-        List<UserVo> userVos = new ArrayList<>();
+        List<UserPageVo> userVos = new ArrayList<>();
         for (User user : users) {
             userVos.add(convertUserToUserVo(user));
         }
@@ -68,8 +69,8 @@ public class UserServiceImpl implements UserService {
         return Pagination.of(userVos, userPage.getTotal());
     }
 
-    private UserVo convertUserToUserVo(User user) {
-        UserVo userVo = new UserVo();
+    private UserPageVo convertUserToUserVo(User user) {
+        UserPageVo userVo = new UserPageVo();
         BeanUtils.copyProperties(user, userVo);
         return userVo;
     }
