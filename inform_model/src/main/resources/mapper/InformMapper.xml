@@ -32,7 +32,6 @@
       i.id,
       i.clue_number,
 	  i.inform_name,
-	  '受理地区' AS acceptanceArea,
 	  i.inform_time,
 	  i.source,
 	  i.check_status,
