@@ -4,8 +4,10 @@
 
     <resultMap id="BaseResultMap" type="com.springboot.domain.User" >
         <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="login_name" property="loginName" jdbcType="VARCHAR" />
         <result column="user_name" property="userName" jdbcType="VARCHAR" />
         <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="area_id" property="areaId" jdbcType="BIGINT" />
         <result column="enable" property="enable" jdbcType="VARCHAR" />
 
@@ -17,8 +19,10 @@
 
     <resultMap id="UserInfoResultMap" type="com.springboot.model.UserInfo" >
         <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="login_name" property="loginName" jdbcType="VARCHAR" />
         <result column="user_name" property="userName" jdbcType="VARCHAR" />
         <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="area_id" property="areaId" jdbcType="BIGINT" />
         <result column="enable" property="enable" jdbcType="VARCHAR" />
         <result column="area_name" property="areaName" jdbcType="VARCHAR" />
@@ -31,7 +35,9 @@
 
     <resultMap id="UserRoleResultMap" type="com.springboot.model.UserRoleDomain" >
         <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="login_name" property="loginName" jdbcType="VARCHAR" />
         <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="area_id" property="areaId" jdbcType="BIGINT" />
         <result column="enable" property="enable" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -43,11 +49,11 @@
     </resultMap>
 
     <sql id="Base_Column_List" >
-        u.id, u.user_name, u.password, u.enable, u.create_time, u.create_by, u.update_time, u.update_by
+        u.id, u.login_name, u.user_name, u.phone, u.password, u.enable, u.create_time, u.create_by, u.update_time, u.update_by
     </sql>
 
     <sql id="Column_List" >
-        u.id, u.user_name, u.area_id, a.area_name, u.enable, u.create_time, u.create_by, u.update_time, u.update_by
+        u.id, u.login_name, u.user_name, u.phone, u.area_id, a.area_name, u.enable, u.create_time, u.create_by, u.update_time, u.update_by
     </sql>
 
     <select id="findUserWithRoleById" parameterType="Long" resultMap="UserRoleResultMap">

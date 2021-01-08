@@ -36,50 +36,13 @@ public class UserVo implements Serializable {
     private static final long serialVersionUID = 4438086802592253397L;
     @NotNull(groups = {UserUpdateGroup.class}, message = "用户ID不能为空")
     private Long id;
-    @NotBlank(groups = {LoginGroup.class, UserAddGroup.class, UserUpdateGroup.class}, message = "用户名不能为空")
+    @NotBlank(groups = {LoginGroup.class, UserAddGroup.class, UserUpdateGroup.class}, message = "登录名不能为空")
+    private String loginName;
+    @NotBlank(groups = {UserAddGroup.class}, message = "用户名不能为空")
     private String userName;
     @NotNull(groups = {UserAddGroup.class, UserUpdateGroup.class}, message = "区域信息不能为空")
     private Long areaId;
     private String enable;
+    private String phone;
     private String areaName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Long getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(Long areaId) {
-        this.areaId = areaId;
-    }
-
-    public String getEnable() {
-        return enable;
-    }
-
-    public void setEnable(String enable) {
-        this.enable = enable;
-    }
-
-    public String getAreaName() {
-        return areaName;
-    }
-
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
-    }
 }
