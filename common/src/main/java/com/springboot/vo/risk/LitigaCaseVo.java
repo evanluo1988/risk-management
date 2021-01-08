@@ -61,4 +61,8 @@ public class LitigaCaseVo {
     public String getPayment() {
         return StrUtils.getMoney(payment);
     }
+
+    public String getIntervalYear() {
+        return StrUtils.getIntStr(intervalYear);
+    }
 }
