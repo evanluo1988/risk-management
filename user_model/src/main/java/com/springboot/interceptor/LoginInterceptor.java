@@ -56,4 +56,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         UserAuthInfoContext.set(user, rolePerms);
         return true;
     }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        UserAuthInfoContext.clear();
+    }
 }
