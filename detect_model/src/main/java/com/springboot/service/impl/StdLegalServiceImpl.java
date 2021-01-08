@@ -3,6 +3,7 @@ package com.springboot.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.springboot.domain.*;
+import com.springboot.enums.DicTypeEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.StdLegalCasemedianMapper;
 import com.springboot.mapper.StdLegalDataStructuredMapper;
@@ -12,6 +13,7 @@ import com.springboot.util.DateUtils;
 import com.springboot.util.StrUtils;
 import com.springboot.util.Utils;
 import com.springboot.utils.CalculatUtil;
+import com.springboot.utils.DetectCacheUtils;
 import com.springboot.vo.risk.LitigaCaseVo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -868,6 +870,13 @@ public class StdLegalServiceImpl implements StdLegalService {
 
         for (StdLegalEntUnexecutedTemp stdLegalEntUnexecutedTemp : stdLegalEntUnexecutedTempList) {
             litigaCaseVos.add(stdLegalEntUnexecutedTemp.toLitigaCaseVo());
+        }
+
+        for(LitigaCaseVo litigaCaseVo : litigaCaseVos) {
+            DicTable dic = DetectCacheUtils.getDicTableByTypeAndDicValue(DicTypeEnum.COURTLEVEL.name(), litigaCaseVo.getCourtLevel());
+            if(Objects.nonNull(dic)) {
+                litigaCaseVo.setCourtLevel(dic.getDicName());
+            }
         }
         return litigaCaseVos.stream().filter(item -> Objects.nonNull(item.getCaseCode())).collect(Collectors.toList());
     }

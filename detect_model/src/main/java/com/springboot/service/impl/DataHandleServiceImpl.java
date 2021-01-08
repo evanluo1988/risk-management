@@ -2,6 +2,7 @@ package com.springboot.service.impl;
 
 import com.google.common.collect.Lists;
 import com.springboot.domain.*;
+import com.springboot.enums.DicTypeEnum;
 import com.springboot.enums.OrgEnum;
 import com.springboot.model.QuotaModel;
 import com.springboot.model.StdGsEntInfoModel;
@@ -281,12 +282,12 @@ public class DataHandleServiceImpl implements DataHandleService {
         //商标概况
         for(QuotaModel quotaModel : quotaModelList) {
             switch(quotaModel.getQuotaCode().trim()){
-                case "ZS_INVALID_BRAND_NUM":
-                    brandInformationVo.setInvalidBrandNum(quotaModel.getQuotaValue());
-                    break;
-                case "ZS_INVALID_BRAND_SPECIES_DISTRIBUTION":
-                    brandInformationVo.setInvalidBrandSpeciesDistribution(quotaModel.getQuotaValue());
-                    break;
+//                case "ZS_INVALID_BRAND_NUM":
+//                    brandInformationVo.setInvalidBrandNum(quotaModel.getQuotaValue());
+//                    break;
+//                case "ZS_INVALID_BRAND_SPECIES_DISTRIBUTION":
+//                    brandInformationVo.setInvalidBrandSpeciesDistribution(quotaModel.getQuotaValue());
+//                    break;
                 case "ZS_VALID_BRAND_NUM":
                     brandInformationVo.setValidBrandNum(quotaModel.getQuotaValue());
                     break;
@@ -295,14 +296,15 @@ public class DataHandleServiceImpl implements DataHandleService {
                     break;
             }
         }
+
+        List<DicTable> dicTableList = DetectCacheUtils.getDicTableListByType(DicTypeEnum.NICECLASSIFY.name());
         //无效商标种类数量
-        List<DicTable> dicTableList = DetectCacheUtils.getDicTableListByType("NICECLASSIFY");
-        List<BrandVarietyVo> invalidBrandVarietyList = stdIaBrandService.getBrandVariety(reqId, false);
-        for(BrandVarietyVo brandVarietyVo : invalidBrandVarietyList) {
-            DicTable dicTable = dicTableList.stream().filter(item -> item.getDicValue().equals(brandVarietyVo.getNiceClassify())).findFirst().get();
-            brandVarietyVo.setNiceClassifyName(dicTable.getDicName());
-        }
-        brandInformationVo.setInvalidBrandVarietyList(invalidBrandVarietyList);
+//        List<BrandVarietyVo> invalidBrandVarietyList = stdIaBrandService.getBrandVariety(reqId, false);
+//        for(BrandVarietyVo brandVarietyVo : invalidBrandVarietyList) {
+//            DicTable dicTable = dicTableList.stream().filter(item -> item.getDicValue().equals(brandVarietyVo.getNiceClassify())).findFirst().get();
+//            brandVarietyVo.setNiceClassifyName(dicTable.getDicName());
+//        }
+//        brandInformationVo.setInvalidBrandVarietyList(invalidBrandVarietyList);
 
         //有效商标种类数量
         List<BrandVarietyVo> validBrandVarietyList = stdIaBrandService.getBrandVariety(reqId, true);
@@ -317,7 +319,7 @@ public class DataHandleServiceImpl implements DataHandleService {
         List<StdIaBrand> stdIaBrandList = stdIaBrandService.findByReqId(reqId);
         for(StdIaBrand stdIaBrand : Utils.getList(stdIaBrandList)) {
             StdIaBrandVo stdIaBrandVo = new StdIaBrandVo();
-            final String type = "NICECLASSIFY";
+            final String type = DicTypeEnum.NICECLASSIFY.name();
             DicTable dicTableByTypeAndDicValue = DetectCacheUtils.getDicTableByTypeAndDicValue(type, stdIaBrand.getNiceClassify());
             stdIaBrandVo.setNiceClassifyName(Optional.ofNullable(dicTableByTypeAndDicValue).orElse(new DicTable()).getDicName());
             BeanUtils.copyProperties(stdIaBrand, stdIaBrandVo);
