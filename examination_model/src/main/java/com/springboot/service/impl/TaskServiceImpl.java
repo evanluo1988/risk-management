@@ -215,6 +215,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void dispatcher(Long id, Long areaId) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
@@ -313,6 +314,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void recheck(Long id) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {

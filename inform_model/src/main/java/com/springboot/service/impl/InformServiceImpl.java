@@ -238,6 +238,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void del(Long id) {
         Inform informById = getInformById(id);
         if (Objects.isNull(informById)){
@@ -299,6 +300,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void recheck(Long id) {
         Inform informById = getInformById(id);
         if (Objects.isNull(informById)){
