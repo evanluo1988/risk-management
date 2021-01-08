@@ -869,7 +869,7 @@ public class StdLegalServiceImpl implements StdLegalService {
         for (StdLegalEntUnexecutedTemp stdLegalEntUnexecutedTemp : stdLegalEntUnexecutedTempList) {
             litigaCaseVos.add(stdLegalEntUnexecutedTemp.toLitigaCaseVo());
         }
-        return litigaCaseVos;
+        return litigaCaseVos.stream().filter(item -> Objects.nonNull(item.getCaseCode())).collect(Collectors.toList());
     }
 
     public void calcRiskLevel(String reqId, List<StdLegalDataStructuredTemp> copyS1, List<StdLegalEnterpriseExecutedTemp> copyS2, List<StdLegalEntUnexecutedTemp> copyS3) {
