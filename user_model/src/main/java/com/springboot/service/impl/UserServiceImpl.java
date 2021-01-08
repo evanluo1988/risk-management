@@ -160,6 +160,7 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(regUserVo, user);
         user.setPassword(oldUser.getPassword());
         user.setEnable(oldUser.getEnable());
+        user.setAreaId(oldUser.getAreaId());
         userMapper.updateById(user);
     }
 
