@@ -40,7 +40,7 @@ public class UserVo implements Serializable {
     private String loginName;
     @NotBlank(groups = {UserAddGroup.class}, message = "用户名不能为空")
     private String userName;
-    @NotNull(groups = {UserAddGroup.class, UserUpdateGroup.class}, message = "区域信息不能为空")
+    @NotNull(groups = {UserAddGroup.class}, message = "区域信息不能为空")
     private Long areaId;
     private String enable;
     private String phone;
