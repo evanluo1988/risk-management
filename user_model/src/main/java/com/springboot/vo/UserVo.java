@@ -1,5 +1,6 @@
 package com.springboot.vo;
 
+import com.springboot.page.PageIn;
 import lombok.Data;
 
 import javax.servlet.Registration;
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class UserVo implements Serializable {
+public class UserVo extends PageIn implements Serializable {
     /**
      * 用户登录
      */

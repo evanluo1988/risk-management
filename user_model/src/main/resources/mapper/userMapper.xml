@@ -60,11 +60,21 @@
         select <include refid="Column_List"/> from users u where u.id = #{id}
     </select>
 
-    <select id="findAllUsersByAreaIds" resultMap="UserInfoResultMap">
+    <select id="findAllUsersByAreaIds" resultMap="UserInfoResultMap" parameterType="Map">
         select <include refid="Column_List"/> from users u
         left join areas a on a.id = u.area_id
         <where>
-            u.area_id in (
+            1=1
+            <if test="loginName != null and loginName !=''">
+                and u.login_name like '%${loginName}%'
+            </if>
+            <if test="userName != null and userName !=''">
+                and u.user_name like '%${userName}%'
+            </if>
+            <if test="areaId != null and areaId !=''">
+                and u.area_id = #{areaId}
+            </if>
+            and u.area_id in (
             <foreach collection="areaIds" item="areaId" index="index" separator=",">
                 #{areaId}
             </foreach>
