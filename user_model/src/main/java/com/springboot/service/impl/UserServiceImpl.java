@@ -115,11 +115,14 @@ public class UserServiceImpl implements UserService {
 
         if (hasDataPermission(user.getAreaId(), id)){
             BeanUtils.copyProperties(user, userVo);
-            Area area = ServerCacheUtils.getAreaById(user.getAreaId());
-            if(Objects.isNull(area)) {
-                throw new ServiceException("区域信息不存在");
+            //如果不是系统管理员查询区域
+            if(id != 1) {
+                Area area = ServerCacheUtils.getAreaById(user.getAreaId());
+                if(Objects.isNull(area)) {
+                    throw new ServiceException("区域信息不存在");
+                }
+                userVo.setAreaName(area.getAreaName());
             }
-            userVo.setAreaName(area.getAreaName());
         } else {
             throw new ServiceException("用户信息不存在");
         }
@@ -164,7 +167,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void login(RegUserVo userVo) {
         log.info("login param:{}", JSON.toJSONString(userVo));
-        User user = getUserByUsername(userVo.getUserName());
+        User user = getUserByLoginname(userVo.getLoginName());
         //用户不存在
         if (Objects.isNull(user)) {
             throw new ServiceException("用户名或密码错误");
@@ -206,18 +209,18 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据用户名查询用户
+     * 根据登录名查询用户
      *
-     * @param userName 用户名
+     * @param loginName 用户名
      * @return 用户信息
      */
-    private User getUserByUsername(String userName) {
-        if (StringUtils.isEmpty(userName)) {
+    private User getUserByLoginname(String loginName) {
+        if (StringUtils.isEmpty(loginName)) {
             return null;
         }
 
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>()
-                .eq(User::getUserName, userName.trim())
+                .eq(User::getLoginName, loginName.trim())
                 .eq(User::getEnable, EnableEnum.Y.getCode());
         return userMapper.selectOne(queryWrapper);
     }
