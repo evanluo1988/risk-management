@@ -11,11 +11,6 @@ public class RegUserVo extends UserVo {
     @NotBlank(groups = {UserVo.LoginGroup.class, UserUpdatePasswordGroup.class}, message = "密码不能为空")
     private String password;
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    @NotBlank(groups = {UserUpdatePasswordGroup.class}, message = "旧密码不能为空")
+    private String oldPassword;
 }

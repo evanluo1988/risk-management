@@ -36,6 +36,8 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.regex.Pattern;
+
 import com.springboot.model.UserRoleDomain;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -322,8 +324,17 @@ public class UserServiceImpl implements UserService {
     public void updateUserPassword(RegUserVo regUserVo) {
         User user = new User();
         BeanUtils.copyProperties(UserAuthInfoContext.getUser(), user);
-        user.setPassword(BCrypt.hashpw(regUserVo.getPassword(), BCrypt.gensalt()));
-        userMapper.updateById(user);
+        User u = userMapper.selectById(user.getId());
+        if(BCrypt.checkpw(regUserVo.getOldPassword(), u.getPassword())) {
+            if(PswUtils.isConformRule(regUserVo.getPassword())) {
+                user.setPassword(BCrypt.hashpw(regUserVo.getPassword(), BCrypt.gensalt()));
+                userMapper.updateById(user);
+            } else {
+                throw new ServiceException("新密码必须为8-16为数字、字母或下划线");
+            }
+        } else {
+            throw new ServiceException("密码不正确");
+        }
     }
 
 }
