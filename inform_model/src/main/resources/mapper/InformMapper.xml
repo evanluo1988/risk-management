@@ -33,13 +33,14 @@
       i.clue_number,
 	  i.inform_name,
 	  i.inform_time,
-	  i.source,
 	  i.check_status,
 	  i.assignment,
 	  i.area_id,
 	  i.expire_time,
 	  a.area_name,
-	  ic.overdue,
+        case i.check_status
+        when 'CHECKED' then 0
+        else i.expire_time &lt; now() end as overdue,
 	  ic.verification,
 	  ir.reward_content
     </sql>
@@ -97,9 +98,6 @@
         <foreach collection="areaIds" item="id" index="i" open="(" close=")" separator=",">
             #{id}
         </foreach>
-        <if test="source != null and source != '' ">
-            AND i.source = #{source}
-        </if>
         <if test="checkStatus != null and checkStatus != '' ">
             AND i.check_status = #{checkStatus}
         </if>
@@ -118,8 +116,11 @@
         <if test="verification != null and verification != '' ">
             AND ic.verification = #{verification}
         </if>
-        <if test="overdue != null">
-            AND ic.overdue = #{overdue}
+        <if test="overdue != null and 'false'.toString() == overdue.toString()">
+            AND (i.check_status = 'CHECKED' or i.expire_time &gt;= now())
+        </if>
+        <if test="overdue != null and 'true'.toString() == overdue.toString()">
+            AND (i.check_status != 'CHECKED' AND i.expire_time &lt; now())
         </if>
         <if test="checkTimeStart != null">
             AND ic.check_time &gt;= #{checkTimeStart}' 00:00:00'

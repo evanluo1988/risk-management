@@ -24,7 +24,6 @@ public interface InformDao extends BaseMapper<Inform> {
 
     /**
      * 投诉举报列表
-     * @param source    举报来源
      * @param checkStatus   核查状态
      * @param informTimeStart   举报时间
      * @param informTimeEnd 举报时间
@@ -39,18 +38,18 @@ public interface InformDao extends BaseMapper<Inform> {
      * @param informPage 分页
      * @return  分页的投诉举报
      */
-    Page<InformPageModel> informPage(@Param("source") String source,
-                                     @Param("checkStatus") String checkStatus,
-                                     @Param("informTimeStart") LocalDate informTimeStart,
-                                     @Param("informTimeEnd") LocalDate informTimeEnd,
-                                     @Param("rewardContent") String rewardContent,
-                                     @Param("informName") String informName,
-                                     @Param("verification") String verification,
-                                     @Param("overdue") Boolean overdue,
-                                     @Param("checkTimeStart") LocalDate checkTimeStart,
-                                     @Param("checkTimeEnd") LocalDate checkTimeEnd,
-                                     @Param("areaIds") List<Long> areaIds,
-                                     Page<Inform> informPage);
+    Page<InformPageModel> informPage(
+            @Param("checkStatus") String checkStatus,
+            @Param("informTimeStart") LocalDate informTimeStart,
+            @Param("informTimeEnd") LocalDate informTimeEnd,
+            @Param("rewardContent") String rewardContent,
+            @Param("informName") String informName,
+            @Param("verification") String verification,
+            @Param("overdue") Boolean overdue,
+            @Param("checkTimeStart") LocalDate checkTimeStart,
+            @Param("checkTimeEnd") LocalDate checkTimeEnd,
+            @Param("areaIds") List<Long> areaIds,
+            Page<Inform> informPage);
 
     List<InformExportModel> listInformByIds(@Param("ids") List<Long> ids);
 }

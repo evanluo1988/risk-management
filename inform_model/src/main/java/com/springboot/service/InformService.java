@@ -66,7 +66,6 @@ public interface InformService extends IService<Inform> {
 
     /**
      * 投诉举报列表
-     * @param source    举报来源
      * @param checkStatus   核查状态
      * @param informTimeStart   举报时间
      * @param informTimeEnd 举报时间
@@ -81,7 +80,7 @@ public interface InformService extends IService<Inform> {
      * @param pageSize  分页
      * @return  分页的投诉举报VO
      */
-    Pagination<InformPageVo> informPage(String source, String checkStatus, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId, Integer pageNo, Integer pageSize);
+    Pagination<InformPageVo> informPage(String checkStatus, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId, Integer pageNo, Integer pageSize);
 
     /**
      * 删除举报

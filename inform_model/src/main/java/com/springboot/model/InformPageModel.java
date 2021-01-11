@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author 刘宏飞
@@ -19,12 +20,8 @@ public class InformPageModel {
     private String clueNumber;
     //被举报对象名称
     private String informName;
-    //受理地区
-    private String acceptanceArea;
     //举报时间
     private LocalDateTime informTime;
-    //举报来源
-    private String source;
     //核查状态
     private String checkStatus;
     //预期
@@ -41,4 +38,6 @@ public class InformPageModel {
     private String areaName;
     //逾期时间
     private LocalDate expireTime;
+    //操作列表
+    private List<String> operations;
 }

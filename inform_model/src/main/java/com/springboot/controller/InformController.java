@@ -48,7 +48,7 @@ public class InformController {
     @GetMapping("/list")
     public ReturnT page(InformVo informVo) {
         Pagination<InformPageVo> pagination = informService.informPage(
-                informVo.getSource(), informVo.getCheckStatus(),
+                informVo.getCheckStatus(),
                 informVo.getInformTimeStart(), informVo.getInformTimeEnd(),
                 informVo.getRewardContent(), informVo.getInformName(),
                 informVo.getVerification(), informVo.getOverdue(),

@@ -20,6 +20,7 @@ import com.springboot.model.InformPageModel;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
+import com.springboot.util.Utils;
 import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.RoleUtils;
 import com.springboot.utils.UserAuthInfoContext;
@@ -221,7 +222,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public Pagination<InformPageVo> informPage(String source, String checkStatus,
+    public Pagination<InformPageVo> informPage(String checkStatus,
                                                LocalDate informTimeStart, LocalDate informTimeEnd,
                                                String rewardContent, String informName,
                                                String verification, Boolean overdue,
@@ -233,7 +234,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         }
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
         areaIds.add(areaId);
-        Page<InformPageModel> page = informDao.informPage(source, checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
+        Page<InformPageModel> page = informDao.informPage(checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
     }
 

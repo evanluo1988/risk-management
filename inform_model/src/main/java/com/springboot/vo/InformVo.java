@@ -23,10 +23,6 @@ public class InformVo extends PageIn {
 
     @NotNull(groups = DispatcherGroup.class,message = "区域不能为空")
     private Long areaId;
-    /**
-     * 举报来源
-     */
-    private String source;
 
     /**
      * 核查状态

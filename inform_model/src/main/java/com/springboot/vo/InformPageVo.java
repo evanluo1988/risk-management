@@ -18,12 +18,8 @@ public class InformPageVo {
     private String clueNumber;
     //被举报对象名称
     private String informName;
-    //受理地区
-    private String acceptanceArea;
     //举报时间
     private LocalDateTime informTime;
-    //举报来源
-    private String source;
     //核查状态
     private String checkStatus;
     //预期
