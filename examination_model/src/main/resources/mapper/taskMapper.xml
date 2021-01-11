@@ -39,15 +39,19 @@
     <sql id="TaskPage">
         tc.id,
         t.task_number,
+        t.task_name,
         e.enterprise_name,
         tc.check_region,
         tc.related_clues,
-        tc.check_status,
-        tc.enable,
-        tc.expire_time,
         e.disposal_stage,
-        tc.overdue,
-        tc.assignment
+        tc.assignment,
+        tc.check_status,
+        t.start_time,
+        tc.expire_time,
+        case tc.check_status
+        when 'CHECKED' then 0
+        else tc.expire_time &lt; now() end as overdue,
+        tc.enable
     </sql>
 
     <sql id="TaskExport">
@@ -103,19 +107,37 @@
         LEFT JOIN tasks t ON tc.task_id = t.id
         LEFT JOIN task_dispositions td ON td.task_check_id = tc.id
         LEFT JOIN enterprises e ON tc.enterprise_id = e.id
-        WHERE tc.enable = 'Y' and
-        tc.area_id in
+        WHERE tc.enable = 'Y'
+        and tc.area_id in
         <foreach collection="areaIds" item="id" index="i" open="(" close=")" separator=",">
             #{id}
         </foreach>
+        <if test="disposalStage!=null and disposalStage!=''">
+            AND e.disposal_stage = #{disposalStage}
+        </if>
+        <if test="taskTimeStart != null">
+            AND t.start_time &gt;= #{taskTimeStart}' 00:00:00'
+        </if>
+        <if test="taskTimeEnd != null">
+            AND t.start_time &lt;= #{taskTimeEnd}' 23:59:59'
+        </if>
+        <if test="overdue != null and 'false'.toString() == overdue.toString()">
+            AND (tc.check_status = 'CHECKED' or tc.expire_time &gt;= now())
+        </if>
+        <if test="overdue != null and 'true'.toString() == overdue.toString()">
+            AND (tc.check_status != 'CHECKED' AND tc.expire_time &lt; now())
+        </if>
+        <if test="taskExpireStart != null">
+            AND tc.expire_time &gt;= #{taskExpireStart}' 00:00:00'
+        </if>
+        <if test="taskExpireEnd != null">
+            AND tc.expire_time &lt;= #{taskExpireEnd}' 23:59:59'
+        </if>
         <if test="enterpriseName!=null and enterpriseName!=''">
-            AND e.enterprise_name = #{enterpriseName}
+            AND e.enterprise_name like '%${enterpriseName}%'
         </if>
         <if test="checkStatus!=null and checkStatus!=''">
             AND tc.check_status = #{checkStatus}
-        </if>
-        <if test="disposalStage!=null and disposalStage!=''">
-            AND e.disposal_stage = #{disposalStage}
         </if>
         <if test="assignment!=null and assignment!=''">
             AND tc.assignment = #{assignment}

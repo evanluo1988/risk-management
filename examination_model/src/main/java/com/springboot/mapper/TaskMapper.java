@@ -9,18 +9,25 @@ import com.springboot.model.TaskModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface TaskMapper extends BaseMapper<Task> {
     IPage<TaskModel> findPageTasks(Page page);
 
-    Page<TaskModel> pageTasks(@Param("enterpriseName") String enterpriseName,
-                              @Param("checkStatus") String checkStatus,
-                              @Param("disposalStage") String disposalStage,
-                              @Param("assignment") String assignment,
-                              @Param("areaIds") List<Long> areaIds,
-                              Page<Task> page);
+    Page<TaskModel> pageTasks(
+            @Param("disposalStage") String disposalStage,
+            @Param("taskTimeStart") LocalDate taskTimeStart,
+            @Param("taskTimeEnd") LocalDate taskTimeEnd,
+            @Param("overdue") Boolean overdue,
+            @Param("taskExpireStart") LocalDate taskExpireStart,
+            @Param("taskExpireEnd") LocalDate taskExpireEnd,
+            @Param("enterpriseName") String enterpriseName,
+            @Param("checkStatus") String checkStatus,
+            @Param("assignment") String assignment,
+            @Param("areaIds") List<Long> areaIds,
+            Page<Task> page);
 
     List<TaskExportModel> listTaskByIds(@Param("ids") List<Long> ids);
 }

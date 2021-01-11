@@ -111,7 +111,7 @@
             AND ir.reward_content = #{rewardContent}
         </if>
         <if test="informName != null and informName != '' ">
-            AND i.inform_name = #{informName}
+            AND i.inform_name like '%${informName}%'
         </if>
         <if test="verification != null and verification != '' ">
             AND ic.verification = #{verification}

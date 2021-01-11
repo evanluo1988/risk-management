@@ -233,7 +233,6 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             areaId = UserAuthInfoContext.getAreaId();
         }
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
-        areaIds.add(areaId);
         Page<InformPageModel> page = informDao.informPage(checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
     }

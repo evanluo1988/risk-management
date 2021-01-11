@@ -6,10 +6,11 @@ import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.vo.TaskDetailVo;
 import com.springboot.vo.TaskImportVo;
-import com.springboot.vo.TaskVo;
+import com.springboot.vo.TaskPageVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -18,11 +19,13 @@ public interface TaskService extends IService<Task> {
 
     public void importTasks(MultipartFile file);
 
-    public Pagination<TaskVo> findTasks(PageIn pageIn);
+    public Pagination<TaskPageVo> findTasks(PageIn pageIn);
 
     void importTasks0(List<TaskImportVo> data);
 
-    Pagination<TaskVo> pageTasks(String enterpriseName, String checkStatus, String disposalStage, String assignment, Long areaId, Integer pageNo, Integer pageSize);
+    Pagination<TaskPageVo> pageTasks(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue,
+                                     LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName,
+                                     String checkStatus , String assignment, Long areaId, Integer pageNo, Integer pageSize);
 
     TaskDetailVo detail(Long id);
 
@@ -34,7 +37,7 @@ public interface TaskService extends IService<Task> {
 
     void revoke(Long id);
 
-    void check(Long id, TaskVo taskVo);
+    void check(Long id, TaskPageVo taskVo);
 
     void recheck(Long id);
 

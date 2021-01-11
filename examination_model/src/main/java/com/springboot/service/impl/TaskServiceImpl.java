@@ -21,13 +21,15 @@ import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
 import com.springboot.util.ConvertUtils;
+import com.springboot.util.DateUtils;
+import com.springboot.util.Utils;
 import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.TaskDetailVo;
 import com.springboot.vo.TaskExportVo;
 import com.springboot.vo.TaskImportVo;
-import com.springboot.vo.TaskVo;
+import com.springboot.vo.TaskPageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +37,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.util.unit.DataUnit;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -138,10 +142,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public Pagination<TaskVo> findTasks(PageIn pageIn) {
+    public Pagination<TaskPageVo> findTasks(PageIn pageIn) {
         IPage<TaskModel> taskPage = taskMapper.findPageTasks(pageIn.convertPage());
 
-        List<TaskVo> taskVos = new ArrayList<>();
+        List<TaskPageVo> taskVos = new ArrayList<>();
         for (TaskModel taskModel : taskPage.getRecords()) {
             taskVos.add(taskModel.convertVo());
         }
@@ -174,17 +178,26 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public Pagination<TaskVo> pageTasks(String enterpriseName, String checkStatus, String disposalStage,
-                                        String assignment, Long areaId, Integer pageNo, Integer pageSize) {
+    public Pagination<TaskPageVo> pageTasks(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue,
+                                            LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName,
+                                            String checkStatus , String assignment, Long areaId, Integer pageNo, Integer pageSize) {
 
         if(Objects.isNull(areaId)) {
             areaId = UserAuthInfoContext.getAreaId();
         }
-        Area area = ServerCacheUtils.getAreaById(areaId);
-        List<Long> areaIds = areaService.findAreaIdsById(area.getId());
-        areaIds.add(area.getId());
-        Page<TaskModel> page = taskMapper.pageTasks(enterpriseName, checkStatus, disposalStage, assignment, areaIds, new Page<>(pageNo, pageSize));
-        return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), TaskVo.class), page.getTotal());
+
+        List<Long> areaIds = areaService.findAreaIdsById(areaId);
+        Page<TaskModel> page = taskMapper.pageTasks(disposalStage, taskTimeStart, taskTimeEnd, overdue,
+                taskExpireStart, taskExpireEnd, enterpriseName,
+                checkStatus, assignment, areaIds, new Page<>(pageNo, pageSize));
+        List<TaskPageVo> taskPageVoList = Lists.newArrayList();
+        for(TaskModel taskModel : Utils.getList(page.getRecords())) {
+            TaskPageVo taskPageVo = new TaskPageVo();
+            BeanUtils.copyProperties(taskModel, taskPageVo);
+            taskPageVo.setStartTime(DateUtils.convertDateStr(taskModel.getStartTime()));
+            taskPageVoList.add(taskPageVo);
+        }
+        return Pagination.of(taskPageVoList, page.getTotal());
     }
 
     @Override
@@ -286,7 +299,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void check(Long id, TaskVo taskVo) {
+    public void check(Long id, TaskPageVo taskVo) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("任务不存在");

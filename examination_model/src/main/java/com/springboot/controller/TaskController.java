@@ -1,11 +1,11 @@
 package com.springboot.controller;
 
-import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.TaskService;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.TaskDetailVo;
+import com.springboot.vo.TaskPageVo;
 import com.springboot.vo.TaskVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,18 +38,21 @@ public class TaskController {
     }
 
     @GetMapping("/list")
-    public ReturnT page(String enterpriseName, String checkStatus, String disposalStage,
-                        String assignment, Long areaId, Integer pageNo, Integer pageSize){
-//        Pagination<TaskVo> taskModelPagination = taskService.pageTasks(
-//                taskVo.getEnterpriseName(),
-//                taskVo.getCheckStatus(),
-//                taskVo.getDisposalStage(),
-//                taskVo.getAssignment(),
-//                taskVo.getCheckRegion(),
-//                pageIn.getPageNo(),
-//                pageIn.getPageSize());
-        Pagination<TaskVo> taskModelPagination = taskService.pageTasks(enterpriseName, checkStatus, disposalStage,
-                assignment, areaId, pageNo, pageSize);
+    public ReturnT page(TaskVo taskVo){
+        Pagination<TaskPageVo> taskModelPagination = taskService.pageTasks(
+                taskVo.getDisposalStage(),
+                taskVo.getTaskTimeStart(),
+                taskVo.getTaskTimeEnd(),
+                taskVo.getOverdue(),
+                taskVo.getTaskExpireStart(),
+                taskVo.getTaskExpireEnd(),
+                taskVo.getEnterpriseName(),
+                taskVo.getCheckStatus(),
+                taskVo.getAssignment(),
+                taskVo.getAreaId(),
+                taskVo.getPageNo(),
+                taskVo.getPageSize());
+
         return ReturnTUtils.getReturnT(taskModelPagination);
     }
 
@@ -81,8 +84,8 @@ public class TaskController {
      * @return
      */
     @PutMapping("/dispatcher/{id}")
-    @Validated(TaskVo.DispatcherGroup.class)
-    public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid TaskVo taskVo){
+    @Validated(TaskPageVo.DispatcherGroup.class)
+    public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid TaskPageVo taskVo){
         taskService.dispatcher(id, taskVo.getAreaId());
         return ReturnTUtils.newCorrectReturnT();
     }
@@ -115,10 +118,10 @@ public class TaskController {
      * @param taskVo
      * @return
      */
-    @Validated(TaskVo.RefundGroup.class)
+    @Validated(TaskPageVo.RefundGroup.class)
     @PutMapping("/return/{id}")
     public ReturnT goBack(@PathVariable("id") Long id,
-                          @RequestBody @Valid TaskVo taskVo){
+                          @RequestBody @Valid TaskPageVo taskVo){
         taskService.goBack(id,taskVo.getRefundReason());
         return ReturnTUtils.newCorrectReturnT();
     }
@@ -142,7 +145,7 @@ public class TaskController {
      */
     @PutMapping("/process/{id}")
     public ReturnT check(@PathVariable("id") Long id,
-                         @RequestBody TaskVo taskVo) {
+                         @RequestBody TaskPageVo taskVo) {
         taskService.check(id, taskVo);
         return ReturnTUtils.newCorrectReturnT();
     }
