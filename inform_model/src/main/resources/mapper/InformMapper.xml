@@ -38,9 +38,10 @@
 	  i.area_id,
 	  i.expire_time,
 	  a.area_name,
+        IF(i.expire_time != null,
         case i.check_status
         when 'CHECKED' then 0
-        else i.expire_time &lt; now() end as overdue,
+        else  i.expire_time &lt; now() end, 0) as overdue,
 	  ic.verification,
 	  ir.reward_content
     </sql>
@@ -117,10 +118,10 @@
             AND ic.verification = #{verification}
         </if>
         <if test="overdue != null and 'false'.toString() == overdue.toString()">
-            AND (i.check_status = 'CHECKED' or i.expire_time &gt;= now())
+            AND (i.check_status = 'CHECKED' or i.expire_time == null or i.expire_time &gt;= now() )
         </if>
         <if test="overdue != null and 'true'.toString() == overdue.toString()">
-            AND (i.check_status != 'CHECKED' AND i.expire_time &lt; now())
+            AND (i.check_status != 'CHECKED' AND i.expire_time != null AND i.expire_time &lt; now())
         </if>
         <if test="checkTimeStart != null">
             AND ic.check_time &gt;= #{checkTimeStart}' 00:00:00'
