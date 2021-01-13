@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 
 /**
@@ -31,7 +32,7 @@ public class PdfTest extends ApplicationTest{
         HashMap data = new HashMap();
         data.put("data",entHealthReportVo);
 
-        File file = new File(this.getClass().getResource("/templates").getFile());
+        InputStream file = this.getClass().getResourceAsStream("/templates");
         String html = FreemarkerUtils.loadFtlHtml(file, "pdf-science.ftl",data);
         FileOutputStream out = new FileOutputStream("d:/pdf-science.pdf");
         ITextUtils.convertHtmlToPdf(out,html);
@@ -45,7 +46,7 @@ public class PdfTest extends ApplicationTest{
         HashMap data = new HashMap();
         data.put("data",entHealthReportVo);
 
-        File file = new File(this.getClass().getResource("/templates").getFile());
+        InputStream file = this.getClass().getResourceAsStream("/templates");
         String html = FreemarkerUtils.loadFtlHtml(file, "pdf-finance.ftl",data);
         FileOutputStream out = new FileOutputStream("d:/pdf-finance.pdf");
         ITextUtils.convertHtmlToPdf(out,html);

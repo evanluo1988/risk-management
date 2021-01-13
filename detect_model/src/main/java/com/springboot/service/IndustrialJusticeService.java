@@ -21,4 +21,6 @@ public interface IndustrialJusticeService {
      */
     public void culQuotas(String reqId, String quotaType);
 
+    void analysisJustice(String reqId) throws Exception;
+
 }

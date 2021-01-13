@@ -29,16 +29,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new HttpServletInterceptor())
                 .addPathPatterns("/**")
+                .excludePathPatterns("/test/**")
                 .excludePathPatterns("/static/**");
 
         registry.addInterceptor(new LoginInterceptor(userService,userRoleService))
                 .excludePathPatterns("/login")
+                .excludePathPatterns("/test/**")
                 .excludePathPatterns("/static/**");
 
         registry.addInterceptor(new AuthorityInterceptor(new AuthorityManagement(new AuthorityServiceImpl())))
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login")
                 .excludePathPatterns("/logout")
+                .excludePathPatterns("/test/**")
                 .excludePathPatterns("/static/**");
     }
 }

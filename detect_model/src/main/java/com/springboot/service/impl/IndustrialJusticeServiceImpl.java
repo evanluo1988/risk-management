@@ -139,7 +139,8 @@ public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements Ind
      * @param reqId
      * @throws Exception
      */
-    private void analysisJustice(String reqId) throws Exception {
+    @Override
+    public void analysisJustice(String reqId) throws Exception {
         //解析司法引擎
         List<StdLegalDataStructured> stdLegalDataStructuredList = stdLegalDataStructuredService.findStdLegalDataStructuredByReqId(reqId);
         List<StdLegalDataAdded> stdLegalDataAddedList = Lists.newArrayList();
