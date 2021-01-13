@@ -9,7 +9,7 @@ import com.springboot.mapper.IaAsPartentMapper;
 import com.springboot.model.IaAsPartentDetailModel;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.service.IaAsPartentService;
-import com.springboot.util.Utils;
+import com.springboot.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -7,7 +7,7 @@ import com.springboot.domain.StdLegalEnterpriseExecutedTemp;
 import com.springboot.mapper.StdLegalDataStructuredTempMapper;
 import com.springboot.mapper.StdLegalEntUnexecutedTempMapper;
 import com.springboot.mapper.StdLegalEnterpriseExecutedTempMapper;
-import com.springboot.util.Utils;
+import com.springboot.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

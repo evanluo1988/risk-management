@@ -1,4 +1,4 @@
-package com.springboot.util;
+package com.springboot.utils;
 
 import com.google.common.collect.Lists;
 

@@ -3,8 +3,8 @@ package com.springboot.controller;
 
 import com.springboot.enums.OrgEnum;
 import com.springboot.service.RiskDetectionService;
-import com.springboot.util.FreemarkerUtils;
-import com.springboot.util.ITextUtils;
+import com.springboot.utils.FreemarkerUtils;
+import com.springboot.utils.ITextUtils;
 import com.springboot.vo.risk.EntHealthReportVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;

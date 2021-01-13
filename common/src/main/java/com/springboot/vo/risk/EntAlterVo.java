@@ -1,7 +1,6 @@
 package com.springboot.vo.risk;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.springboot.util.StrUtils;
+import com.springboot.utils.StrUtils;
 import lombok.Data;
 
 /**

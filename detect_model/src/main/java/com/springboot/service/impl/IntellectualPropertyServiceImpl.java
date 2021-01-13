@@ -6,7 +6,7 @@ import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.service.*;
-import com.springboot.util.Utils;
+import com.springboot.utils.Utils;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.SqlSplicingUtils;
 import org.springframework.beans.factory.annotation.Autowired;

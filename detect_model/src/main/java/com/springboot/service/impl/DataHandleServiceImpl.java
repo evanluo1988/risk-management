@@ -7,7 +7,7 @@ import com.springboot.enums.OrgEnum;
 import com.springboot.model.QuotaModel;
 import com.springboot.model.StdGsEntInfoModel;
 import com.springboot.service.*;
-import com.springboot.util.Utils;
+import com.springboot.utils.Utils;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.vo.risk.*;
 import org.springframework.beans.BeanUtils;

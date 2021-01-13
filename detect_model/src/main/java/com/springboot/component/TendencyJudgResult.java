@@ -2,7 +2,7 @@ package com.springboot.component;
 
 import com.springboot.mapper.StdLegalDataStructuredTempMapper;
 import com.springboot.model.VerdictResultModel;
-import com.springboot.util.Utils;
+import com.springboot.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
