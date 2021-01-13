@@ -1,6 +1,6 @@
 package com.springboot.vo.risk;
 
-import com.springboot.util.StrUtils;
+import com.springboot.utils.StrUtils;
 import lombok.Data;
 
 /**

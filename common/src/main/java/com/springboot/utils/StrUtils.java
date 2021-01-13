@@ -1,9 +1,7 @@
-package com.springboot.util;
+package com.springboot.utils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.UUID;
 

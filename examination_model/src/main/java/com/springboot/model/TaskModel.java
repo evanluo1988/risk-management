@@ -1,7 +1,7 @@
 package com.springboot.model;
 
 import com.springboot.domain.Task;
-import com.springboot.util.DateUtils;
+import com.springboot.utils.DateUtils;
 import com.springboot.vo.TaskPageVo;
 import lombok.Data;
 

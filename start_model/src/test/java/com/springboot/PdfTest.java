@@ -2,8 +2,8 @@ package com.springboot;
 
 import com.springboot.enums.OrgEnum;
 import com.springboot.service.DataHandleService;
-import com.springboot.util.FreemarkerUtils;
-import com.springboot.util.ITextUtils;
+import com.springboot.utils.FreemarkerUtils;
+import com.springboot.utils.ITextUtils;
 import com.springboot.vo.risk.EntHealthReportVo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

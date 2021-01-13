@@ -7,7 +7,7 @@ import com.springboot.ApplicationTest;
 import com.springboot.model.remote.CustomerIndustrialAndJusticeRequest;
 import com.springboot.model.remote.CustomerIndustrialAndJusticeResponse;
 import com.springboot.service.WYSourceDataService;
-import com.springboot.util.StrUtils;
+import com.springboot.utils.StrUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

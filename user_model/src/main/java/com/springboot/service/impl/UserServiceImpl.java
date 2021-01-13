@@ -12,14 +12,13 @@ import com.springboot.exception.ServiceException;
 import com.springboot.mapper.UserMapper;
 import com.springboot.model.RolePerm;
 import com.springboot.model.UserInfo;
-import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.AreaService;
 import com.springboot.service.RoleService;
 import com.springboot.service.UserRoleService;
 import com.springboot.service.UserService;
-import com.springboot.util.ConvertUtils;
+import com.springboot.utils.ConvertUtils;
 import com.springboot.utils.*;
 import com.springboot.vo.*;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +35,8 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import com.springboot.model.UserRoleDomain;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author evan

@@ -1,4 +1,4 @@
-package com.springboot.util;
+package com.springboot.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

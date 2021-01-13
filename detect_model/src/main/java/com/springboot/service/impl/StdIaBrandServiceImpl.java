@@ -7,7 +7,7 @@ import com.springboot.domain.StdIaBrand;
 import com.springboot.mapper.StdIaBrandMapper;
 import com.springboot.service.StdEntBasicService;
 import com.springboot.service.StdIaBrandService;
-import com.springboot.util.Utils;
+import com.springboot.utils.Utils;
 import com.springboot.vo.risk.BrandVarietyVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
