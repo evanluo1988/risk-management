@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.Objects;
 
@@ -55,6 +56,14 @@ public class DateUtils {
 
     public static Date currentDate() {
        return localDateToDate(LocalDate.now());
+    }
+
+    public static Date currentDateTime() {
+        return localDateTimeToDate(LocalDateTime.now());
+    }
+
+    public static LocalDateTime addMinute(Long minutes){
+        return LocalDateTime.now().plusMinutes(minutes);
     }
 
 }
