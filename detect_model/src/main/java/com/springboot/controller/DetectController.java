@@ -41,7 +41,7 @@ public class DetectController {
         data.put("data",entHealthReportVo);
 
 
-        InputStream file = this.getClass().getResourceAsStream("/templates");
+        InputStream file = this.getClass().getResourceAsStream("/templates/pdf-finance.ftl");
         String html = FreemarkerUtils.loadFtlHtml(file, "pdf-finance.ftl",data);
 
         ITextUtils.convertHtmlToPdf(response.getOutputStream(),html);
@@ -63,7 +63,7 @@ public class DetectController {
         HashMap data = new HashMap();
         data.put("data",entHealthReportVo);
 
-        InputStream file = this.getClass().getResourceAsStream("/templates");
+        InputStream file = this.getClass().getResourceAsStream("/templates/pdf-science.ftl");
         String html = FreemarkerUtils.loadFtlHtml(file, "pdf-science.ftl",data);
 
         ITextUtils.convertHtmlToPdf(response.getOutputStream(),html);

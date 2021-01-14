@@ -23,17 +23,19 @@ import java.util.Map;
  */
 public class FreemarkerUtils {
     public static String loadFtlHtml(InputStream file, String fileName, Map globalMap){
-        ApplicationHome applicationHome = new ApplicationHome(FreemarkerUtils.class);
-        String rootPath = applicationHome.getSource().getParentFile().toString();
+        String rootPath = System.getProperty("user.dir");
+        rootPath = new File(rootPath).getParentFile().getAbsolutePath();
 
         String configFilePath = rootPath+File.separator+"config";
         File configFile = new File(configFilePath);
         if (!configFile.exists()){
-            try {
-                FileUtils.copyInputStreamToFile(file,configFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            configFile.mkdir();
+        }
+
+        try {
+            FileUtils.copyInputStreamToFile(file,new File(configFilePath+File.separator+fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if(globalMap ==null || fileName == null || "".equals(fileName)){
