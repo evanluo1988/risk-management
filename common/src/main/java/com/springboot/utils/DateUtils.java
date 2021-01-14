@@ -53,4 +53,8 @@ public class DateUtils {
         return LocalDate.now().getYear() - date.getYear();
     }
 
+    public static Date currentDate() {
+       return localDateToDate(LocalDate.now());
+    }
+
 }

@@ -6,6 +6,7 @@ import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.service.*;
+import com.springboot.utils.DateUtils;
 import com.springboot.utils.Utils;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.SqlSplicingUtils;
@@ -92,19 +93,25 @@ public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements 
      */
     private void createEdsData(String reqId, String entName) {
 
-        List<IaAsPartentModel> iaAsPartentModelList = wySourceDataService.getPatentData(entName);
+        CloudQueryLog cloudQueryLog = cloudQueryLogService.getByReqId(reqId);
+
+        List<IaAsPartentModel> iaAsPartentModelList = wySourceDataService.getPatentData(entName, cloudQueryLog);
         for(IaAsPartentModel iaAsPartentModel : iaAsPartentModelList){
             iaAsPartentModel.setReqId(reqId);
             iaAsPartentService.savePartent(iaAsPartentModel);
         }
 
-        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData(entName);
+        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData(entName, cloudQueryLog);
         iaAsBrandList.stream().forEach(item -> item.setReqId(reqId));
         iaAsBrandService.saveIaAsBrands(iaAsBrandList);
 
-        List<IaAsCopyright> iaAsCopyrightList = wySourceDataService.getCopyrightData(entName);
+        List<IaAsCopyright> iaAsCopyrightList = wySourceDataService.getCopyrightData(entName, cloudQueryLog);
         iaAsCopyrightList.stream().forEach((item -> item.setReqId(reqId)));
         iaAsCopyrightService.saveIaAsCopyrights(iaAsCopyrightList);
+
+        //保存知识产权数据
+        cloudQueryLog.setUpdateTime(DateUtils.currentDate());
+        cloudQueryLogService.update(cloudQueryLog);
     }
 
     /**

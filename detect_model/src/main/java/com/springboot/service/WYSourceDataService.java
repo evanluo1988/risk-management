@@ -1,5 +1,6 @@
 package com.springboot.service;
 
+import com.springboot.domain.CloudQueryLog;
 import com.springboot.domain.IaAsBrand;
 import com.springboot.domain.IaAsCopyright;
 import com.springboot.model.IaAsPartentModel;
@@ -19,20 +20,20 @@ public interface WYSourceDataService {
      * @param entName
      * @return
      */
-    public List<IaAsPartentModel> getPatentData(String entName);
+    public List<IaAsPartentModel> getPatentData(String entName, CloudQueryLog cloudQueryLog);
 
     /**
      * 商标
      * @param entName
      * @return
      */
-    public List<IaAsBrand> getBrandData(String entName);
+    public List<IaAsBrand> getBrandData(String entName, CloudQueryLog cloudQueryLog);
 
     /**
      * 著作
      * @param entName
      * @return
      */
-    public List<IaAsCopyright> getCopyrightData(String entName);
+    public List<IaAsCopyright> getCopyrightData(String entName, CloudQueryLog cloudQueryLog);
 
 }
