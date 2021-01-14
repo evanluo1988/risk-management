@@ -21,19 +21,19 @@ public class WYSourceDataServiceTest extends ApplicationTest {
 
     @Test
     public void testGetPatentData() {
-        List<IaAsPartentModel> res =  wySourceDataService.getPatentData("广西南宁卓信商贸有限公司");
+        List<IaAsPartentModel> res =  wySourceDataService.getPatentData("广西南宁卓信商贸有限公司" ,null);
         System.out.println(res);
     }
 
     @Test
     public void testGetBrandData() {
-        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData("广西南宁卓信商贸有限公司");
+        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData("广西南宁卓信商贸有限公司", null);
         System.out.println(iaAsBrandList);
     }
 
     @Test
     public void testGetCopyrightData() {
-        List<IaAsCopyright> res =  wySourceDataService.getCopyrightData("广西南宁卓信商贸有限公司");
+        List<IaAsCopyright> res =  wySourceDataService.getCopyrightData("广西南宁卓信商贸有限公司", null);
         System.out.println(res);
 
     }

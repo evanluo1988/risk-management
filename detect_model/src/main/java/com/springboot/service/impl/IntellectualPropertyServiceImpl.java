@@ -92,19 +92,24 @@ public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements 
      */
     private void createEdsData(String reqId, String entName) {
 
-        List<IaAsPartentModel> iaAsPartentModelList = wySourceDataService.getPatentData(entName);
+        CloudQueryLog cloudQueryLog = cloudQueryLogService.getByReqId(reqId);
+
+        List<IaAsPartentModel> iaAsPartentModelList = wySourceDataService.getPatentData(entName, cloudQueryLog);
         for(IaAsPartentModel iaAsPartentModel : iaAsPartentModelList){
             iaAsPartentModel.setReqId(reqId);
             iaAsPartentService.savePartent(iaAsPartentModel);
         }
 
-        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData(entName);
+        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData(entName, cloudQueryLog);
         iaAsBrandList.stream().forEach(item -> item.setReqId(reqId));
         iaAsBrandService.saveIaAsBrands(iaAsBrandList);
 
-        List<IaAsCopyright> iaAsCopyrightList = wySourceDataService.getCopyrightData(entName);
+        List<IaAsCopyright> iaAsCopyrightList = wySourceDataService.getCopyrightData(entName, cloudQueryLog);
         iaAsCopyrightList.stream().forEach((item -> item.setReqId(reqId)));
         iaAsCopyrightService.saveIaAsCopyrights(iaAsCopyrightList);
+
+        //保存知识产权数据
+        cloudQueryLogService.update(cloudQueryLog);
     }
 
     /**

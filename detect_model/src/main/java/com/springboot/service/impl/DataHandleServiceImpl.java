@@ -484,10 +484,10 @@ public class DataHandleServiceImpl implements DataHandleService {
                 case "GS_ENT_ADDRESS":
                     entBasicInformation.setAddress(quotaModel.getQuotaValue());
                     break;
-                case "GX_ENT_OPERATESCOPE":
+                case "GS_ENT_OPERATESCOPE":
                     entBasicInformation.setOperateScope(quotaModel.getQuotaValue());
                     break;
-                case "GX_ENT_REGORG":
+                case "GS_ENT_REGORG":
                     entBasicInformation.setRegOrg(quotaModel.getQuotaValue());
                     break;
             }

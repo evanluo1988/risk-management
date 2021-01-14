@@ -16,4 +16,10 @@ public class CloudQueryLog extends BaseDomain {
     private String entName;
     @TableField(value = "message")
     private String message;
+    @TableField(value = "partent_message")
+    private String partentMessage;
+    @TableField(value = "brand_message")
+    private String brandMessage;
+    @TableField(value = "copyright_message")
+    private String copyrightMessage;
 }
