@@ -9,6 +9,7 @@ import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.*;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.service.*;
+import com.springboot.utils.DateUtils;
 import com.springboot.utils.Utils;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.SqlSplicingUtils;
@@ -308,6 +309,7 @@ public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements Ind
         cloudQueryLog.setEntName(entName);
         cloudQueryLog.setMessage(response);
         cloudQueryLog.setReqId(reqId);
+        cloudQueryLog.setCreateTime(DateUtils.currentDate());
         cloudQueryLogService.create(cloudQueryLog);
     }
 

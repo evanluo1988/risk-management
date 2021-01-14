@@ -6,6 +6,7 @@ import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.service.*;
+import com.springboot.utils.DateUtils;
 import com.springboot.utils.Utils;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.SqlSplicingUtils;
@@ -109,6 +110,7 @@ public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements 
         iaAsCopyrightService.saveIaAsCopyrights(iaAsCopyrightList);
 
         //保存知识产权数据
+        cloudQueryLog.setUpdateTime(DateUtils.currentDate());
         cloudQueryLogService.update(cloudQueryLog);
     }
 
