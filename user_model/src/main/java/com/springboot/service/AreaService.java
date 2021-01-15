@@ -25,6 +25,9 @@ public interface AreaService extends IService<Area> {
      */
     Collection<AreaVo> listAreaByParentId(Long parentId);
 
+
+    Collection<AreaVo> subsAreaByParentId(Long parentId);
+
     /**
      * 根据当前区域ID获取它下面的区域ID集合
      * @param areaId

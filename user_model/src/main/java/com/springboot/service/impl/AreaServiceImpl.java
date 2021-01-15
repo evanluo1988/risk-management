@@ -89,6 +89,11 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
     }
 
     @Override
+    public Collection<AreaVo> subsAreaByParentId(Long parentId) {
+        return ConvertUtils.sourceToTarget(listAreaByParentIds(com.google.common.collect.Sets.newHashSet(parentId)),AreaVo.class);
+    }
+
+    @Override
     public Area getAreaById(Long areaId) {
         if (Objects.isNull(areaId)){
             return null;
