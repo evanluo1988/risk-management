@@ -1,11 +1,11 @@
 package com.springboot.component;
 
+import com.google.common.collect.Sets;
 import com.springboot.domain.StdEntBasic;
 import com.springboot.domain.StdIaPartent;
 import com.springboot.service.StdEntBasicService;
 import com.springboot.service.StdIaPartentService;
 import com.springboot.utils.Utils;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
