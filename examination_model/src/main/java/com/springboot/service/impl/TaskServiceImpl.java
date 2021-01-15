@@ -354,7 +354,18 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public void export(List<Long> ids) throws IOException {
+    public void export(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue, LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName, String checkStatus, String assignment, Long areaId) throws IOException  {
+        if(Objects.isNull(areaId)) {
+            areaId = UserAuthInfoContext.getAreaId();
+        }
+
+        List<Long> areaIds = areaService.findAreaIdsById(areaId);
+        Page<TaskModel> page = taskMapper.pageTasks(disposalStage, taskTimeStart, taskTimeEnd, overdue,
+                taskExpireStart, taskExpireEnd, enterpriseName,
+                checkStatus, assignment, areaIds, new Page<>(1, 10000));
+
+        List<Long> ids = page.getRecords().stream().map(TaskModel::getId).collect(Collectors.toList());
+
         if (CollectionUtils.isEmpty(ids)){
             return ;
         }

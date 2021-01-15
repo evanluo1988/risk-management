@@ -39,9 +39,18 @@ public interface InformService extends IService<Inform> {
 
     /**
      * 导出
-     * @param ids
+     * @param checkStatus
+     * @param informTimeStart
+     * @param informTimeEnd
+     * @param rewardContent
+     * @param informName
+     * @param verification
+     * @param overdue
+     * @param checkTimeStart
+     * @param checkTimeEnd
+     * @param areaId
      */
-    void export(List<Long> ids) throws IOException;
+    void export(String checkStatus, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException;
 
     /**
      * 分派

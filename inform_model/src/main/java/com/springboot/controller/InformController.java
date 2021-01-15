@@ -93,12 +93,18 @@ public class InformController {
 
     /**
      * 举报导出
-     * @param ids
+     * @param informVo
      * @throws IOException
      */
     @GetMapping("/export")
-    public void export(@RequestBody List<Long> ids) throws IOException {
-        informService.export(ids);
+    public void export(InformVo informVo) throws IOException {
+        informService.export(
+                informVo.getCheckStatus(),
+                informVo.getInformTimeStart(), informVo.getInformTimeEnd(),
+                informVo.getRewardContent(), informVo.getInformName(),
+                informVo.getVerification(), informVo.getOverdue(),
+                informVo.getCheckTimeStart(), informVo.getCheckTimeEnd(),
+                informVo.getAreaId());
     }
 
     /**

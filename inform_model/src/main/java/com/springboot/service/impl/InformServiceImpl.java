@@ -100,7 +100,15 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public void export(List<Long> ids) throws IOException {
+    public void export(String checkStatus, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException {
+        if(Objects.isNull(areaId)) {
+            areaId = UserAuthInfoContext.getAreaId();
+        }
+        List<Long> areaIds = areaService.findAreaIdsById(areaId);
+        Page<InformPageModel> page = informDao.informPage(checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(1, 10000));
+
+        List<Long> ids = page.getRecords().stream().map(InformPageModel::getId).collect(Collectors.toList());
+
         if (CollectionUtils.isEmpty(ids)){
             return ;
         }

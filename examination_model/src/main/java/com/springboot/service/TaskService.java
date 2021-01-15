@@ -43,5 +43,5 @@ public interface TaskService extends IService<Task> {
 
     Collection<Task> listTaskByTaskNumbers(Set<String> taskNumbers);
 
-    void export(List<Long> ids) throws IOException;
+    void export(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue, LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName, String checkStatus, String assignment, Long areaId) throws IOException;
 }

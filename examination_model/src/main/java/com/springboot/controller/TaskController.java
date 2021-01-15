@@ -91,8 +91,17 @@ public class TaskController {
     }
 
     @GetMapping("/export")
-    public void export(@RequestParam List<Long> ids) throws IOException {
-        taskService.export(ids);
+    public void export(TaskVo taskVo) throws IOException {
+        taskService.export(taskVo.getDisposalStage(),
+                taskVo.getTaskTimeStart(),
+                taskVo.getTaskTimeEnd(),
+                taskVo.getOverdue(),
+                taskVo.getTaskExpireStart(),
+                taskVo.getTaskExpireEnd(),
+                taskVo.getEnterpriseName(),
+                taskVo.getCheckStatus(),
+                taskVo.getAssignment(),
+                taskVo.getAreaId());
     }
 
     /**
