@@ -36,7 +36,7 @@
         <where>
         <choose>
             <when test="valid == true">
-                authoritystatus in ('待审中', '已注册', '已初审')
+                authoritystatus = '已注册'
             </when>
             <otherwise>
                 authoritystatus in ('已驳回', '已销亡')
