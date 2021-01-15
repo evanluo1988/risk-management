@@ -32,7 +32,6 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import com.springboot.model.UserRoleDomain;
@@ -52,8 +51,6 @@ public class UserServiceImpl implements UserService {
     private UserRoleService userRoleService;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private UserLockService userLockService;
 
     @Override
     public Pagination<UserPageVo> findUsers(UserVo userVo) {
@@ -169,9 +166,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void login(RegUserVo userVo) {
         //check lock
-        UserLock userLock = userLockService.getByLoginName(userVo.getLoginName());
-        if(Objects.nonNull(userLock) && Objects.nonNull(userLock.getLockTime()) &&
-                !userLock.getLockTime().isBefore(LocalDateTime.now())) {
+        if(UserLoginCache.isLock(userVo.getLoginName())) {
             throw new ServiceException("请稍后登录！");
         }
 

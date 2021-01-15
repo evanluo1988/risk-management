@@ -1,16 +1,12 @@
 package com.springboot.config;
 
 import com.google.common.collect.Lists;
-import com.springboot.domain.UserLock;
 import com.springboot.exception.ServiceException;
 import com.springboot.exception.UserLoginException;
 import com.springboot.ret.ReturnT;
-import com.springboot.service.UserLockService;
-import com.springboot.utils.DateUtils;
 import com.springboot.utils.ReturnTUtils;
-import lombok.Synchronized;
+import com.springboot.utils.UserLoginCache;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,11 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 异常拦截器
@@ -35,8 +29,6 @@ import java.util.Objects;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @Autowired
-    private UserLockService userLockService;
 
     /**
      * 用户登陆异常
@@ -47,32 +39,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserLoginException.class)
     public ReturnT UserLoginExceptionHandler(UserLoginException e) {
         log.error("UserLoginException {}",e);
-        synchronized(this) {
-            UserLock userLock = userLockService.getByLoginName(e.getLoginName());
-            if(Objects.isNull(userLock)) {
-                UserLock ul = new UserLock();
-                ul.setLoginCount(1);
-                ul.setLoginName(e.getLoginName());
-                ul.setCreateTime(DateUtils.currentDateTime());
-                userLockService.create(ul);
-            }else {
-                if(Objects.isNull(userLock.getLockTime())){
-                    userLock.setLoginCount(userLock.getLoginCount() + 1);
-                    if(userLock.getLoginCount() == 3) {
-                        userLock.setLockTime(DateUtils.addMinute(10L));
-                    }
-                    userLock.setUpdateTime(DateUtils.currentDateTime());
-                    userLockService.update(userLock);
-                } else {
-                    if(LocalDateTime.now().isAfter(userLock.getLockTime())) {
-                        userLock.setLoginCount(1);
-                        userLock.setLoginName(e.getLoginName());
-                        userLock.setCreateTime(DateUtils.currentDate());
-                        userLockService.create(userLock);
-                    }
-                }
-            }
-        }
+        UserLoginCache.lock(e.getLoginName());
         return ReturnTUtils.getReturnT(e);
     }
 
