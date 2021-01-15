@@ -15,10 +15,14 @@ public class UserLoginCache {
     private static Map<String, LocalDateTime> userLockMap = Maps.newConcurrentMap();
     private static Object login = new Object();
 
+    /**
+     * 锁用户
+     * @param loginName
+     */
     public static void lock(String loginName) {
         userLoginMap.putIfAbsent(loginName, Lists.newArrayList());
         synchronized (login) {
-            //如果集合在5分钟之内，大于等于3次，就锁用户，
+            //添加当前时间，并过滤5分钟以内的数据
             List<LocalDateTime> localDateTimes = userLoginMap.computeIfPresent(loginName, (k, v) -> {
                 if(CollectionUtils.isEmpty(v)) {
                     v = Lists.newArrayList();
@@ -32,7 +36,8 @@ public class UserLoginCache {
                 }
                 return v;
             });
-            if(localDateTimes.size() == 3){
+            //如果大于3次就锁用户
+            if(localDateTimes.size() >= 3){
                 userLockMap.put(loginName, DateUtils.addMinute(10L));
             }
         }

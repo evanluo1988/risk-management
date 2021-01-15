@@ -17,7 +17,7 @@ public class LogoutController {
     private UserService userService;
 
     @GetMapping
-    public ReturnT login(){
+    public ReturnT logout(){
         userService.logout();
         return ReturnTUtils.newCorrectReturnT();
     }
