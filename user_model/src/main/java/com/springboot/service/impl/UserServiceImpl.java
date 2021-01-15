@@ -8,16 +8,14 @@ import com.springboot.domain.*;
 import com.springboot.enums.AreaTypeEnum;
 import com.springboot.enums.EnableEnum;
 import com.springboot.enums.RoleEnum;
+import com.springboot.exception.UserLoginException;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.UserMapper;
 import com.springboot.model.RolePerm;
 import com.springboot.model.UserInfo;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
-import com.springboot.service.AreaService;
-import com.springboot.service.RoleService;
-import com.springboot.service.UserRoleService;
-import com.springboot.service.UserService;
+import com.springboot.service.*;
 import com.springboot.utils.ConvertUtils;
 import com.springboot.utils.*;
 import com.springboot.vo.*;
@@ -34,6 +32,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.springboot.model.UserRoleDomain;
@@ -53,6 +52,8 @@ public class UserServiceImpl implements UserService {
     private UserRoleService userRoleService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private UserLockService userLockService;
 
     @Override
     public Pagination<UserPageVo> findUsers(UserVo userVo) {
@@ -167,15 +168,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void login(RegUserVo userVo) {
+        //check lock
+        UserLock userLock = userLockService.getByLoginName(userVo.getLoginName());
+        if(Objects.nonNull(userLock) && Objects.nonNull(userLock.getLockTime()) &&
+                !userLock.getLockTime().isBefore(LocalDateTime.now())) {
+            throw new ServiceException("请稍后登录！");
+        }
+
         log.info("login param:{}", JSON.toJSONString(userVo));
         User user = getUserByLoginname(userVo.getLoginName());
         //用户不存在
         if (Objects.isNull(user)) {
-            throw new ServiceException("用户名或密码错误");
+            throw new UserLoginException("用户名或密码错误", userVo.getLoginName());
         }
         //密码错误
         if (!BCrypt.checkpw(userVo.getPassword(), user.getPassword())) {
-            throw new ServiceException("用户名或密码错误");
+            throw new UserLoginException("用户名或密码错误", userVo.getLoginName());
         }
         log.debug("userName password valid success");
         HttpServletRequest request = HttpServletLocalThread.getRequest();
