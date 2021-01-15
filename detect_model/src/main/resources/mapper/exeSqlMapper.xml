@@ -14,4 +14,8 @@
         ${exeSql}
     </select>
 
+    <delete id="deleteByTableNameAndReqId">
+        delete from `${tableName}` where req_id = #{reqId}
+    </delete>
+
 </mapper>

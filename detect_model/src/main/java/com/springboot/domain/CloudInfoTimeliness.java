@@ -20,4 +20,6 @@ public class CloudInfoTimeliness extends BaseDomain {
     private LocalDateTime expireTime;
     @TableField(value = "status")
     private String status;
+    @TableField(value = "deleted")
+    private String deleted;
 }

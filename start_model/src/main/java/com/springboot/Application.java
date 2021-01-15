@@ -9,11 +9,15 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 /**
  * @author evan
  */
+@EnableScheduling
+@EnableAsync
 @SpringBootApplication
 @ServletComponentScan(basePackages = "com.springboot.config")
 @EnableFeignClients(basePackages = "com.springboot.service.remote")

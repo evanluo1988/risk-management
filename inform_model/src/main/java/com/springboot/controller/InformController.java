@@ -97,7 +97,7 @@ public class InformController {
      * @throws IOException
      */
     @GetMapping("/export")
-    public void export(@RequestParam List<Long> ids) throws IOException {
+    public void export(@RequestBody List<Long> ids) throws IOException {
         informService.export(ids);
     }
 

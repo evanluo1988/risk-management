@@ -2,6 +2,9 @@ package com.springboot.service;
 
 import com.springboot.domain.CloudInfoTimeliness;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface CloudInfoTimelinessService {
     /**
      * 检测时效性
@@ -16,4 +19,7 @@ public interface CloudInfoTimelinessService {
 
     public void updateTimeLiness(String entName, String reqId);
 
+    List<CloudInfoTimeliness> listExpired(LocalDateTime expiredTime);
+
+    void clean(String reqId);
 }
