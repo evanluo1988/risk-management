@@ -32,8 +32,7 @@ public class PdfTest extends ApplicationTest{
         HashMap data = new HashMap();
         data.put("data",entHealthReportVo);
 
-        InputStream file = this.getClass().getResourceAsStream("/templates");
-        String html = FreemarkerUtils.loadFtlHtml(file, "pdf-science.ftl",data);
+        String html = FreemarkerUtils.loadFtlHtml("/templates/", "pdf-science.ftl",data);
         FileOutputStream out = new FileOutputStream("d:/pdf-science.pdf");
         ITextUtils.convertHtmlToPdf(out,html);
     }
@@ -46,8 +45,7 @@ public class PdfTest extends ApplicationTest{
         HashMap data = new HashMap();
         data.put("data",entHealthReportVo);
 
-        InputStream file = this.getClass().getResourceAsStream("/templates");
-        String html = FreemarkerUtils.loadFtlHtml(file, "pdf-finance.ftl",data);
+        String html = FreemarkerUtils.loadFtlHtml("/templates/", "pdf-finance.ftl",data);
         FileOutputStream out = new FileOutputStream("d:/pdf-finance.pdf");
         ITextUtils.convertHtmlToPdf(out,html);
     }

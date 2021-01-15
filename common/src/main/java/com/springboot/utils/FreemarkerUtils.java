@@ -22,29 +22,14 @@ import java.util.Map;
  * @Version 1.0
  */
 public class FreemarkerUtils {
-    public static String loadFtlHtml(InputStream file, String fileName, Map globalMap){
-        String rootPath = System.getProperty("user.dir");
-        rootPath = new File(rootPath).getParentFile().getAbsolutePath();
-
-        String configFilePath = rootPath+File.separator+"config";
-        File configFile = new File(configFilePath);
-        if (!configFile.exists()){
-            configFile.mkdir();
-        }
-
-        try {
-            FileUtils.copyInputStreamToFile(file,new File(configFilePath+File.separator+fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if(globalMap ==null || fileName == null || "".equals(fileName)){
+    public static String loadFtlHtml(String basePackagePath, String fileName, Map globalMap) {
+        if (globalMap == null || fileName == null || "".equals(fileName)) {
             throw new IllegalArgumentException("Directory file");
         }
 
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
         try {
-            cfg.setDirectoryForTemplateLoading(configFile);
+            cfg.setClassForTemplateLoading(FreemarkerUtils.class, basePackagePath);
             cfg.setDefaultEncoding("UTF-8");
             //.RETHROW
             cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
