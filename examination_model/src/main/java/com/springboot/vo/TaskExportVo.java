@@ -3,6 +3,7 @@ package com.springboot.vo;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.springboot.easyexcel.converter.DisposalStageConverter;
 import com.springboot.easyexcel.converter.InvolveInternetConverter;
+import com.springboot.easyexcel.converter.RegionalScaleConverter;
 import com.springboot.easyexcel.converter.RiskLevelConverter;
 import lombok.Data;
 
@@ -67,7 +68,7 @@ public class TaskExportVo {
     @ExcelProperty(value = {"是否涉及互联网"}, index = 17, converter = InvolveInternetConverter.class)
     private String involveInternet;
 
-    @ExcelProperty(value = {"跨省跨区情况"}, index = 18)
+    @ExcelProperty(value = {"跨省跨区情况"}, index = 18 ,converter = RegionalScaleConverter.class)
     private String regionalScale;
 
     @ExcelProperty(value = {"涉及地区"}, index = 19)

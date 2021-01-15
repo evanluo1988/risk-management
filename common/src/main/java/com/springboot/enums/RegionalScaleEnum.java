@@ -35,10 +35,20 @@ public enum RegionalScaleEnum {
         this.desc = desc;
     }
 
-    private static RegionalScaleEnum descOf(String desc){
+    public static RegionalScaleEnum descOf(String desc){
         RegionalScaleEnum[] values = RegionalScaleEnum.values();
         for (RegionalScaleEnum value : values) {
             if (value.getDesc().equalsIgnoreCase(desc)){
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public static RegionalScaleEnum codeOf(String code) {
+        RegionalScaleEnum[] values = RegionalScaleEnum.values();
+        for (RegionalScaleEnum value : values) {
+            if (value.getCode().equalsIgnoreCase(code)){
                 return value;
             }
         }

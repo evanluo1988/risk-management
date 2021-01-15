@@ -71,7 +71,7 @@ public class TaskImportVo {
     @ExcelProperty(value = {"是否涉及互联网"}, index = 17, converter = InvolveInternetConverter.class)
     private String involveInternet;
 
-    @ExcelProperty(value = {"跨省跨区情况"}, index = 18)
+    @ExcelProperty(value = {"跨省跨区情况"}, index = 18 ,converter = RegionalScaleConverter.class)
     private String regionalScale;
 
     @ExcelProperty(value = {"涉及地区"}, index = 19)
