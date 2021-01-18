@@ -180,6 +180,7 @@ public class UserServiceImpl implements UserService {
         if (!BCrypt.checkpw(userVo.getPassword(), user.getPassword())) {
             throw new UserLoginException("用户名或密码错误", userVo.getLoginName());
         }
+        UserLoginCache.unLock(userVo.getLoginName());
         log.debug("userName password valid success");
         HttpServletRequest request = HttpServletLocalThread.getRequest();
         //将session和业务用户关联

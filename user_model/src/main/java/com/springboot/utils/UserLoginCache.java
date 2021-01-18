@@ -55,4 +55,13 @@ public class UserLoginCache {
         });
          return lockTime != null;
     }
+
+    /**
+     * 解除用户锁定
+     * @param loginName
+     */
+    public static void unLock(String loginName) {
+        userLoginMap.remove(loginName);
+        userLockMap.remove(loginName);
+    }
 }
