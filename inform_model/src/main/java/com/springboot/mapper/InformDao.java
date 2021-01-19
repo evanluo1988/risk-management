@@ -55,10 +55,10 @@ public interface InformDao extends BaseMapper<Inform> {
 
     List<InformExportModel> listInformByIds(@Param("ids") List<Long> ids);
 
-    List<InformTop10Model> informsTop10(List<Long> areaIds);
+    List<InformTop10Model> informsTop10(@Param("areaIds") List<Long> areaIds);
 
-    Integer pendingOverdueList(List<Long> areaIds);
+    Integer pendingOverdueList(@Param("areaIds") List<Long> areaIds);
 
-    Integer pendingToCheckList(List<Long> areaIds);
+    Integer pendingToCheckList(@Param("areaIds") List<Long> areaIds);
     List<InformGraphModel> getInformGraphList(@Param("areaIds") List<Long> areaIds);
 }
