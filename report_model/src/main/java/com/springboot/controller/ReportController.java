@@ -19,9 +19,6 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @Autowired
-    private ReportService reportService;
-
     /**
      * 获取举报对象top10的记录
      */
