@@ -1,16 +1,16 @@
 package com.springboot.service.impl;
 
-import com.springboot.model.InformTop10Model;
-import com.springboot.model.InfromPendingListModel;
-import com.springboot.model.TaskPendingListModel;
-import com.springboot.service.InformService;
-import com.springboot.service.ReportService;
-import com.springboot.service.TaskService;
+import com.google.common.collect.Lists;
+import com.springboot.enums.CheckStatusEnum;
+import com.springboot.model.*;
+import com.springboot.service.*;
 import com.springboot.utils.ConvertUtils;
+import com.springboot.utils.UserAuthInfoContext;
+import com.springboot.utils.Utils;
+import com.springboot.vo.GraphItemVo;
 import com.springboot.vo.InformTop10Vo;
 import com.springboot.vo.PendingListVo;
 import org.springframework.beans.BeanUtils;
-import com.springboot.model.InformGraphModel;
 import com.springboot.service.InformService;
 import com.springboot.service.ReportService;
 import com.springboot.vo.GraphVo;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -26,6 +27,8 @@ public class ReportServiceImpl implements ReportService {
     private InformService informService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private AreaService areaService;
 
     @Override
     public List<InformTop10Vo> informsTop10() {
@@ -48,7 +51,31 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public GraphVo getStatisticalGraph() {
         GraphVo graphVo = new GraphVo();
+        List<GraphItemVo> graphItemList = Lists.newArrayList();
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
         List<InformGraphModel> informGraphModelList = informService.getInformGraphList();
+        List<TaskGraphModel> taskGraphModelList = taskService.getInformGraphList();
+        for(Long areaId : areaIds) {
+            GraphItemVo graphItemVo = new GraphItemVo();
+            List<InformGraphModel> informGraphModels = Utils.getList(informGraphModelList).stream().filter(item -> item.getAreaId().equals(areaId)).collect(Collectors.toList());
+            for(InformGraphModel informGraphModel : Utils.getList(informGraphModels)) {
+                if(CheckStatusEnum.CHECKED.getCode().equals(informGraphModel.getCheckStatus())) {
+                    graphItemVo.setInformChecked(informGraphModel.getCount());
+                }else {
+                    graphItemVo.setInformUncheck(informGraphModel.getCount());
+                }
+            }
+
+            List<TaskGraphModel> taskGraphModels = Utils.getList(taskGraphModelList).stream().filter(item -> item.getAreaId().equals(areaId)).collect(Collectors.toList());
+            for(TaskGraphModel taskGraphModel : taskGraphModels) {
+                if(CheckStatusEnum.CHECKED.getCode().equals(taskGraphModel.getCheckStatus())) {
+                    graphItemVo.setTaskChecked(taskGraphModel.getCount());
+                } else {
+                    graphItemVo.setTaskUncheck(taskGraphModel.getCount());
+                }
+            }
+            graphItemList.add(graphItemVo);
+        }
         return graphVo;
     }
 }
