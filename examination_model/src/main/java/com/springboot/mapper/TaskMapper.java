@@ -30,4 +30,8 @@ public interface TaskMapper extends BaseMapper<Task> {
             Page<Task> page);
 
     List<TaskExportModel> listTaskByIds(@Param("ids") List<Long> ids);
+
+    Integer pendingOverdueList(List<Long> areaIds);
+
+    Integer pendingToCheckList(List<Long> areaIds);
 }

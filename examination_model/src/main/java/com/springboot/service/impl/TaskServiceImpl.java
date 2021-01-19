@@ -17,6 +17,7 @@ import com.springboot.exception.ServiceException;
 import com.springboot.mapper.TaskMapper;
 import com.springboot.model.TaskExportModel;
 import com.springboot.model.TaskModel;
+import com.springboot.model.TaskPendingListModel;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
@@ -378,6 +379,14 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         String fileName = URLEncoder.encode("任务", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), TaskExportVo.class).sheet("1").doWrite(taskExportVos);
+    }
+
+    @Override
+    public TaskPendingListModel pendingList() {
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        Integer overdueNum = taskMapper.pendingOverdueList(areaIds);
+        Integer toCheckNum = taskMapper.pendingToCheckList(areaIds);
+        return new TaskPendingListModel(overdueNum,toCheckNum);
     }
 
     private Task getTaskById(Long id) {

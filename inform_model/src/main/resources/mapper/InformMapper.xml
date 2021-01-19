@@ -184,6 +184,16 @@
     </select>
 
     <select id="pendingToCheckList" parameterType="List" resultType="Integer">
-
+        SELECT
+        count(*)
+        FROM
+        informs
+        WHERE check_status = 'WAITING_CHECK'
+        AND area_id in
+        <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
+            <if test="areaId != null">
+                #{areaId}
+            </if>
+        </foreach>
     </select>
 </mapper>

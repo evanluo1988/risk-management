@@ -161,4 +161,36 @@
             #{id}
         </foreach>
     </select>
+
+    <select id="pendingOverdueList" parameterType="List" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        task_checks
+        WHERE
+        (check_status = 'WAITING_CHECK'
+        OR check_status = 'CHECKING')
+        AND (expire_time IS NULL
+        OR expire_time &lt; NOW())
+        AND area_id in
+        <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
+            <if test="areaId != null">
+                #{areaId}
+            </if>
+        </foreach>
+    </select>
+
+    <select id="pendingToCheckList" parameterType="List" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        task_checks
+        WHERE check_status = 'WAITING_CHECK'
+        AND area_id in
+        <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
+            <if test="areaId != null">
+                #{areaId}
+            </if>
+        </foreach>
+    </select>
 </mapper>
