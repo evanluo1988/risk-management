@@ -5,6 +5,7 @@ import com.springboot.service.ReportService;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.InformTop10Vo;
 import com.springboot.vo.PendingListVo;
+import com.springboot.vo.GraphVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/report")
 public class ReportController {
+    @Autowired
+    private ReportService reportService;
 
     @Autowired
     private ReportService reportService;
@@ -41,9 +44,8 @@ public class ReportController {
      * 统计图
      */
     @GetMapping("/statisticalgraph")
-    public void statisticalGraph() {
-
+    public ReturnT statisticalGraph() {
+        GraphVo graphVo = reportService.getStatisticalGraph();
+        return ReturnTUtils.getReturnT(graphVo);
     }
-
-
 }

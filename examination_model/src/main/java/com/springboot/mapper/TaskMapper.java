@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.domain.Task;
 import com.springboot.model.TaskExportModel;
+import com.springboot.model.TaskGraphModel;
 import com.springboot.model.TaskModel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -34,4 +35,5 @@ public interface TaskMapper extends BaseMapper<Task> {
     Integer pendingOverdueList(List<Long> areaIds);
 
     Integer pendingToCheckList(List<Long> areaIds);
+    List<TaskGraphModel> getInformGraphList(@Param("areaIds") List<Long> areaIds);
 }
