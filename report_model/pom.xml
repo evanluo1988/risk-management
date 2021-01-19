@@ -26,7 +26,7 @@
 
         <dependency>
             <groupId>com.springboot</groupId>
-            <artifactId>detect_model</artifactId>
+            <artifactId>examination_model</artifactId>
             <version>${version}</version>
         </dependency>
     </dependencies>

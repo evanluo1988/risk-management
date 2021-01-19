@@ -16,6 +16,8 @@ import com.springboot.exception.ServiceException;
 import com.springboot.mapper.InformDao;
 import com.springboot.model.InformExportModel;
 import com.springboot.model.InformPageModel;
+import com.springboot.model.InformTop10Model;
+import com.springboot.model.InfromPendingListModel;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
 import com.springboot.utils.ConvertUtils;
@@ -318,6 +320,20 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         informById.setUpdateBy(UserAuthInfoContext.getUserName());
         informById.setUpdateTime(new Date());
         updateById(informById);
+    }
+
+    @Override
+    public List<InformTop10Model> informsTop10() {
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        return informDao.informsTop10(areaIds);
+    }
+
+    @Override
+    public InfromPendingListModel pendingList() {
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        Integer overdueNum = informDao.pendingOverdueList(areaIds);
+        Integer toCheckNum = informDao.pendingToCheckList(areaIds);
+        return new InfromPendingListModel(overdueNum,toCheckNum);
     }
 
     private Inform getInformById(Long id) {

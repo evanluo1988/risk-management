@@ -4,31 +4,31 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.springboot.domain.Inform">
-    <result column="id" property="id" />
-        <result column="clue_number" property="clueNumber" />
-        <result column="source" property="source" />
-        <result column="anonymous" property="anonymous" />
-        <result column="inform_time" property="informTime" />
-        <result column="inform_name" property="informName" />
-        <result column="inform_type" property="informType" />
-        <result column="area_id" property="areaId" />
-        <result column="crime_time" property="crimeTime" />
-        <result column="crime_region" property="crimeRegion" />
-        <result column="crime_address" property="crimeAddress" />
-        <result column="involved_amount" property="involvedAmount" />
-        <result column="inform_content" property="informContent" />
-        <result column="assignment" property="assignment" />
-        <result column="check_status" property="checkStatus" />
-        <result column="inform_person_id" property="informPersonId" />
+        <result column="id" property="id"/>
+        <result column="clue_number" property="clueNumber"/>
+        <result column="source" property="source"/>
+        <result column="anonymous" property="anonymous"/>
+        <result column="inform_time" property="informTime"/>
+        <result column="inform_name" property="informName"/>
+        <result column="inform_type" property="informType"/>
+        <result column="area_id" property="areaId"/>
+        <result column="crime_time" property="crimeTime"/>
+        <result column="crime_region" property="crimeRegion"/>
+        <result column="crime_address" property="crimeAddress"/>
+        <result column="involved_amount" property="involvedAmount"/>
+        <result column="inform_content" property="informContent"/>
+        <result column="assignment" property="assignment"/>
+        <result column="check_status" property="checkStatus"/>
+        <result column="inform_person_id" property="informPersonId"/>
         <result column="attach" property="attachment"/>
-        <result column="enable" property="enable" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="create_by" property="createBy" />
-        <result column="update_by" property="updateBy" />
+        <result column="enable" property="enable"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
     </resultMap>
 
-    <sql id="Inform_Page_Column" >
+    <sql id="Inform_Page_Column">
       i.id,
       i.clue_number,
 	  i.inform_name,
@@ -89,11 +89,12 @@
     </sql>
 
     <select id="informPage" parameterType="Map" resultType="com.springboot.model.InformPageModel">
-        SELECT <include refid="Inform_Page_Column"/>
+        SELECT
+        <include refid="Inform_Page_Column"/>
         FROM informs i
-            LEFT JOIN inform_checks ic ON i.id = ic.inform_id
-            LEFT JOIN inform_rewards ir ON i.id = ir.inform_id
-            LEFT JOIN areas a ON i.area_id = a.id
+        LEFT JOIN inform_checks ic ON i.id = ic.inform_id
+        LEFT JOIN inform_rewards ir ON i.id = ir.inform_id
+        LEFT JOIN areas a ON i.area_id = a.id
         WHERE i.enable = 'Y'
         and i.area_id in
         <foreach collection="areaIds" item="id" index="i" open="(" close=")" separator=",">
@@ -137,15 +138,52 @@
     </select>
 
     <select id="listInformByIds" parameterType="java.util.List" resultType="com.springboot.model.InformExportModel">
-        SELECT <include refid="Inform_Export_Column"/>
+        SELECT
+        <include refid="Inform_Export_Column"/>
         FROM informs i
         LEFT JOIN inform_persons ip ON i.inform_person_id = ip.id
         LEFT JOIN inform_checks ic ON i.id = ic.inform_id
         LEFT JOIN inform_refunds ir ON i.id = ir.inform_id
         LEFT JOIN inform_rewards ire ON i.id = ire.inform_id
-        WHERE i.id IN 
+        WHERE i.id IN
         <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
+    </select>
+
+    <select id="informsTop10" parameterType="List" resultType="com.springboot.model.InformTop10Model">
+        SELECT
+          inform_name AS entName, COUNT(inform_name) AS informNum
+        FROM
+          informs
+        WHERE area_id in
+        <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
+            <if test="areaId != null">
+                #{areaId}
+            </if>
+        </foreach>
+        GROUP BY inform_name
+        ORDER BY informNum DESC
+        LIMIT 10
+    </select>
+
+    <select id="pendingOverdueList" parameterType="List" resultType="Integer">
+        SELECT
+          count(*)
+        FROM
+          informs
+        WHERE
+        (check_status = 'WAITING_CHECK' OR check_status = 'CHECKING')
+        AND (expire_time IS NULL OR expire_time &lt; NOW())
+        AND area_id in
+        <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
+            <if test="areaId != null">
+                #{areaId}
+            </if>
+        </foreach>
+    </select>
+
+    <select id="pendingToCheckList" parameterType="List" resultType="Integer">
+
     </select>
 </mapper>

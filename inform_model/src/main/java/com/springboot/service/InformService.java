@@ -2,6 +2,8 @@ package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.Inform;
+import com.springboot.model.InformTop10Model;
+import com.springboot.model.InfromPendingListModel;
 import com.springboot.page.Pagination;
 import com.springboot.vo.InformImportVo;
 import com.springboot.vo.InformPageVo;
@@ -107,4 +109,8 @@ public interface InformService extends IService<Inform> {
     void revoke(Long id);
 
     void recheck(Long id);
+
+    List<InformTop10Model> informsTop10();
+
+    InfromPendingListModel pendingList();
 }

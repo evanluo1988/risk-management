@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.domain.Inform;
 import com.springboot.model.InformExportModel;
 import com.springboot.model.InformPageModel;
+import com.springboot.model.InformTop10Model;
 import com.springboot.vo.InformPageVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -52,4 +53,10 @@ public interface InformDao extends BaseMapper<Inform> {
             Page<Inform> informPage);
 
     List<InformExportModel> listInformByIds(@Param("ids") List<Long> ids);
+
+    List<InformTop10Model> informsTop10(List<Long> areaIds);
+
+    Integer pendingOverdueList(List<Long> areaIds);
+
+    Integer pendingToCheckList(List<Long> areaIds);
 }
