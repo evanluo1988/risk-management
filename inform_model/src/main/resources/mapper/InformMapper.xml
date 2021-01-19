@@ -198,9 +198,8 @@
     </select>
 
     <select id="getInformGraphList" parameterType="java.util.List" resultType="com.springboot.model.InformGraphModel">
-        select i.area_id, a.area_name, i.check_status, count(1) as count
+        select i.area_id, i.check_status, count(1) as count
         from informs i
-        left join areas a on a.id = i.area_id
         where i.assignment = 'ASSIGNED'
         and i.area_id in
         <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">

@@ -5,6 +5,7 @@ import com.springboot.enums.CheckStatusEnum;
 import com.springboot.model.*;
 import com.springboot.service.*;
 import com.springboot.utils.ConvertUtils;
+import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.utils.Utils;
 import com.springboot.vo.GraphItemVo;
@@ -52,11 +53,13 @@ public class ReportServiceImpl implements ReportService {
     public GraphVo getStatisticalGraph() {
         GraphVo graphVo = new GraphVo();
         List<GraphItemVo> graphItemList = Lists.newArrayList();
-        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        graphVo.setGraphItemList(graphItemList);
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId(), Boolean.FALSE);
         List<InformGraphModel> informGraphModelList = informService.getInformGraphList();
         List<TaskGraphModel> taskGraphModelList = taskService.getInformGraphList();
         for(Long areaId : areaIds) {
             GraphItemVo graphItemVo = new GraphItemVo();
+            graphItemVo.setAreaName(ServerCacheUtils.getAreaById(areaId).getAreaName());
             List<InformGraphModel> informGraphModels = Utils.getList(informGraphModelList).stream().filter(item -> item.getAreaId().equals(areaId)).collect(Collectors.toList());
             for(InformGraphModel informGraphModel : Utils.getList(informGraphModels)) {
                 if(CheckStatusEnum.CHECKED.getCode().equals(informGraphModel.getCheckStatus())) {

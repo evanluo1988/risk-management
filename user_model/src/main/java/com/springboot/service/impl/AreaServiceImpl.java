@@ -138,6 +138,11 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
 
     @Override
     public List<Long> findAreaIdsById(Long areaId) {
+        return findAreaIdsById(areaId, true);
+    }
+
+    @Override
+    public List<Long> findAreaIdsById(Long areaId, boolean self) {
         HashSet<Long> areaIds = Sets.newHashSetWithExpectedSize(1);
         if (Objects.nonNull(areaId)){
             areaIds.add(areaId);
@@ -151,6 +156,11 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
             areaIds.addAll(subAreas.stream().map(Area::getId).collect(Collectors.toList()));
         }
 
+        if(Objects.nonNull(areaId) && !self){
+            areaIds.remove(areaId);
+        }
+
         return Lists.newArrayList(areaIds);
     }
+
 }
