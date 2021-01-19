@@ -16,6 +16,7 @@ import com.springboot.enums.EnableEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.TaskMapper;
 import com.springboot.model.TaskExportModel;
+import com.springboot.model.TaskGraphModel;
 import com.springboot.model.TaskModel;
 import com.springboot.model.TaskPendingListModel;
 import com.springboot.page.PageIn;
@@ -386,7 +387,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
         Integer overdueNum = taskMapper.pendingOverdueList(areaIds);
         Integer toCheckNum = taskMapper.pendingToCheckList(areaIds);
-        return new TaskPendingListModel(overdueNum,toCheckNum);
+        return new TaskPendingListModel(overdueNum, toCheckNum);
+    }
+
+    @Override
+    public List<TaskGraphModel> getInformGraphList() {
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        return taskMapper.getInformGraphList(areaIds);
     }
 
     private Task getTaskById(Long id) {

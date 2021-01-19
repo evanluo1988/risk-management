@@ -3,6 +3,7 @@ package com.springboot.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.Task;
 import com.springboot.model.TaskPendingListModel;
+import com.springboot.model.TaskGraphModel;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.vo.TaskDetailVo;
@@ -47,4 +48,6 @@ public interface TaskService extends IService<Task> {
     void export(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue, LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName, String checkStatus, String assignment, Long areaId) throws IOException;
 
     TaskPendingListModel pendingList();
+
+    List<TaskGraphModel> getInformGraphList();
 }

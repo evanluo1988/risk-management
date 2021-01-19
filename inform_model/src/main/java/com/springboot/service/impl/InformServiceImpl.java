@@ -15,6 +15,7 @@ import com.springboot.enums.CheckStatusEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.InformDao;
 import com.springboot.model.InformExportModel;
+import com.springboot.model.InformGraphModel;
 import com.springboot.model.InformPageModel;
 import com.springboot.model.InformTop10Model;
 import com.springboot.model.InfromPendingListModel;
@@ -333,7 +334,13 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
         Integer overdueNum = informDao.pendingOverdueList(areaIds);
         Integer toCheckNum = informDao.pendingToCheckList(areaIds);
-        return new InfromPendingListModel(overdueNum,toCheckNum);
+        return new InfromPendingListModel(overdueNum, toCheckNum);
+    }
+
+    @Override
+    public List<InformGraphModel> getInformGraphList() {
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
+        return informDao.getInformGraphList(areaIds);
     }
 
     private Inform getInformById(Long id) {

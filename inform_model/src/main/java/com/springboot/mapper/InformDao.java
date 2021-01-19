@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.domain.Inform;
 import com.springboot.model.InformExportModel;
+import com.springboot.model.InformGraphModel;
 import com.springboot.model.InformPageModel;
 import com.springboot.model.InformTop10Model;
 import com.springboot.vo.InformPageVo;
@@ -59,4 +60,5 @@ public interface InformDao extends BaseMapper<Inform> {
     Integer pendingOverdueList(List<Long> areaIds);
 
     Integer pendingToCheckList(List<Long> areaIds);
+    List<InformGraphModel> getInformGraphList(@Param("areaIds") List<Long> areaIds);
 }

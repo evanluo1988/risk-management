@@ -1,5 +1,6 @@
 package com.springboot.service;
 
+import com.springboot.vo.GraphVo;
 import com.springboot.vo.InformTop10Vo;
 import com.springboot.vo.PendingListVo;
 
@@ -18,4 +19,7 @@ public interface ReportService {
      * @return
      */
     PendingListVo pendingList();
+
+    public GraphVo getStatisticalGraph();
+
 }

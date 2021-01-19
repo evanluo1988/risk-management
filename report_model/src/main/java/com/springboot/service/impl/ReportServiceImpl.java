@@ -7,10 +7,13 @@ import com.springboot.service.InformService;
 import com.springboot.service.ReportService;
 import com.springboot.service.TaskService;
 import com.springboot.utils.ConvertUtils;
-import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.vo.InformTop10Vo;
 import com.springboot.vo.PendingListVo;
 import org.springframework.beans.BeanUtils;
+import com.springboot.model.InformGraphModel;
+import com.springboot.service.InformService;
+import com.springboot.service.ReportService;
+import com.springboot.vo.GraphVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +39,16 @@ public class ReportServiceImpl implements ReportService {
         TaskPendingListModel taskPendingListModel = taskService.pendingList();
 
         PendingListVo pendingListVo = new PendingListVo();
-        BeanUtils.copyProperties(informPendingListModel,pendingListVo);
-        BeanUtils.copyProperties(taskPendingListModel,pendingListVo);
+        BeanUtils.copyProperties(informPendingListModel, pendingListVo);
+        BeanUtils.copyProperties(taskPendingListModel, pendingListVo);
         return pendingListVo;
+    }
+
+
+    @Override
+    public GraphVo getStatisticalGraph() {
+        GraphVo graphVo = new GraphVo();
+        List<InformGraphModel> informGraphModelList = informService.getInformGraphList();
+        return graphVo;
     }
 }
