@@ -15,6 +15,7 @@
         <module>inform_model</module>
         <module>examination_model</module>
         <module>detect_model</module>
+        <module>report_model</module>
     </modules>
 
     <parent>
