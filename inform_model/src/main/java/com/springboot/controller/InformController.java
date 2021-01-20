@@ -7,9 +7,7 @@ import com.springboot.ret.ReturnT;
 import com.springboot.service.InformRefundService;
 import com.springboot.service.InformService;
 import com.springboot.utils.ReturnTUtils;
-import com.springboot.vo.InformPageVo;
-import com.springboot.vo.InformViewVo;
-import com.springboot.vo.InformVo;
+import com.springboot.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -114,8 +112,8 @@ public class InformController {
      * @return
      */
     @PutMapping("/dispatcher/{id}")
-    @Validated({InformVo.DispatcherGroup.class})
-    public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid InformVo informVo) {
+    @Validated({InformDispatcherVo.DispatcherGroup.class})
+    public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid InformDispatcherVo informVo) {
         informService.dispatcher(id, informVo.getAreaId());
         return ReturnTUtils.newCorrectReturnT();
     }
@@ -143,10 +141,10 @@ public class InformController {
      * @param informVo
      * @return
      */
-    @Validated(InformVo.RefundGroup.class)
+    @Validated(InformRefundVo.RefundGroup.class)
     @PutMapping("/return/{id}")
     public ReturnT goBack(@PathVariable("id") Long id,
-                          @RequestBody @Valid InformVo informVo) {
+                          @RequestBody @Valid InformRefundVo informVo) {
         informService.goBack(id,informVo.getRefundReason());
         return ReturnTUtils.newCorrectReturnT();
     }
@@ -170,7 +168,7 @@ public class InformController {
      */
     @PutMapping("/process/{id}")
     public ReturnT check(@PathVariable("id") Long id,
-                         @RequestBody InformVo informVo) {
+                         @RequestBody InformCheckVo informVo) {
         informService.check(id, informVo);
         return ReturnTUtils.newCorrectReturnT();
     }

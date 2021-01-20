@@ -6,10 +6,7 @@ import com.springboot.model.InformTop10Model;
 import com.springboot.model.InfromPendingListModel;
 import com.springboot.model.InformGraphModel;
 import com.springboot.page.Pagination;
-import com.springboot.vo.InformImportVo;
-import com.springboot.vo.InformPageVo;
-import com.springboot.vo.InformViewVo;
-import com.springboot.vo.InformVo;
+import com.springboot.vo.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -74,7 +71,7 @@ public interface InformService extends IService<Inform> {
      * @param id
      * @param informVo
      */
-    void check(Long id, InformVo informVo);
+    void check(Long id, InformCheckVo informVo);
 
     /**
      * 投诉举报列表

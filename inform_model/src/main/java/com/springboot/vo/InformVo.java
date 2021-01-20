@@ -17,21 +17,10 @@ import java.time.LocalDateTime;
  */
 @Data
 public class InformVo extends PageIn {
-    public interface DispatcherGroup{}
-    public interface CheckGroup{}
-    public interface RefundGroup{}
-
-    @NotNull(groups = DispatcherGroup.class,message = "区域不能为空")
-    private Long areaId;
-
     /**
-     * 核查状态
+     * 线索属实性审核
      */
-    private String checkStatus;
-    /**
-     * 分派状态
-     */
-    private String assignment;
+    private String verification;
     /**
      * 举报查询开始时间
      */
@@ -43,21 +32,29 @@ public class InformVo extends PageIn {
     @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
     private LocalDate informTimeEnd;
     /**
-     * 奖励情况
-     */
-    private String rewardContent;
-    /**
      * 被举报对象名称
      */
     private String informName;
     /**
-     * 线索属实性审核
-     */
-    private String verification;
-    /**
-     * 是否预期
+     * 是否逾期
      */
     private Boolean overdue;
+    /**
+     * 核查状态
+     */
+    private String checkStatus;
+    /**
+     * 奖励情况
+     */
+    private String rewardContent;
+    /**
+     * 区域ID
+     */
+    private Long areaId;
+    /**
+     * 分派状态
+     */
+    private String assignment;
     /**
      * 核查开始时间
      */
@@ -68,73 +65,4 @@ public class InformVo extends PageIn {
      */
     @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
     private LocalDate checkTimeEnd;
-
-    /**
-     * 核查单位
-     */
-    private Long checkUnit;
-
-    /**
-     * 核查时间
-     */
-    @NotNull(groups = CheckGroup.class,message = "核查时间必填")
-    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
-    private LocalDate checkTime;
-
-    /**
-     * 企业全称
-     */
-    private String enterpriseName;
-
-    /**
-     * 核查地点
-     */
-    private String checkPlace;
-
-    /**
-     * 涉及行业
-     */
-    private String industry;
-
-    /**
-     * 核查详情
-     */
-    @NotBlank(groups = CheckGroup.class,message = "核查详情必填")
-    private String checkDetails;
-
-    /**
-     * 核查对应企业全称
-     */
-    private String checkEnterpriseName;
-
-    /**
-     * 处置措施
-     */
-    private String disposalMeasures;
-
-    /**
-     * 是否移交，1为移交，0为未移交
-     */
-    private Boolean transfer;
-
-    /**
-     * 移交单位
-     */
-    private String transferUnit;
-
-    /**
-     * 移交原因
-     */
-    private String transferReason;
-
-    /**
-     * 附件
-     */
-    private String attachment;
-    /**
-     * 退回原因
-     */
-    @NotBlank(message = "退回原因必填",groups = RefundGroup.class)
-    private String refundReason;
-
 }

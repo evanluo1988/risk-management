@@ -1,7 +1,12 @@
 package com.springboot.vo;
 
+import com.springboot.config.DateFormatConfig;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -11,11 +16,10 @@ import java.time.LocalDateTime;
  */
 @Data
 public class InformCheckVo {
+    public interface CheckGroup{}
+
     private Long id;
-    /**
-     * 核查时间
-     */
-    private LocalDateTime checkTime;
+
     /**
      * 线索属实性审核
      */
@@ -43,5 +47,21 @@ public class InformCheckVo {
     /**
      * 核查详情
      */
+    @NotBlank(groups = InformCheckVo.CheckGroup.class,message = "核查详情必填")
     private String checkDetails;
+    /**
+     * 奖励情况
+     */
+    private String rewardContent;
+    /**
+     * 核查时间
+     */
+    @NotNull(groups = InformCheckVo.CheckGroup.class,message = "核查时间必填")
+    @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
+    private LocalDate checkTime;
+    /**
+     * 核查状态
+     */
+    @NotNull(groups = InformCheckVo.CheckGroup.class,message = "核查状态必填")
+    private String checkStatus;
 }
