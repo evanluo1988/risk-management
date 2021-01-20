@@ -49,6 +49,7 @@ public class InformController {
     public ReturnT page(InformVo informVo) {
         Pagination<InformPageVo> pagination = informService.informPage(
                 informVo.getCheckStatus(),
+                informVo.getAssignment(),
                 informVo.getInformTimeStart(), informVo.getInformTimeEnd(),
                 informVo.getRewardContent(), informVo.getInformName(),
                 informVo.getVerification(), informVo.getOverdue(),
@@ -99,7 +100,7 @@ public class InformController {
     @GetMapping("/export")
     public void export(InformVo informVo) throws IOException {
         informService.export(
-                informVo.getCheckStatus(),
+                informVo.getCheckStatus(), informVo.getAssignment(),
                 informVo.getInformTimeStart(), informVo.getInformTimeEnd(),
                 informVo.getRewardContent(), informVo.getInformName(),
                 informVo.getVerification(), informVo.getOverdue(),

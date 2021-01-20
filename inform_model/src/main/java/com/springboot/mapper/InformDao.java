@@ -27,6 +27,7 @@ public interface InformDao extends BaseMapper<Inform> {
     /**
      * 投诉举报列表
      * @param checkStatus   核查状态
+     * @Param assignment    分派状态
      * @param informTimeStart   举报时间
      * @param informTimeEnd 举报时间
      * @param rewardContent 奖励情况
@@ -35,13 +36,13 @@ public interface InformDao extends BaseMapper<Inform> {
      * @param overdue   是否逾期
      * @param checkTimeStart    核查时间
      * @param checkTimeEnd  核查时间
-     * @param areaId    涉及地区
      * @param areaIds   可以查询的地区
      * @param informPage 分页
      * @return  分页的投诉举报
      */
     Page<InformPageModel> informPage(
             @Param("checkStatus") String checkStatus,
+            @Param("assignment") String assignment,
             @Param("informTimeStart") LocalDate informTimeStart,
             @Param("informTimeEnd") LocalDate informTimeEnd,
             @Param("rewardContent") String rewardContent,

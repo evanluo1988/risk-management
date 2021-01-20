@@ -103,12 +103,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public void export(String checkStatus, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException {
+    public void export(String checkStatus, String assignment, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException {
         if(Objects.isNull(areaId)) {
             areaId = UserAuthInfoContext.getAreaId();
         }
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
-        Page<InformPageModel> page = informDao.informPage(checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(1, 10000));
+        Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(1, 10000));
 
         List<Long> ids = page.getRecords().stream().map(InformPageModel::getId).collect(Collectors.toList());
 
@@ -229,7 +229,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public Pagination<InformPageVo> informPage(String checkStatus,
+    public Pagination<InformPageVo> informPage(String checkStatus, String assignment,
                                                LocalDate informTimeStart, LocalDate informTimeEnd,
                                                String rewardContent, String informName,
                                                String verification, Boolean overdue,
@@ -240,7 +240,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             areaId = UserAuthInfoContext.getAreaId();
         }
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
-        Page<InformPageModel> page = informDao.informPage(checkStatus, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
+        Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
     }
 
@@ -273,6 +273,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             InformCheck informCheck = informCheckService.getByInformId(id);
             informViewVo.setInformCheck(informCheck);
         }
+        informViewVo.setAreaName(ServerCacheUtils.getAreaById(informById.getAreaId()).getAreaName());
         return informViewVo;
     }
 

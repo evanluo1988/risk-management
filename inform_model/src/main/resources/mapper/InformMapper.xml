@@ -103,6 +103,9 @@
         <if test="checkStatus != null and checkStatus != '' ">
             AND i.check_status = #{checkStatus}
         </if>
+        <if test="assignment != null and assignment != '' ">
+            AND i.assignment = #{assignment}
+        </if>
         <if test="informTimeStart != null">
             AND i.inform_time &gt;= #{informTimeStart}' 00:00:00'
         </if>
