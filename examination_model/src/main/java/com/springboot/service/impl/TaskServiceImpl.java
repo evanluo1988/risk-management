@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -377,7 +378,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         HttpServletResponse response = HttpServletLocalThread.getResponse();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        String fileName = URLEncoder.encode("任务", "UTF-8").replaceAll("\\+", "%20");
+        String fileName = URLEncoder.encode("核查处置任务情况"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), TaskExportVo.class).sheet("1").doWrite(taskExportVos);
     }

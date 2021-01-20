@@ -41,6 +41,7 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -122,7 +123,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         HttpServletResponse response = HttpServletLocalThread.getResponse();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        String fileName = URLEncoder.encode("举报", "UTF-8").replaceAll("\\+", "%20");
+        String fileName = URLEncoder.encode("举报任务情况"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(),InformExportVo.class).sheet("1").doWrite(informExportVos);
     }
