@@ -123,10 +123,10 @@
             AND t.start_time &lt;= #{taskTimeEnd}' 23:59:59'
         </if>
         <if test="overdue != null and 'false'.toString() == overdue.toString()">
-            AND (tc.check_status = 'CHECKED' or tc.expire_time == null or tc.expire_time &gt;= now())
+            AND (tc.check_status = 'CHECKED' or tc.expire_time is null or tc.expire_time &gt;= now())
         </if>
         <if test="overdue != null and 'true'.toString() == overdue.toString()">
-            AND (tc.check_status != 'CHECKED' AND tc.expire_time != null AND tc.expire_time &lt; now())
+            AND (tc.check_status != 'CHECKED' AND tc.expire_time is not null AND tc.expire_time &lt; now())
         </if>
         <if test="taskExpireStart != null">
             AND tc.expire_time &gt;= #{taskExpireStart}' 00:00:00'
