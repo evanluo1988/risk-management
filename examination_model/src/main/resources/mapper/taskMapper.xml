@@ -194,7 +194,7 @@
         </foreach>
     </select>
 
-    <select id="getInformGraphList" parameterType="java.util.List" resultType="com.springboot.model.TaskGraphModel">
+    <select id="getInformGraphList" resultType="com.springboot.model.TaskGraphModel">
         select tc.area_id, tc.check_status, count(1) as count
         from task_checks tc
         left join tasks t on t.id = tc.task_id
