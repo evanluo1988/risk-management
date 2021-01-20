@@ -25,6 +25,10 @@ public class InformCheckVo {
      */
     private String enterpriseName;
     /**
+     * 核查企业全称
+     */
+    private String checkEnterpriseName;
+    /**
      * 核查地点
      */
     private String checkPlace;
