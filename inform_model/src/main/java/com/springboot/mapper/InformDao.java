@@ -60,5 +60,5 @@ public interface InformDao extends BaseMapper<Inform> {
     Integer pendingOverdueList(@Param("areaIds") List<Long> areaIds);
 
     Integer pendingToCheckList(@Param("areaIds") List<Long> areaIds);
-    List<InformGraphModel> getInformGraphList(@Param("areaIds") List<Long> areaIds);
+    List<InformGraphModel> getInformGraphList(@Param("areaIds") List<Long> areaIds, @Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
 }

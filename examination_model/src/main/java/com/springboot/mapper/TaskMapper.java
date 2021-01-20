@@ -35,5 +35,5 @@ public interface TaskMapper extends BaseMapper<Task> {
     Integer pendingOverdueList(@Param("areaIds") List<Long> areaIds);
 
     Integer pendingToCheckList(@Param("areaIds") List<Long> areaIds);
-    List<TaskGraphModel> getInformGraphList(@Param("areaIds") List<Long> areaIds);
+    List<TaskGraphModel> getInformGraphList(@Param("areaIds") List<Long> areaIds, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

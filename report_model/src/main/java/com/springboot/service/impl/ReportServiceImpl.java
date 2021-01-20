@@ -18,6 +18,7 @@ import com.springboot.vo.GraphVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,13 +51,13 @@ public class ReportServiceImpl implements ReportService {
 
 
     @Override
-    public GraphVo getStatisticalGraph() {
+    public GraphVo getStatisticalGraph(LocalDate startDate, LocalDate endDate) {
         GraphVo graphVo = new GraphVo();
         List<GraphItemVo> graphItemList = Lists.newArrayList();
         graphVo.setGraphItemList(graphItemList);
         List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId(), Boolean.FALSE);
-        List<InformGraphModel> informGraphModelList = informService.getInformGraphList();
-        List<TaskGraphModel> taskGraphModelList = taskService.getInformGraphList();
+        List<InformGraphModel> informGraphModelList = informService.getInformGraphList(startDate, endDate);
+        List<TaskGraphModel> taskGraphModelList = taskService.getInformGraphList(startDate, endDate);
         for(Long areaId : areaIds) {
             GraphItemVo graphItemVo = new GraphItemVo();
             graphItemVo.setAreaName(ServerCacheUtils.getAreaById(areaId).getAreaName());

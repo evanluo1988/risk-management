@@ -203,6 +203,12 @@
         select i.area_id, i.check_status, count(1) as count
         from informs i
         where i.assignment = 'ASSIGNED'
+        <if test="startDate != null">
+            AND i.inform_time &gt;= '${startDate}'
+        </if>
+        <if test="endDate != null">
+            AND i.inform_time &lt;= '${endDate}'
+        </if>
         and i.area_id in
         <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
             #{areaId}

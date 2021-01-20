@@ -338,9 +338,9 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public List<InformGraphModel> getInformGraphList() {
+    public List<InformGraphModel> getInformGraphList(LocalDate startDate, LocalDate endDate) {
         List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
-        return informDao.getInformGraphList(areaIds);
+        return informDao.getInformGraphList(areaIds, startDate, endDate);
     }
 
     private Inform getInformById(Long id) {
