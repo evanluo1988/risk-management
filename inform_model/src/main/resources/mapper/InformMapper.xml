@@ -153,7 +153,9 @@
 
     <select id="informsTop10" parameterType="List" resultType="com.springboot.model.InformTop10Model">
         SELECT
-          inform_name AS entName, COUNT(inform_name) AS informNum
+            inform_name AS entName,
+            COUNT(inform_name) AS informNum,
+            CONCAT('0.', UNIX_TIMESTAMP(MAX(inform_time))) + COUNT(inform_name) AS score
         FROM
           informs
         WHERE area_id in
@@ -163,7 +165,7 @@
             </if>
         </foreach>
         GROUP BY inform_name
-        ORDER BY informNum DESC
+        ORDER BY score DESC
         LIMIT 10
     </select>
 
