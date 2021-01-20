@@ -7,6 +7,7 @@ import com.springboot.utils.ServerCacheUtils;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -102,11 +103,13 @@ public class InformExportVo {
      */
     @ExcelProperty(value = {"核查处置情况","核查状态"},index = 16,converter = InformCheckStatusConverter.class)
     private String checkStatus;
+
+    private Long areaId;
     /**
      * 核查单位
      */
     @ExcelProperty(value = {"核查处置情况","核查单位"},index = 17)
-    private String checkUnit;
+    private String areaName;
     /**
      * 核查时间
      */
@@ -193,11 +196,11 @@ public class InformExportVo {
     @ExcelProperty(value = {"奖励信息","逾期时间"},index = 34)
     private String expireTime;
 
-    public String getCheckUnit(){
-        if (StringUtils.isBlank(checkUnit)){
-            return checkUnit = null;
+    public String getAreaName(){
+        if (Objects.isNull(areaId)){
+            return areaName = null;
         }else {
-            Area areaById = ServerCacheUtils.getAreaById(Long.valueOf(checkUnit));
+            Area areaById = ServerCacheUtils.getAreaById(areaId);
             return Optional.ofNullable(areaById).orElse(new Area()).getAreaName();
         }
     }

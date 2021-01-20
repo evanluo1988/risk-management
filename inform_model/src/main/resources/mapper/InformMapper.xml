@@ -68,7 +68,6 @@
     ip.identity_card AS identityCard,
     ip.contact_way AS contactWay,
     ip.address,
-    ic.check_unit AS checkUnit,
     DATE_FORMAT(ic.check_time,'%Y-%m-%d') AS checkTime,
     ic.enterprise_name AS enterpriseName,
     ic.check_place AS checkPlace,

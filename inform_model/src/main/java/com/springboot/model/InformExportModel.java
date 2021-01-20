@@ -82,10 +82,6 @@ public class InformExportModel {
      */
     private String checkStatus;
     /**
-     * 核查单位
-     */
-    private String checkUnit;
-    /**
      * 核查时间
      */
     private String checkTime;
@@ -153,4 +149,6 @@ public class InformExportModel {
      * 逾期时间
      */
     private String expireTime;
+
+    private Long areaId;
 }
