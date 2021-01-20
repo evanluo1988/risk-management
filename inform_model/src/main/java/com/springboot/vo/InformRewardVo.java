@@ -16,19 +16,12 @@ public class InformRewardVo {
      * 奖励情况
      */
     private String rewardContent;
-
     /**
      * 奖励金额
      */
     private Long rewardAmount;
-
     /**
      * 奖励时间
      */
     private LocalDateTime rewardTime;
-
-    /**
-     * 举报ID
-     */
-    private Long informId;
 }
