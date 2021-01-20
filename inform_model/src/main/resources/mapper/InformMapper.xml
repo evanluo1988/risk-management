@@ -158,7 +158,8 @@
             COUNT(inform_name) AS informNum
         FROM
           informs
-        WHERE area_id in
+        WHERE enable = 'Y'
+        AND area_id in
         <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
             <if test="areaId != null">
                 #{areaId}
@@ -174,9 +175,10 @@
           count(*)
         FROM
           informs
-        WHERE
-        (check_status = 'WAITING_CHECK' OR check_status = 'CHECKING')
-        AND (expire_time IS NULL OR expire_time &lt; NOW())
+        WHERE enable = 'Y'
+        AND (check_status = 'WAITING_CHECK' OR check_status = 'CHECKING')
+        AND expire_time IS NOT NULL
+        AND expire_time &lt; NOW()
         AND area_id in
         <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
             <if test="areaId != null">
@@ -190,7 +192,8 @@
         count(*)
         FROM
         informs
-        WHERE check_status = 'WAITING_CHECK'
+        WHERE enable = 'Y'
+        AND check_status = 'WAITING_CHECK'
         AND area_id in
         <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
             <if test="areaId != null">

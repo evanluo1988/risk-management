@@ -167,11 +167,11 @@
         count(*)
         FROM
         task_checks
-        WHERE
-        (check_status = 'WAITING_CHECK'
+        WHERE enable = 'Y'
+        AND (check_status = 'WAITING_CHECK'
         OR check_status = 'CHECKING')
-        AND (expire_time IS NULL
-        OR expire_time &lt; NOW())
+        AND expire_time IS NOT NULL
+        AND expire_time &lt; NOW()
         AND area_id in
         <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
             <if test="areaId != null">
@@ -185,7 +185,8 @@
         count(*)
         FROM
         task_checks
-        WHERE check_status = 'WAITING_CHECK'
+        WHERE enable = 'Y'
+        AND check_status = 'WAITING_CHECK'
         AND area_id in
         <foreach collection="areaIds" index="index" item="areaId" open="(" close=")" separator=",">
             <if test="areaId != null">
