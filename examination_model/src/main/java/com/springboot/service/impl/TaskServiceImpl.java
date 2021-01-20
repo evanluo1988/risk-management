@@ -28,10 +28,7 @@ import com.springboot.utils.Utils;
 import com.springboot.utils.HttpServletLocalThread;
 import com.springboot.utils.ServerCacheUtils;
 import com.springboot.utils.UserAuthInfoContext;
-import com.springboot.vo.TaskDetailVo;
-import com.springboot.vo.TaskExportVo;
-import com.springboot.vo.TaskImportVo;
-import com.springboot.vo.TaskPageVo;
+import com.springboot.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -301,7 +298,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void check(Long id, TaskPageVo taskVo) {
+    public void check(Long id, TaskCheckVo taskVo) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("任务不存在");
@@ -315,8 +312,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             taskDisposition.setCreateTime(new Date());
             taskDispositionService.save(taskDisposition);
         }else {
-            taskVo.setId(dispositionByTaskCheckId.getId());
-            BeanUtils.copyProperties(taskVo,dispositionByTaskCheckId);
+            //taskVo.setId(dispositionByTaskCheckId.getId());
+            BeanUtils.copyProperties(taskVo,dispositionByTaskCheckId,"id");
             dispositionByTaskCheckId.setUpdateBy(UserAuthInfoContext.getUserName());
             dispositionByTaskCheckId.setUpdateTime(new Date());
             taskDispositionService.updateById(dispositionByTaskCheckId);

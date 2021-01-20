@@ -4,6 +4,7 @@ import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.TaskService;
 import com.springboot.utils.ReturnTUtils;
+import com.springboot.vo.TaskCheckVo;
 import com.springboot.vo.TaskDetailVo;
 import com.springboot.vo.TaskPageVo;
 import com.springboot.vo.TaskVo;
@@ -154,7 +155,7 @@ public class TaskController {
      */
     @PutMapping("/process/{id}")
     public ReturnT check(@PathVariable("id") Long id,
-                         @RequestBody TaskPageVo taskVo) {
+                         @RequestBody TaskCheckVo taskVo) {
         taskService.check(id, taskVo);
         return ReturnTUtils.newCorrectReturnT();
     }

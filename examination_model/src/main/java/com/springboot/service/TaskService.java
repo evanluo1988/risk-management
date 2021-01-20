@@ -6,6 +6,7 @@ import com.springboot.model.TaskPendingListModel;
 import com.springboot.model.TaskGraphModel;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
+import com.springboot.vo.TaskCheckVo;
 import com.springboot.vo.TaskDetailVo;
 import com.springboot.vo.TaskImportVo;
 import com.springboot.vo.TaskPageVo;
@@ -39,7 +40,7 @@ public interface TaskService extends IService<Task> {
 
     void revoke(Long id);
 
-    void check(Long id, TaskPageVo taskVo);
+    void check(Long id, TaskCheckVo taskVo);
 
     void recheck(Long id);
 
