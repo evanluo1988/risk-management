@@ -391,9 +391,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public List<TaskGraphModel> getInformGraphList() {
+    public List<TaskGraphModel> getInformGraphList(LocalDate startDate, LocalDate endDate) {
         List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
-        return taskMapper.getInformGraphList(areaIds);
+        return taskMapper.getInformGraphList(areaIds, startDate, endDate);
     }
 
     private Task getTaskById(Long id) {

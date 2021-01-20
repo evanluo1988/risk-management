@@ -26,7 +26,7 @@ public class InformServiceTest extends ApplicationTest {
         list.add(1L);
 
         //Mockito.when(areaService.findAreaIdsById(Mockito.anyLong())).thenReturn(list);
-        List<InformGraphModel> informGraphModelList = informDao.getInformGraphList(list);
-        informGraphModelList.size();
+        //List<InformGraphModel> informGraphModelList = informDao.getInformGraphList(list);
+        //informGraphModelList.size();
     }
 }

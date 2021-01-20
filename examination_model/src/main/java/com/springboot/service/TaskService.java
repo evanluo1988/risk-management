@@ -49,5 +49,5 @@ public interface TaskService extends IService<Task> {
 
     TaskPendingListModel pendingList();
 
-    List<TaskGraphModel> getInformGraphList();
+    List<TaskGraphModel> getInformGraphList(LocalDate startDate, LocalDate endDate);
 }

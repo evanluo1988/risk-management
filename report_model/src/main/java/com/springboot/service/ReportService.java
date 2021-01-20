@@ -4,6 +4,7 @@ import com.springboot.vo.GraphVo;
 import com.springboot.vo.InformTop10Vo;
 import com.springboot.vo.PendingListVo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReportService {
@@ -20,6 +21,6 @@ public interface ReportService {
      */
     PendingListVo pendingList();
 
-    public GraphVo getStatisticalGraph();
+    public GraphVo getStatisticalGraph(LocalDate startDate, LocalDate endDate);
 
 }

@@ -118,5 +118,5 @@ public interface InformService extends IService<Inform> {
      * 举报图
      * @return
      */
-    List<InformGraphModel> getInformGraphList();
+    List<InformGraphModel> getInformGraphList(LocalDate startDate, LocalDate endDate);
 }
