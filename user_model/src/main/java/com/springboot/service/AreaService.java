@@ -36,6 +36,14 @@ public interface AreaService extends IService<Area> {
     List<Long> findAreaIdsById(Long areaId);
 
     /**
+     * 根据当前区域ID获取它下面的区域ID集合
+     * @param areaId
+     * @param self 包含自己
+     * @return
+     */
+    List<Long> findAreaIdsById(Long areaId, boolean self);
+
+    /**
      * 根据AreaId查询Area
      * @param areaId
      * @return
