@@ -6,8 +6,8 @@ package com.springboot.enums;
  * @date 2021/1/6 13:56
  */
 public enum JudicialCaseEnum {
-    FILE_CASE(1,"立案"),
-    UN_FILE_CASE(0,"未立案")
+    FILE_CASE(1,"是"),
+    UN_FILE_CASE(0,"否")
     ;
     private Integer code;
     private String desc;
