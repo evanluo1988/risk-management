@@ -19,7 +19,7 @@ public interface TaskService extends IService<Task> {
 
     public void importTasks(MultipartFile file);
 
-    public Pagination<TaskPageVo> findTasks(PageIn pageIn);
+    //public Pagination<TaskPageVo> findTasks(PageIn pageIn);
 
     void importTasks0(List<TaskImportVo> data);
 

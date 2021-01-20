@@ -140,17 +140,17 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         }
     }
 
-    @Override
-    public Pagination<TaskPageVo> findTasks(PageIn pageIn) {
-        IPage<TaskModel> taskPage = taskMapper.findPageTasks(pageIn.convertPage());
-
-        List<TaskPageVo> taskVos = new ArrayList<>();
-        for (TaskModel taskModel : taskPage.getRecords()) {
-            taskVos.add(taskModel.convertVo());
-        }
-
-        return Pagination.of(taskVos, taskPage.getTotal());
-    }
+//    @Override
+//    public Pagination<TaskPageVo> findTasks(PageIn pageIn) {
+//        IPage<TaskModel> taskPage = taskMapper.findPageTasks(pageIn.convertPage());
+//
+//        List<TaskPageVo> taskVos = new ArrayList<>();
+//        for (TaskModel taskModel : taskPage.getRecords()) {
+//            taskVos.add(taskModel.convertVo());
+//        }
+//
+//        return Pagination.of(taskVos, taskPage.getTotal());
+//    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

@@ -1,8 +1,6 @@
 package com.springboot.model;
 
 import com.springboot.domain.Task;
-import com.springboot.utils.DateUtils;
-import com.springboot.vo.TaskPageVo;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -21,15 +19,15 @@ public class TaskModel extends Task {
     private String relatedClues;
     private String enable;
 
-    public TaskPageVo convertVo(){
-        TaskPageVo taskVo = new TaskPageVo();
-        taskVo.setId(this.getId());
-        taskVo.setTaskNumber(this.getTaskNumber());
-        taskVo.setTaskName(this.getTaskName());
-        taskVo.setStartTime(this.getStartTime() != null ? DateUtils.convertDateStr(this.getStartTime()):"");
-        taskVo.setWaitCheckCount(this.getWaitCheckCount());
-        taskVo.setTaskStatus(this.getTaskStatus());
-        taskVo.setDueTime(this.getDueTime() != null ? DateUtils.convertDateStr(this.getStartTime()):"");
-        return taskVo;
-    }
+//    public TaskPageVo convertVo(){
+//        TaskPageVo taskVo = new TaskPageVo();
+//        taskVo.setId(this.getId());
+//        taskVo.setTaskNumber(this.getTaskNumber());
+//        taskVo.setTaskName(this.getTaskName());
+//        taskVo.setStartTime(this.getStartTime() != null ? DateUtils.convertDateStr(this.getStartTime()):"");
+//        taskVo.setWaitCheckCount(this.getWaitCheckCount());
+//        taskVo.setTaskStatus(this.getTaskStatus());
+//        taskVo.setDueTime(this.getDueTime() != null ? DateUtils.convertDateStr(this.getStartTime()):"");
+//        return taskVo;
+//    }
 }
