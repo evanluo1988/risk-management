@@ -6,10 +6,7 @@ import com.springboot.model.TaskPendingListModel;
 import com.springboot.model.TaskGraphModel;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
-import com.springboot.vo.TaskCheckVo;
-import com.springboot.vo.TaskDetailVo;
-import com.springboot.vo.TaskImportVo;
-import com.springboot.vo.TaskPageVo;
+import com.springboot.vo.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,9 +23,9 @@ public interface TaskService extends IService<Task> {
 
     void importTasks0(List<TaskImportVo> data);
 
-    Pagination<TaskPageVo> pageTasks(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue,
-                                     LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName,
-                                     String checkStatus , String assignment, Long areaId, Integer pageNo, Integer pageSize);
+    Pagination<TaskCheckPageVo> pageTasks(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue,
+                                          LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName,
+                                          String checkStatus , String assignment, Long areaId, Integer pageNo, Integer pageSize);
 
     TaskDetailVo detail(Long id);
 

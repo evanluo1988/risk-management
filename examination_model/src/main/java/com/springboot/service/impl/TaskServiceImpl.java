@@ -177,7 +177,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public Pagination<TaskPageVo> pageTasks(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue,
+    public Pagination<TaskCheckPageVo> pageTasks(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue,
                                             LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName,
                                             String checkStatus , String assignment, Long areaId, Integer pageNo, Integer pageSize) {
 
@@ -189,9 +189,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         Page<TaskModel> page = taskMapper.pageTasks(disposalStage, taskTimeStart, taskTimeEnd, overdue,
                 taskExpireStart, taskExpireEnd, enterpriseName,
                 checkStatus, assignment, areaIds, new Page<>(pageNo, pageSize));
-        List<TaskPageVo> taskPageVoList = Lists.newArrayList();
+        List<TaskCheckPageVo> taskPageVoList = Lists.newArrayList();
         for(TaskModel taskModel : Utils.getList(page.getRecords())) {
-            TaskPageVo taskPageVo = new TaskPageVo();
+            TaskCheckPageVo taskPageVo = new TaskCheckPageVo();
             BeanUtils.copyProperties(taskModel, taskPageVo);
             taskPageVo.setStartTime(DateUtils.convertDateStr(taskModel.getStartTime()));
             taskPageVoList.add(taskPageVo);

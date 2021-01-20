@@ -4,10 +4,7 @@ import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.TaskService;
 import com.springboot.utils.ReturnTUtils;
-import com.springboot.vo.TaskCheckVo;
-import com.springboot.vo.TaskDetailVo;
-import com.springboot.vo.TaskPageVo;
-import com.springboot.vo.TaskVo;
+import com.springboot.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -40,7 +37,7 @@ public class TaskController {
 
     @GetMapping("/list")
     public ReturnT page(TaskVo taskVo){
-        Pagination<TaskPageVo> taskModelPagination = taskService.pageTasks(
+        Pagination<TaskCheckPageVo> taskModelPagination = taskService.pageTasks(
                 taskVo.getDisposalStage(),
                 taskVo.getTaskTimeStart(),
                 taskVo.getTaskTimeEnd(),
