@@ -29,6 +29,10 @@ public class InformVo extends PageIn {
      */
     private String checkStatus;
     /**
+     * 分派状态
+     */
+    private String assignment;
+    /**
      * 举报查询开始时间
      */
     @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)

@@ -13,4 +13,5 @@ import lombok.Data;
 public class InformViewVo {
     private Inform inform;
     private InformCheck informCheck;
+    private String areaName;
 }

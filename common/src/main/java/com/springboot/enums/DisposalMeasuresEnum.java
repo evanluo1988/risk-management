@@ -9,7 +9,7 @@ package com.springboot.enums;
 public enum DisposalMeasuresEnum {
     NOTHING("NOTHING","无"),
     ADMINISTRATIVE_RESOLUTION("ADMINISTRATIVE_RESOLUTION","行政化解"),
-    JUDICIAL_CASE("JUDICIAL_CASE","司法立案")
+        JUDICIAL_CASE("JUDICIAL_CASE","司法立案")
 
     ;
     private String code;

@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -43,6 +42,7 @@ public interface InformService extends IService<Inform> {
     /**
      * 导出
      * @param checkStatus
+     * @Param assignment
      * @param informTimeStart
      * @param informTimeEnd
      * @param rewardContent
@@ -53,7 +53,7 @@ public interface InformService extends IService<Inform> {
      * @param checkTimeEnd
      * @param areaId
      */
-    void export(String checkStatus, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException;
+    void export(String checkStatus, String assignment, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException;
 
     /**
      * 分派
@@ -79,6 +79,7 @@ public interface InformService extends IService<Inform> {
     /**
      * 投诉举报列表
      * @param checkStatus   核查状态
+     * @Param assignment    分派状态
      * @param informTimeStart   举报时间
      * @param informTimeEnd 举报时间
      * @param rewardContent 奖励情况
@@ -92,7 +93,7 @@ public interface InformService extends IService<Inform> {
      * @param pageSize  分页
      * @return  分页的投诉举报VO
      */
-    Pagination<InformPageVo> informPage(String checkStatus, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId, Integer pageNo, Integer pageSize);
+    Pagination<InformPageVo> informPage(String checkStatus, String assignment, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId, Integer pageNo, Integer pageSize);
 
     /**
      * 删除举报
