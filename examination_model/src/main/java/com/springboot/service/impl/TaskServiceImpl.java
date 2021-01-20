@@ -102,8 +102,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             //校验编号不能重复
             Set<String> taskNumbers = data.stream().map(TaskImportVo::getTaskNumber).collect(Collectors.toSet());
             Collection<Task> tasks = taskService.listTaskByTaskNumbers(taskNumbers);
-            if (!CollectionUtils.isEmpty(tasks)){
-                throw new ServiceException("任务编号数据库已经存在！"+Arrays.toString(tasks.stream().map(Task::getTaskNumber).collect(Collectors.toSet()).toArray()));
+            if (!CollectionUtils.isEmpty(tasks)) {
+                throw new ServiceException("任务编号数据库已经存在！" + Arrays.toString(tasks.stream().map(Task::getTaskNumber).collect(Collectors.toSet()).toArray()));
             }
 
             checkRegionNonNull(data);
@@ -114,13 +114,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         private void checkRegionNonNull(List<TaskImportVo> data) {
             boolean hasNull = false;
             for (TaskImportVo taskImportVo : data) {
-                if (StringUtils.isEmpty(taskImportVo.getCheckRegion())){
+                if (StringUtils.isEmpty(taskImportVo.getCheckRegion())) {
                     hasNull = true;
                     break;
                 }
             }
 
-            if (hasNull){
+            if (hasNull) {
                 throw new ServiceException("核查区域不能为空");
             }
         }
@@ -128,13 +128,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         private void checkStartTimeNonNull(List<TaskImportVo> data) {
             boolean hasNull = false;
             for (TaskImportVo taskImportVo : data) {
-                if (StringUtils.isEmpty(taskImportVo.getStartTimeStr())){
+                if (StringUtils.isEmpty(taskImportVo.getStartTimeStr())) {
                     hasNull = true;
                     break;
                 }
             }
 
-            if (hasNull){
+            if (hasNull) {
                 throw new ServiceException("创建时间不能为空");
             }
         }
@@ -178,10 +178,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Override
     public Pagination<TaskCheckPageVo> pageTasks(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue,
-                                            LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName,
-                                            String checkStatus , String assignment, Long areaId, Integer pageNo, Integer pageSize) {
+                                                 LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName,
+                                                 String checkStatus, String assignment, Long areaId, Integer pageNo, Integer pageSize) {
 
-        if(Objects.isNull(areaId)) {
+        if (Objects.isNull(areaId)) {
             areaId = UserAuthInfoContext.getAreaId();
         }
 
@@ -190,7 +190,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
                 taskExpireStart, taskExpireEnd, enterpriseName,
                 checkStatus, assignment, areaIds, new Page<>(pageNo, pageSize));
         List<TaskCheckPageVo> taskPageVoList = Lists.newArrayList();
-        for(TaskModel taskModel : Utils.getList(page.getRecords())) {
+        for (TaskModel taskModel : Utils.getList(page.getRecords())) {
             TaskCheckPageVo taskPageVo = new TaskCheckPageVo();
             BeanUtils.copyProperties(taskModel, taskPageVo);
             taskPageVo.setStartTime(DateUtils.convertDateStr(taskModel.getStartTime()));
@@ -205,7 +205,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         Task task = getTaskById(taskCheck.getTaskId());
         TaskDisposition taskDisposition = taskDispositionService.getDispositionByTaskCheckId(taskCheck.getId());
         Enterprise enterprise = enterpriseService.getEnterpriseById(taskCheck.getEnterpriseId());
-        return new TaskDetailVo(task, taskCheck, taskDisposition, enterprise);
+        return new TaskDetailVo(ConvertUtils.sourceToTarget(task, TaskInfoVo.class), ConvertUtils.sourceToTarget(taskCheck, TaskCheckInfoVo.class)
+                , ConvertUtils.sourceToTarget(taskDisposition, TaskDispositionVo.class), ConvertUtils.sourceToTarget(enterprise, EnterpriseVo.class));
     }
 
     @Override
@@ -238,7 +239,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("已分派的不能分派");
         }
         Area area = null;
-        if(Objects.isNull(areaId)) {
+        if (Objects.isNull(areaId)) {
             Enterprise enterpriseById = enterpriseService.getEnterpriseById(taskCheckById.getEnterpriseId());
             area = areaService.getArea(enterpriseById.getEnterpriseName());
         } else {
@@ -249,7 +250,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             taskCheckById.setAssignment(AssignmentEnum.ASSIGNED_FAIL.getCode());
             taskCheckById.setUpdateTime(new Date());
             taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
-        }else {
+        } else {
             taskCheckById.setAssignment(AssignmentEnum.ASSIGNED.getCode())
                     .setAreaId(area.getId())
                     .setCheckRegion(area.getAreaName());
@@ -285,7 +286,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("任务不存在");
         }
 
-        if(!AssignmentEnum.ASSIGNED.getCode().equals(taskCheckById.getAssignment())) {
+        if (!AssignmentEnum.ASSIGNED.getCode().equals(taskCheckById.getAssignment())) {
             throw new ServiceException("未分派不能撤回");
         }
 
@@ -305,15 +306,15 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         }
 
         TaskDisposition dispositionByTaskCheckId = taskDispositionService.getDispositionByTaskCheckId(id);
-        if (Objects.isNull(dispositionByTaskCheckId)){
+        if (Objects.isNull(dispositionByTaskCheckId)) {
             TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(taskVo, TaskDisposition.class);
             taskDisposition.setTaskCheckId(id);
             taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
             taskDisposition.setCreateTime(new Date());
             taskDispositionService.save(taskDisposition);
-        }else {
+        } else {
             //taskVo.setId(dispositionByTaskCheckId.getId());
-            BeanUtils.copyProperties(taskVo,dispositionByTaskCheckId,"id");
+            BeanUtils.copyProperties(taskVo, dispositionByTaskCheckId, "id");
             dispositionByTaskCheckId.setUpdateBy(UserAuthInfoContext.getUserName());
             dispositionByTaskCheckId.setUpdateTime(new Date());
             taskDispositionService.updateById(dispositionByTaskCheckId);
@@ -332,7 +333,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("核查不存在");
         }
-        if(!CheckStatusEnum.CHECKED.getCode().equals(taskCheckById.getCheckStatus())) {
+        if (!CheckStatusEnum.CHECKED.getCode().equals(taskCheckById.getCheckStatus())) {
             throw new ServiceException("该条任务信息还未核查");
         }
 
@@ -344,7 +345,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Override
     public Collection<Task> listTaskByTaskNumbers(Set<String> taskNumbers) {
-        if (CollectionUtils.isEmpty(taskNumbers)){
+        if (CollectionUtils.isEmpty(taskNumbers)) {
             return Collections.emptySet();
         }
 
@@ -354,8 +355,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public void export(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue, LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName, String checkStatus, String assignment, Long areaId) throws IOException  {
-        if(Objects.isNull(areaId)) {
+    public void export(String disposalStage, LocalDate taskTimeStart, LocalDate taskTimeEnd, Boolean overdue, LocalDate taskExpireStart, LocalDate taskExpireEnd, String enterpriseName, String checkStatus, String assignment, Long areaId) throws IOException {
+        if (Objects.isNull(areaId)) {
             areaId = UserAuthInfoContext.getAreaId();
         }
 
@@ -366,8 +367,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
         List<Long> ids = page.getRecords().stream().map(TaskModel::getId).collect(Collectors.toList());
 
-        if (CollectionUtils.isEmpty(ids)){
-            return ;
+        if (CollectionUtils.isEmpty(ids)) {
+            return;
         }
 
         List<TaskExportModel> exportModelList = taskMapper.listTaskByIds(ids);
@@ -375,7 +376,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         HttpServletResponse response = HttpServletLocalThread.getResponse();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
-        String fileName = URLEncoder.encode("核查处置任务情况"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "UTF-8").replaceAll("\\+", "%20");
+        String fileName = URLEncoder.encode("核查处置任务情况" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), TaskExportVo.class).sheet("1").doWrite(taskExportVos);
     }

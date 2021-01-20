@@ -4,6 +4,7 @@ import com.springboot.domain.Enterprise;
 import com.springboot.domain.Task;
 import com.springboot.domain.TaskCheck;
 import com.springboot.domain.TaskDisposition;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -12,16 +13,10 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@AllArgsConstructor
 public class TaskDetailVo {
-    private Task task;
-    private TaskCheck taskCheck;
-    private TaskDisposition taskDisposition;
-    private Enterprise taskEnterprise;
-
-    public TaskDetailVo(Task task,TaskCheck taskCheck,TaskDisposition taskDisposition,Enterprise taskEnterprise){
-        this.task = task;
-        this.taskCheck = taskCheck;
-        this.taskDisposition = taskDisposition;
-        this.taskEnterprise = taskEnterprise;
-    }
+    private TaskInfoVo task;
+    private TaskCheckInfoVo taskCheck;
+    private TaskDispositionVo taskDisposition;
+    private EnterpriseVo taskEnterprise;
 }
