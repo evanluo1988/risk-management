@@ -269,12 +269,20 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     public InformViewVo view(Long id) {
         Inform informById = getInformById(id);
         InformViewVo informViewVo = new InformViewVo();
-        informViewVo.setInform(informById);
+
+        InformInfoVo informInfoVo = ConvertUtils.sourceToTarget(informById, InformInfoVo.class);
+        Optional.ofNullable(informInfoVo).ifPresent((informInfoVoTemp)->{
+            informInfoVo.setAreaName(ServerCacheUtils.getAreaById(informInfoVoTemp.getAreaId()).getAreaName());
+        });
+        informViewVo.setInform(informInfoVo);
         if (Objects.nonNull(informById)){
             InformCheck informCheck = informCheckService.getByInformId(id);
-            informViewVo.setInformCheck(informCheck);
+            informViewVo.setInformCheck(ConvertUtils.sourceToTarget(informCheck,InformCheckVo.class));
+
+            InformReward informReward = informRewardService.getByInformId(id);
+            informViewVo.setInformReward(ConvertUtils.sourceToTarget(informReward,InformRewardVo.class));
         }
-        informViewVo.setAreaName(ServerCacheUtils.getAreaById(informById.getAreaId()).getAreaName());
+
         return informViewVo;
     }
 

@@ -1,6 +1,7 @@
 package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.springboot.domain.InformCheck;
 import com.springboot.domain.InformReward;
 
 /**
@@ -13,4 +14,5 @@ import com.springboot.domain.InformReward;
  */
 public interface InformRewardService extends IService<InformReward> {
 
+    InformReward getByInformId(Long informId);
 }

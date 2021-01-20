@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 public class InformViewVo {
-    private Inform inform;
-    private InformCheck informCheck;
-    private String areaName;
+    private InformInfoVo inform;
+    private InformCheckVo informCheck;
+    private InformRewardVo informReward;
 }
