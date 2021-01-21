@@ -3,6 +3,7 @@ package com.springboot.model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author lhf
@@ -141,6 +142,7 @@ public class InformExportModel {
      * 奖励金额
      */
     private Float rewardAmountFloat;
+    private Long rewardAmount;
     /**
      * 奖励时间
      */
@@ -151,4 +153,11 @@ public class InformExportModel {
     private String expireTime;
 
     private Long areaId;
+
+    public Float getRewardAmountFloat() {
+        if (Objects.nonNull(rewardAmount)){
+            rewardAmountFloat = Float.valueOf(String.valueOf(rewardAmount))/100;
+        }
+        return rewardAmountFloat;
+    }
 }

@@ -190,7 +190,7 @@ public class InformImportVo {
     /**
      * 奖励金额
      */
-    @ExcelProperty(value = {"奖励金额"},index = 32,converter = InformRewardConverter.class)
+    @ExcelProperty(value = {"奖励金额"},index = 32)
     private Float rewardAmountFloat;
     /**
      * 奖励时间

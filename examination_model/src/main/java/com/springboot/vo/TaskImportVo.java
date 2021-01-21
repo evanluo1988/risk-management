@@ -60,7 +60,7 @@ public class TaskImportVo {
     private String businessAddress;
 
     @ExcelProperty(value = {"涉案金额"}, index = 14)
-    private String money;
+    private Float moneyFloat;
 
     @ExcelProperty(value = {"涉案人数"}, index = 15)
     private String involvePeople;
@@ -139,6 +139,7 @@ public class TaskImportVo {
 
     public TaskDisposition toTaskDisposition() {
         TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(this, TaskDisposition.class);
+        taskDisposition.setMoney(Objects.isNull(moneyFloat) ? null : Float.valueOf(moneyFloat * 100).longValue());
         taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
         taskDisposition.setCreateTime(new Date());
         return taskDisposition;

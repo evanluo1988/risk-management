@@ -2,6 +2,8 @@ package com.springboot.model;
 
 import lombok.Data;
 
+import java.util.Objects;
+
 /**
  * @author lhf
  * @version 1.0
@@ -23,7 +25,8 @@ public class TaskExportModel {
     private String disposalStage;
     private String industry;
     private String businessAddress;
-    private String money;
+    private Long money;
+    private Float moneyFloat;
     private String involvePeople;
     private String employeesNumber;
     private String involveInternet;
@@ -41,4 +44,11 @@ public class TaskExportModel {
     private String punishment;
     private String relatedClues;
     private String expireTime;
+
+    public Float getMoneyFloat() {
+        if (Objects.nonNull(money)) {
+            moneyFloat = Float.valueOf(String.valueOf(money)) / 100;
+        }
+        return moneyFloat;
+    }
 }

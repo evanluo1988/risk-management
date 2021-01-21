@@ -8,7 +8,8 @@ package com.springboot.enums;
 public enum RewardStatusEnum {
     REWARDED("REWARDED","奖励"),
     UN_REWARD("UN_REWARD","未奖励"),
-    UNDER_REVIEW("UNDER_REVIEW","评审中")
+    UNDER_REVIEW("UNDER_REVIEW","评审中"),
+    NO_REWARD("NO_REWARD","不予奖励")
 
     ;
     private String code;

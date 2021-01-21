@@ -57,7 +57,7 @@ public class TaskExportVo {
     private String businessAddress;
 
     @ExcelProperty(value = {"涉案金额"}, index = 14)
-    private String money;
+    private Float moneyFloat;
 
     @ExcelProperty(value = {"涉案人数"}, index = 15)
     private String involvePeople;

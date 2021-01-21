@@ -50,18 +50,6 @@ public class InformCheckVo {
     @NotBlank(groups = InformCheckVo.CheckGroup.class,message = "核查详情必填")
     private String checkDetails;
     /**
-     * 奖励情况
-     */
-    private String rewardStatus;
-    /**
-     * 奖励金额
-     */
-    private Long rewardAmount;
-    /**
-     * 奖励时间
-     */
-    private LocalDateTime rewardTime;
-    /**
      * 核查时间
      */
     @NotNull(groups = InformCheckVo.CheckGroup.class,message = "核查时间必填")
