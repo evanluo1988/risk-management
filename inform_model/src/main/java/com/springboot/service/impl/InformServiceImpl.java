@@ -199,7 +199,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void check(Long id, InformCheckVo informVo) {
+    public void check(Long id, InformCheckReqVo informVo) {
         Inform informById = getInformById(id);
         if (Objects.isNull(informById)) {
             throw new ServiceException("举报信息不存在");

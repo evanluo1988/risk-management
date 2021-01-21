@@ -71,7 +71,7 @@ public interface InformService extends IService<Inform> {
      * @param id
      * @param informVo
      */
-    void check(Long id, InformCheckVo informVo);
+    void check(Long id, InformCheckReqVo informVo);
 
     /**
      * 投诉举报列表

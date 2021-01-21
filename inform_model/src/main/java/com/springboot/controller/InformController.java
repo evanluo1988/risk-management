@@ -168,7 +168,7 @@ public class InformController {
      */
     @PutMapping("/process/{id}")
     public ReturnT check(@PathVariable("id") Long id,
-                         @RequestBody InformCheckVo informVo) {
+                         @RequestBody InformCheckReqVo informVo) {
         informService.check(id, informVo);
         return ReturnTUtils.newCorrectReturnT();
     }
