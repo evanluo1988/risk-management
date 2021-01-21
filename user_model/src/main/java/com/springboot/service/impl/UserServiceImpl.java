@@ -248,6 +248,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void create(RegUserVo userVo) {
+        if(userMapper.countByLoginName(userVo.getLoginName()) > 0) {
+            throw new ServiceException("登录名已存在！");
+        }
+
+        if(userVo.getPassword() != null && !PswUtils.isConformRule(userVo.getPassword())) {
+            throw new ServiceException("新密码必须为8-16为数字、字母或下划线");
+        }
+
         //如果没输入密码 填充默认密码 否则加密用户输入密码
         if (StringUtils.isEmpty(userVo.getPassword())) {
             userVo.setPassword(BCrypt.hashpw(GlobalConstants.DEFAULT_PASSWORD, BCrypt.gensalt()));

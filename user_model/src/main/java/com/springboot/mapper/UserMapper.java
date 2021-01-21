@@ -7,6 +7,7 @@ import com.springboot.domain.User;
 import com.springboot.model.UserInfo;
 import com.springboot.model.UserRoleDomain;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Update("Update users SET enable='N' WHERE id = #{id}")
     void disableById(@Param("id")Long id);
+
+    @Select("select count(1) from users WHERE login_name = #{loginName}")
+    int countByLoginName(@Param("loginName") String loginName);
 }
