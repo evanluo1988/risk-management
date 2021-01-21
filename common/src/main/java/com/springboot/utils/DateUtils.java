@@ -43,6 +43,13 @@ public class DateUtils {
         return convertDateStr(localDateTimeToDate(localDateTime));
     }
 
+    public static LocalDate toLocalDate(LocalDateTime localDateTime) {
+        if(localDateTime == null) {
+            return null;
+        }
+        return localDateTime.toLocalDate();
+    }
+
     public static LocalDateTime dateToLocalDateTime(Date date){
         if(Objects.isNull(date)){
             return null;

@@ -19,7 +19,7 @@ public class TaskDispositionVo {
     /**
      * 涉案金额
      */
-    private String money;
+    private Long money;
     /**
      * 员工人数
      */

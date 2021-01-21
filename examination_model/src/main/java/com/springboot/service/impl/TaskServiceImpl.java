@@ -193,7 +193,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         for (TaskModel taskModel : Utils.getList(page.getRecords())) {
             TaskCheckPageVo taskPageVo = new TaskCheckPageVo();
             BeanUtils.copyProperties(taskModel, taskPageVo);
-            taskPageVo.setStartTime(DateUtils.convertDateStr(taskModel.getStartTime()));
+            taskPageVo.setStartTime(DateUtils.toLocalDate(taskModel.getStartTime()));
             taskPageVoList.add(taskPageVo);
         }
         return Pagination.of(taskPageVoList, page.getTotal());

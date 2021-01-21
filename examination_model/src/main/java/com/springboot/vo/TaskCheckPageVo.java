@@ -41,7 +41,7 @@ public class TaskCheckPageVo {
     /**
      * 发起时间
      */
-    private String startTime;
+    private LocalDate startTime;
     /**
      * 到期时间
      */
