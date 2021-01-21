@@ -1152,6 +1152,9 @@ public class StdLegalServiceImpl implements StdLegalService {
 
     private void calcRiskLevelOfS1(String reqId, List<StdLegalDataStructuredTemp> copyS1) {
         Set<String> serialNos = copyS1.stream().map(StdLegalDataStructuredTemp::getSerialno).collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(serialNos)){
+            return ;
+        }
         LambdaQueryWrapper<StdLegalCasemedian> queryWrapper = new LambdaQueryWrapper<StdLegalCasemedian>()
                 .eq(StdLegalCasemedian::getReqId, reqId)
                 .in(StdLegalCasemedian::getSerialNo, serialNos);
