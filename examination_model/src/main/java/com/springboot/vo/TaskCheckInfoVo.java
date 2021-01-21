@@ -20,4 +20,8 @@ public class TaskCheckInfoVo {
      * 相关线索
      */
     private String relatedClues;
+    /**
+     * 逾期时间
+     */
+    private LocalDate expireTime;
 }
