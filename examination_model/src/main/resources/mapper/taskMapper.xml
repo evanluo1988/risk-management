@@ -156,7 +156,8 @@
         LEFT JOIN enterprises e ON tc.enterprise_id = e.id
         LEFT JOIN tasks t ON t.id = tc.task_id
         LEFT JOIN task_dispositions td ON tc.id = td.task_check_id
-        WHERE tc.id IN
+        WHERE tc.enable = 'Y'
+        and tc.id IN
         <foreach collection="ids" separator="," open="(" close=")" item="id" index="index">
             #{id}
         </foreach>

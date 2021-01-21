@@ -147,7 +147,8 @@
         LEFT JOIN inform_checks ic ON i.id = ic.inform_id
         LEFT JOIN inform_refunds ir ON i.id = ir.inform_id
         LEFT JOIN inform_rewards ire ON i.id = ire.inform_id
-        WHERE i.id IN
+        WHERE i.enable = 'Y'
+        and i.id IN
         <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
