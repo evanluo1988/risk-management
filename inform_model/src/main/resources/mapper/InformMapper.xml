@@ -207,8 +207,7 @@
     <select id="getInformGraphList" resultType="com.springboot.model.InformGraphModel">
         select i.area_id, i.check_status, count(1) as count
         from informs i
-        where i.assignment = 'ASSIGNED'
-        and i.enable = 'Y'
+        where i.enable = 'Y'
         <if test="startDate != null">
             AND i.inform_time &gt;= '${startDate}'
         </if>

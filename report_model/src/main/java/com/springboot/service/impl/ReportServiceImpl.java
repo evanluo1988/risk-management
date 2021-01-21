@@ -55,7 +55,7 @@ public class ReportServiceImpl implements ReportService {
         GraphVo graphVo = new GraphVo();
         List<GraphItemVo> graphItemList = Lists.newArrayList();
         graphVo.setGraphItemList(graphItemList);
-        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId(), Boolean.FALSE);
+        List<Long> areaIds = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId());
         List<InformGraphModel> informGraphModelList = informService.getInformGraphList(startDate, endDate);
         List<TaskGraphModel> taskGraphModelList = taskService.getInformGraphList(startDate, endDate);
         for(Long areaId : areaIds) {

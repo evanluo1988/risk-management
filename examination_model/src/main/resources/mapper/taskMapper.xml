@@ -199,8 +199,7 @@
         select tc.area_id, tc.check_status, count(1) as count
         from task_checks tc
         left join tasks t on t.id = tc.task_id
-        where tc.assignment = 'ASSIGNED'
-        and tc.enable = 'Y'
+        where tc.enable = 'Y'
         <if test="startDate != null">
             AND t.start_time &gt;= '${startDate}'
         </if>
