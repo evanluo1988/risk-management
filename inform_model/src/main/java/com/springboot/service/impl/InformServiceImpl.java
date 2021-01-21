@@ -426,7 +426,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         }
 
         private void checkUnitCorrect(Collection<InformImportVo> data) {
-            data.forEach(informImportVo -> {
+            data.stream().filter(informImportVo -> !StringUtils.isEmpty(informImportVo.getCheckUnitStr())).forEach(informImportVo -> {
                 Area areaByName = ServerCacheUtils.getAreaByName(informImportVo.getCheckUnitStr());
                 if (Objects.isNull(areaByName)){
                     throw new ServiceException("核查单位错误，线索编号："+informImportVo.getClueNumber());
