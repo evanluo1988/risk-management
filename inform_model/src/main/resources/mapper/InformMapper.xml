@@ -43,7 +43,7 @@
         when 'CHECKED' then 0
         else  i.expire_time &lt; now() end, 0) as overdue,
 	  ic.verification,
-	  ir.reward_content
+	  ir.reward_status
     </sql>
 
     <sql id="Inform_Export_Column">
@@ -81,7 +81,7 @@
     ic.transfer_unit AS transferUnit,
     ic.transfer_reason AS transferReason,
     ic.attachment as checkAtta,
-    ire.reward_content AS rewardContent,
+    ire.reward_status AS rewardStatus,
     ire.reward_amount AS rewardAmount,
     DATE_FORMAT(ire.reward_time,'%Y-%m-%d') AS rewardTime,
     ir.reason
@@ -111,8 +111,8 @@
         <if test="informTimeEnd != null">
             AND i.inform_time &lt;= #{informTimeEnd}' 23:59:59'
         </if>
-        <if test="rewardContent != null and rewardContent != '' ">
-            AND ir.reward_content = #{rewardContent}
+        <if test="rewardStatus != null and rewardStatus != '' ">
+            AND ir.reward_status = #{rewardStatus}
         </if>
         <if test="informName != null and informName != '' ">
             AND i.inform_name like '%${informName}%'

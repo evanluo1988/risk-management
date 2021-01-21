@@ -49,7 +49,7 @@ public class InformController {
                 informVo.getCheckStatus(),
                 informVo.getAssignment(),
                 informVo.getInformTimeStart(), informVo.getInformTimeEnd(),
-                informVo.getRewardContent(), informVo.getInformName(),
+                informVo.getRewardStatus(), informVo.getInformName(),
                 informVo.getVerification(), informVo.getOverdue(),
                 informVo.getCheckTimeStart(), informVo.getCheckTimeEnd(),
                 informVo.getAreaId(),
@@ -100,7 +100,7 @@ public class InformController {
         informService.export(
                 informVo.getCheckStatus(), informVo.getAssignment(),
                 informVo.getInformTimeStart(), informVo.getInformTimeEnd(),
-                informVo.getRewardContent(), informVo.getInformName(),
+                informVo.getRewardStatus(), informVo.getInformName(),
                 informVo.getVerification(), informVo.getOverdue(),
                 informVo.getCheckTimeStart(), informVo.getCheckTimeEnd(),
                 informVo.getAreaId());

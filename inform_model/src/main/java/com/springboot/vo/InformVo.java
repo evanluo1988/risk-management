@@ -46,7 +46,7 @@ public class InformVo extends PageIn {
     /**
      * 奖励情况
      */
-    private String rewardContent;
+    private String rewardStatus;
     /**
      * 区域ID
      */

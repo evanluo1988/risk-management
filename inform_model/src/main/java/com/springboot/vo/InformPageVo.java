@@ -27,7 +27,7 @@ public class InformPageVo {
     //线索属实性审核
     private String verification;
     //奖励情况
-    private String rewardContent;
+    private String rewardStatus;
     //分派状态
     private String assignment;
     //分派区域ID

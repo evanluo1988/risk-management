@@ -26,7 +26,7 @@ public class InformReward extends BaseDomain {
     /**
      * 奖励情况
      */
-    private String rewardContent;
+    private String rewardStatus;
 
     /**
      * 奖励金额

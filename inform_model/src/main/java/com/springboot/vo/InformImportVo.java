@@ -7,6 +7,7 @@ import com.springboot.domain.InformPerson;
 import com.springboot.domain.InformReward;
 import com.springboot.easyexcel.converter.*;
 import com.springboot.enums.AssignmentEnum;
+import com.springboot.enums.RewardStatusEnum;
 import com.springboot.utils.ConvertUtils;
 import com.springboot.utils.UserAuthInfoContext;
 import com.springboot.utils.ServerCacheUtils;
@@ -184,8 +185,8 @@ public class InformImportVo {
     /**
      * 奖励情况
      */
-    @ExcelProperty(value = {"奖励情况"},index = 31)
-    private String rewardContent;
+    @ExcelProperty(value = {"奖励情况"},index = 31 ,converter = RewardStatusConverter.class)
+    private String rewardStatus;
     /**
      * 奖励金额
      */

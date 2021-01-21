@@ -15,7 +15,7 @@ public class InformRewardVo {
     /**
      * 奖励情况
      */
-    private String rewardContent;
+    private String rewardStatus;
     /**
      * 奖励金额
      */

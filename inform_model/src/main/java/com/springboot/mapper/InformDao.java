@@ -30,7 +30,7 @@ public interface InformDao extends BaseMapper<Inform> {
      * @Param assignment    分派状态
      * @param informTimeStart   举报时间
      * @param informTimeEnd 举报时间
-     * @param rewardContent 奖励情况
+     * @param rewardStatus 奖励情况
      * @param informName    被举报对象名称
      * @param verification  线索属实性审核
      * @param overdue   是否逾期
@@ -45,7 +45,7 @@ public interface InformDao extends BaseMapper<Inform> {
             @Param("assignment") String assignment,
             @Param("informTimeStart") LocalDate informTimeStart,
             @Param("informTimeEnd") LocalDate informTimeEnd,
-            @Param("rewardContent") String rewardContent,
+            @Param("rewardStatus") String rewardStatus,
             @Param("informName") String informName,
             @Param("verification") String verification,
             @Param("overdue") Boolean overdue,

@@ -104,12 +104,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public void export(String checkStatus, String assignment, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardContent, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException {
+    public void export(String checkStatus, String assignment, LocalDate informTimeStart, LocalDate informTimeEnd, String rewardStatus, String informName, String verification, Boolean overdue, LocalDate checkTimeStart, LocalDate checkTimeEnd, Long areaId) throws IOException {
         if(Objects.isNull(areaId)) {
             areaId = UserAuthInfoContext.getAreaId();
         }
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
-        Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(1, 10000));
+        Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardStatus, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(1, 10000));
 
         List<Long> ids = page.getRecords().stream().map(InformPageModel::getId).collect(Collectors.toList());
 
@@ -215,11 +215,25 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             informCheck.setCreateTime(new Date());
             informCheckService.save(informCheck);
         }else {
-            BeanUtils.copyProperties(informVo,informCheckByInformId);
+            BeanUtils.copyProperties(informVo,informCheckByInformId,"id");
             informCheckByInformId.setCheckTime(LocalDateTime.of(informVo.getCheckTime(), LocalTime.of(0,0)));
             informCheckByInformId.setUpdateBy(UserAuthInfoContext.getUserName());
             informCheckByInformId.setUpdateTime(new Date());
             informCheckService.updateById(informCheckByInformId);
+        }
+
+        // reward
+        InformReward rewardByInformId = informRewardService.getByInformId(id);
+        if (Objects.isNull(rewardByInformId)){
+            InformReward informReward = ConvertUtils.sourceToTarget(informVo, InformReward.class);
+            informReward.setCreateTime(new Date());
+            informReward.setCreateBy(UserAuthInfoContext.getUserName());
+            informRewardService.save(informReward);
+        }else{
+            BeanUtils.copyProperties(informVo,rewardByInformId,"id");
+            rewardByInformId.setUpdateTime(new Date());
+            rewardByInformId.setUpdateBy(UserAuthInfoContext.getUserName());
+            informRewardService.updateById(rewardByInformId);
         }
 
         //update checkStatus
@@ -232,7 +246,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     @Override
     public Pagination<InformPageVo> informPage(String checkStatus, String assignment,
                                                LocalDate informTimeStart, LocalDate informTimeEnd,
-                                               String rewardContent, String informName,
+                                               String rewardStatus, String informName,
                                                String verification, Boolean overdue,
                                                LocalDate checkTimeStart, LocalDate checkTimeEnd,
                                                Long areaId, Integer pageNo, Integer pageSize) {
@@ -241,7 +255,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             areaId = UserAuthInfoContext.getAreaId();
         }
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
-        Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardContent, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
+        Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardStatus, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
         return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
     }
 

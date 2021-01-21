@@ -52,7 +52,15 @@ public class InformCheckVo {
     /**
      * 奖励情况
      */
-    private String rewardContent;
+    private String rewardStatus;
+    /**
+     * 奖励金额
+     */
+    private Long rewardAmount;
+    /**
+     * 奖励时间
+     */
+    private LocalDateTime rewardTime;
     /**
      * 核查时间
      */

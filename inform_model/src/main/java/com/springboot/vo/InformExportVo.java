@@ -178,8 +178,8 @@ public class InformExportVo {
     /**
      * 奖励情况
      */
-    @ExcelProperty(value = {"奖励信息","奖励情况"},index = 31)
-    private String rewardContent;
+    @ExcelProperty(value = {"奖励信息","奖励情况"},index = 31,converter = RewardStatusConverter.class)
+    private String rewardStatus;
     /**
      * 奖励金额
      */
