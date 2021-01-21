@@ -8,6 +8,7 @@ import com.springboot.exception.ServiceException;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.utils.SpringContextUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.Callable;
 
 //todo 将来需要去掉Data，这个是为了测试
 @Data
+@Slf4j
 public class QuotaTask implements Callable<QuotaValue> {
 
     private String reqId;
@@ -30,7 +32,7 @@ public class QuotaTask implements Callable<QuotaValue> {
     }
 
     @Override
-    public QuotaValue call() throws Exception {
+    public QuotaValue call() {
         QuotaExecutor quotaExecutor = getQuotaExecutor();
         Map map = quotaExecutor.execQuota(reqId, quota);
         QuotaValue quotaValue = getQuotaValue(map);
@@ -174,6 +176,7 @@ public class QuotaTask implements Callable<QuotaValue> {
             }
         }
 
-        throw new ServiceException("没找到分档值，code = " + quota.getQuotaCode() + " value = " + val);
+        log.info("没找到分档值，code = " + quota.getQuotaCode() + " value = " + val);
+        return new QuotaGrand();
     }
 }

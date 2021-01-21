@@ -27,6 +27,9 @@ public class InventorNum implements QuotaComponent{
     @Override
     public String execQuota(String reqId) {
         StdEntBasic stdEntBasic = stdEntBasicService.getStdEntBasicByReqId(reqId);
+        if(stdEntBasic == null) {
+            return "0";
+        }
         Set<String> intersection = null;
         List<StdIaPartent> stdIaPartentList = stdIaPartentService.findByReqId(reqId);
         stdIaPartentList = Utils.getList(stdIaPartentList).stream().filter(item -> !StringUtils.isEmpty(item.getIno()) && item.getApc().contains(stdEntBasic.getEntName())).collect(Collectors.toList());

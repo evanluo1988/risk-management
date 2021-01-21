@@ -38,9 +38,10 @@ public class QuotaSqlExector implements QuotaExecutor {
         }
         if(quotaRule.contains(ENT_NAME)){
             StdEntBasic stdEntBasic = stdEntBasicService.getStdEntBasicByReqId(reqId);
-            quotaRule = quotaRule.replace(ENT_NAME, stdEntBasic.getEntName());
+            if(stdEntBasic != null && stdEntBasic.getEntName() != null) {
+                quotaRule = quotaRule.replace(ENT_NAME, stdEntBasic.getEntName());
+            }
         }
-
         return quotaRule.replace("?", "'" +reqId + "'");
     }
 }
