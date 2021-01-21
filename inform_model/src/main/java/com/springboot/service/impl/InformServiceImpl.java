@@ -144,7 +144,11 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         if(Objects.isNull(areaId)) {
              area = areaService.getArea(inform.getInformName());
         } else {
-             area = ServerCacheUtils.getAreaById(areaId);
+            List<Long> areaIdsById = areaService.findAreaIdsById(areaId, false);
+            if (!areaIdsById.contains(areaId)){
+                throw new ServiceException("分派区域异常");
+            }
+            area = ServerCacheUtils.getAreaById(areaId);
         }
 
         if (Objects.isNull(area)) {
