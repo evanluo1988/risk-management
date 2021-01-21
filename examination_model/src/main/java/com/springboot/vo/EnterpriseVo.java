@@ -64,4 +64,8 @@ public class EnterpriseVo {
      * 行政处罚
      */
     private String punishment;
+    /**
+     * 风险等级
+     */
+    private String riskLevel;
 }
