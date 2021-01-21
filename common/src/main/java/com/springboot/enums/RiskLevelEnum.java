@@ -7,8 +7,8 @@ package com.springboot.enums;
  * @Version 1.0
  */
 public enum RiskLevelEnum {
-    HIGH("HIGN","高"),
-    MIDDLE("HIDDLE","中"),
+    HIGH("HIGH","高"),
+    MIDDLE("MIDDLE","中"),
     GENERAL("GENERAL","一般"),
     LOW("LOW","低")
 
