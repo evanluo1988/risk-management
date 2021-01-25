@@ -44,9 +44,9 @@ public class StdLegalEntUnexecutedTemp extends StdLegalEntUnexecuted {
         String intervalYear = null;
         LocalDate now = LocalDate.now();
         if (Objects.nonNull(regDate)){
-            String.valueOf(Math.round((((double)(now.toEpochDay()-regDate.toEpochDay()))/365 )*10000)/10000);
+            String.valueOf(((now.toEpochDay()-regDate.toEpochDay())/365));
         }else if (Objects.nonNull(publishDate)){
-            String.valueOf(Math.round((((double)(now.toEpochDay()-publishDate.toEpochDay()))/365 )*10000)/10000);
+            String.valueOf(((now.toEpochDay()-publishDate.toEpochDay())/365));
         }
         return intervalYear;
     }

@@ -63,7 +63,7 @@ public class StdLegalEnterpriseExecutedTemp extends StdLegalEnterpriseExecuted {
         String intervalYear = null;
         if (Objects.nonNull(caseCreateTime)){
             LocalDate now = LocalDate.now();
-            intervalYear = String.valueOf(Math.round((((double)(now.toEpochDay()-caseCreateTime.toEpochDay()))/365 )*10000)/10000);
+            intervalYear = String.valueOf((now.toEpochDay()-caseCreateTime.toEpochDay())/365);
         }
         return intervalYear;
     }

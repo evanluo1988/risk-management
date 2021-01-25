@@ -35,13 +35,25 @@ public class StdLegalDataStructuredTemp extends StdLegalDataStructured {
                 .docClass(calcDocClass(this.getDocuClass()))
                 .caseReason(this.getCaseReason())
                 .lawStatus(this.getLawstatus())
-                .intervalYear(stdLegalCasemedianTemp.getIntervalYear())
+                .intervalYear(calcIntervalYear(stdLegalCasemedianTemp.getIntervalYear()))
                 .payment(getPayment(stdLegalCasemedianTemp))
                 .courtLevel(stdLegalCasemedianTemp.getCourtLevel())
                 .sentenceBrief(calcSentenceBrief(stdLegalCasemedianTemp.getSentenceBrief()))
                 .sentenceEffect(calcSentenceEffect(stdLegalCasemedianTemp.getSentenceEffect()))
                 .build();
         return litigaCaseVo;
+    }
+
+    /**
+     * 向下取整
+     * @param intervalYear
+     * @return
+     */
+    private String calcIntervalYear(String intervalYear) {
+        if(intervalYear != null && intervalYear.indexOf(".") > 0) {
+            return intervalYear.substring(0, intervalYear.indexOf("."));
+        }
+        return intervalYear;
     }
 
     private String getPayment(StdLegalCasemedianTemp stdLegalCasemedianTemp) {
