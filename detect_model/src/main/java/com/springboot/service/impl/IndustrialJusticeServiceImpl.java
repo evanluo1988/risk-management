@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import com.springboot.domain.*;
 import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.*;
-import com.springboot.model.BracketsModel;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.service.*;
 import com.springboot.utils.*;
