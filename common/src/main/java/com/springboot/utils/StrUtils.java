@@ -1,5 +1,8 @@
 package com.springboot.utils;
 
+import com.springboot.model.BracketsModel;
+import org.springframework.util.StringUtils;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Random;
@@ -39,6 +42,7 @@ public class StrUtils {
 
     /**
      * 随机字符串
+     *
      * @param length
      * @return
      */
@@ -60,26 +64,28 @@ public class StrUtils {
 
     /**
      * 获取钱
-     * @param moneyStr 金额
+     *
+     * @param moneyStr  金额
      * @param regCapCur 币种
      * @return
      */
     public static String getMoneyText(String moneyStr, String regCapCur) {
-        if(moneyStr == null) {
+        if (moneyStr == null) {
             return "";
         }
         BigDecimal money = new BigDecimal(moneyStr);
 
-        return money.divide(BigDecimal.valueOf(10000)).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString()+"万元";
+        return money.divide(BigDecimal.valueOf(10000)).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "万元";
     }
 
     /**
      * 保留两位小数
+     *
      * @param moneyStr
      * @return
      */
     public static String getMoney(String moneyStr) {
-        if(moneyStr == null) {
+        if (moneyStr == null) {
             return "";
         }
         BigDecimal money = new BigDecimal(moneyStr);
@@ -88,18 +94,19 @@ public class StrUtils {
 
     /**
      * 日期字符串
+     *
      * @param date
      * @return
      */
     public static String getDataStr(String date) {
-        if(date == null) {
+        if (date == null) {
             return "";
         }
         return date.replace("-", "/");
     }
 
     public static String getDataStr(LocalDate date) {
-        if(date == null) {
+        if (date == null) {
             return "";
         }
         return date.toString().replace("-", "/");
@@ -107,25 +114,65 @@ public class StrUtils {
 
     /**
      * 百分比
+     *
      * @param ratio
      */
     public static String getRatioStr(String ratio) {
-        if(ratio == null){
+        if (ratio == null) {
             return "";
         }
         BigDecimal bRatio = new BigDecimal(ratio);
-        return bRatio.multiply(BigDecimal.valueOf(100)).stripTrailingZeros().toPlainString()+"%";
-    }
-
-    public static void main(String[] args) {
-        System.out.println(StrUtils.getMoneyText("45000", null));
+        return bRatio.multiply(BigDecimal.valueOf(100)).stripTrailingZeros().toPlainString() + "%";
     }
 
     public static String getIntStr(String ratio) {
-        if(ratio == null){
+        if (ratio == null) {
             return "";
         }
         BigDecimal bRatio = new BigDecimal(ratio);
         return String.valueOf(bRatio.intValue());
+    }
+
+
+    /**
+     * 返回输入中是否有括号，并且返回英文和中文括号替换后的字符串
+     *
+     * @param str 原串
+     * @return
+     */
+    public static BracketsModel brackets(String str) {
+        String ZH_LEFT = "（";
+        String ZH_RIGHT = "）";
+
+        BracketsModel bracketsModel = new BracketsModel();
+        bracketsModel.setHas(false);
+        if (StringUtils.isEmpty(str)) {
+            return bracketsModel;
+        }
+
+        if (str.contains(ZH_LEFT) || str.contains(ZH_RIGHT)) {
+            bracketsModel.setZh(str);
+            bracketsModel.setHas(true);
+
+            String fistStepResult = str.replaceAll(ZH_LEFT, "(");
+            String result = fistStepResult.replaceAll(ZH_RIGHT, ")");
+            bracketsModel.setEn(result);
+        }else if (str.contains("(") || str.contains(")")) {
+            bracketsModel.setEn(str);
+            bracketsModel.setHas(true);
+
+            String fistStepResult = str.replaceAll("\\(", ZH_LEFT);
+            String result = fistStepResult.replaceAll("\\)", ZH_RIGHT);
+            bracketsModel.setZh(result);
+        }
+
+        return bracketsModel;
+    }
+
+    public static void main(String[] args) {
+        String entName = "测试（测试括号有限公司）有限公司";
+        BracketsModel brackets = StrUtils.brackets(entName);
+        System.out.println(brackets);
+
     }
 }
