@@ -6,10 +6,7 @@ import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.service.*;
-import com.springboot.utils.DateUtils;
-import com.springboot.utils.Utils;
-import com.springboot.utils.DetectCacheUtils;
-import com.springboot.utils.SqlSplicingUtils;
+import com.springboot.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,20 +89,28 @@ public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements 
      * @param entName
      */
     private void createEdsData(String reqId, String entName) {
-
         CloudQueryLog cloudQueryLog = cloudQueryLogService.getByReqId(reqId);
-
         List<IaAsPartentModel> iaAsPartentModelList = wySourceDataService.getPatentData(entName, cloudQueryLog);
+        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData(entName, cloudQueryLog);
+        List<IaAsCopyright> iaAsCopyrightList = wySourceDataService.getCopyrightData(entName, cloudQueryLog);
+        String orgEntName = entName;
+        if(CollectionUtils.isEmpty(iaAsPartentModelList) && CollectionUtils.isEmpty(iaAsBrandList) && CollectionUtils.isEmpty(iaAsCopyrightList)) {
+            entName = StrUtils.brackets(entName);
+            if(StringUtils.isEmpty(entName) && orgEntName.equals(entName)){
+                return;
+            }
+            iaAsPartentModelList = wySourceDataService.getPatentData(entName, cloudQueryLog);
+            iaAsBrandList = wySourceDataService.getBrandData(entName, cloudQueryLog);
+            iaAsCopyrightList = wySourceDataService.getCopyrightData(entName, cloudQueryLog);
+        }
+
         for(IaAsPartentModel iaAsPartentModel : iaAsPartentModelList){
             iaAsPartentModel.setReqId(reqId);
             iaAsPartentService.savePartent(iaAsPartentModel);
         }
-
-        List<IaAsBrand> iaAsBrandList = wySourceDataService.getBrandData(entName, cloudQueryLog);
         iaAsBrandList.stream().forEach(item -> item.setReqId(reqId));
         iaAsBrandService.saveIaAsBrands(iaAsBrandList);
 
-        List<IaAsCopyright> iaAsCopyrightList = wySourceDataService.getCopyrightData(entName, cloudQueryLog);
         iaAsCopyrightList.stream().forEach((item -> item.setReqId(reqId)));
         iaAsCopyrightService.saveIaAsCopyrights(iaAsCopyrightList);
 

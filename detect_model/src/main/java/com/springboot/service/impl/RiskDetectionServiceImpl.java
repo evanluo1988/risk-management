@@ -4,10 +4,12 @@ import com.springboot.domain.CloudInfoTimeliness;
 import com.springboot.domain.EntWyBasic;
 import com.springboot.enums.OrgEnum;
 import com.springboot.service.*;
+import com.springboot.utils.StrUtils;
 import com.springboot.vo.risk.EntHealthReportVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -24,6 +26,9 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
     @Override
     public EntHealthReportVo checkByEntName(String entName, OrgEnum org) {
         CloudInfoTimeliness cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
+        if(cloudInfoTimeliness == null) {
+            cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(StrUtils.brackets(entName));
+        }
         String reqId = "";
         try{
             if(cloudInfoTimelinessService.checkTimeliness(cloudInfoTimeliness)) {

@@ -135,44 +135,33 @@ public class StrUtils {
 
 
     /**
-     * 返回输入中是否有括号，并且返回英文和中文括号替换后的字符串
+     * 如果字符串包含英文中文括号转换
      *
      * @param str 原串
      * @return
      */
-    public static BracketsModel brackets(String str) {
+    public static String brackets(String str) {
         String ZH_LEFT = "（";
         String ZH_RIGHT = "）";
 
-        BracketsModel bracketsModel = new BracketsModel();
-        bracketsModel.setHas(false);
         if (StringUtils.isEmpty(str)) {
-            return bracketsModel;
+            return str;
         }
-
+        String result = "";
         if (str.contains(ZH_LEFT) || str.contains(ZH_RIGHT)) {
-            bracketsModel.setZh(str);
-            bracketsModel.setHas(true);
-
             String fistStepResult = str.replaceAll(ZH_LEFT, "(");
-            String result = fistStepResult.replaceAll(ZH_RIGHT, ")");
-            bracketsModel.setEn(result);
+            result = fistStepResult.replaceAll(ZH_RIGHT, ")");
         }else if (str.contains("(") || str.contains(")")) {
-            bracketsModel.setEn(str);
-            bracketsModel.setHas(true);
-
             String fistStepResult = str.replaceAll("\\(", ZH_LEFT);
-            String result = fistStepResult.replaceAll("\\)", ZH_RIGHT);
-            bracketsModel.setZh(result);
+            result = fistStepResult.replaceAll("\\)", ZH_RIGHT);
         }
 
-        return bracketsModel;
+        return result;
     }
 
     public static void main(String[] args) {
-        String entName = "测试（测试括号有限公司）有限公司";
-        BracketsModel brackets = StrUtils.brackets(entName);
-        System.out.println(brackets);
+        String entName = "测试(测试括号有限公司)有限公司";
+        System.out.println(StrUtils.brackets(entName));
 
     }
 }

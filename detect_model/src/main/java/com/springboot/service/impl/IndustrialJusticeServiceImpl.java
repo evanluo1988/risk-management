@@ -7,12 +7,10 @@ import com.google.common.collect.Lists;
 import com.springboot.domain.*;
 import com.springboot.executor.QuotaTask;
 import com.springboot.mapper.*;
+import com.springboot.model.BracketsModel;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.service.*;
-import com.springboot.utils.DateUtils;
-import com.springboot.utils.Utils;
-import com.springboot.utils.DetectCacheUtils;
-import com.springboot.utils.SqlSplicingUtils;
+import com.springboot.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -160,8 +158,16 @@ public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements Ind
      */
     private void createEdsData(String reqId, String entName) {
         String response = wySourceDataService.getIndustrialAndJusticeData(entName);
+        String orgEntName = entName;
         if(response == null){
-            return;
+            entName = StrUtils.brackets(entName);
+            if(StringUtils.isEmpty(entName) || orgEntName.equals(entName)) {
+                return;
+            }
+            response = wySourceDataService.getIndustrialAndJusticeData(entName);
+            if(response == null) {
+                return;
+            }
         }
 
         JSONObject jsonObject = JSONObject.parseObject(response);
