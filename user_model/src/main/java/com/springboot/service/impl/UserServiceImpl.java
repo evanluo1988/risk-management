@@ -265,7 +265,7 @@ public class UserServiceImpl implements UserService {
 
         //校验area
         Area areaById = areaService.getById(userVo.getAreaId());
-        if (!hasDataPermission(userVo.getAreaId())){
+        if (!hasDataPermission(userVo.getAreaId()) && !userVo.getAreaId().equals(UserAuthInfoContext.getAreaId())){
             throw new ServiceException("没有建此区域用户的权限");
         }
         //checkOpAreaPermissionEnough(areaById);
