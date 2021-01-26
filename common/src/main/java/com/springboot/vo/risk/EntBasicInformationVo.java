@@ -79,11 +79,11 @@ public class EntBasicInformationVo {
 
 
     public String getRegCap() {
-        return StrUtils.getMoneyText(regCap, regCapCur);
+        return StrUtils.getMoneyText(regCap, "万元");
     }
 
     public String getRecCap() {
-        return StrUtils.getMoneyText(recCap, regCapCur);
+        return StrUtils.getMoneyText(recCap, "万元");
     }
 
     public String getCanDate() {

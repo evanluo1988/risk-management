@@ -54,6 +54,6 @@ public class EntHealthDetectionRadarVo {
     private String legalRiskScore;
 
     public String getRegCap() {
-        return StrUtils.getMoneyText(regCap, regCapCur);
+        return StrUtils.getMoneyText(regCap, "万元");
     }
 }

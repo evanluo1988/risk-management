@@ -61,6 +61,6 @@ public class EntSharesfrostVo {
     }
 
     public String getFroam() {
-        return StrUtils.getMoneyText(froam, null);
+        return StrUtils.getMoneyText(froam, "万元");
     }
 }
