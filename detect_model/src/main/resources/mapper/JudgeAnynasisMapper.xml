@@ -47,7 +47,7 @@
     <select id="judgeResultFinalMap" parameterType="java.util.List" resultType="java.util.Map" flushCache="true" useCache="true">
 
         SELECT
-        DISTINCT trim(v.code) code,trim(v.description) description,trim(v.rank) rank
+        DISTINCT trim(v.code) code,trim(v.description) description,trim(v.rank) `rank`
         FROM
         eds_ss_add_result_regex r
         JOIN eds_ss_add_result_values v ON v.description=r.result
