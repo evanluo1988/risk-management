@@ -44,7 +44,7 @@ public class EntWyPerson extends BaseDomain {
     /**
      * 姓名
      */
-    @TableField(value = "name")
-    @JSONField(name = "name")
-    private String name;
+    @TableField(value = "isfrname")
+    @JSONField(name = "isFrName")
+    private String isFrName;
 }
