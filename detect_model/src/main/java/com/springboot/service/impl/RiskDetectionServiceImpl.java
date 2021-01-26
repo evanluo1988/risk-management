@@ -3,6 +3,7 @@ package com.springboot.service.impl;
 import com.springboot.domain.CloudInfoTimeliness;
 import com.springboot.domain.EntWyBasic;
 import com.springboot.enums.OrgEnum;
+import com.springboot.exception.ServiceException;
 import com.springboot.service.*;
 import com.springboot.utils.StrUtils;
 import com.springboot.vo.risk.EntHealthReportVo;
@@ -25,9 +26,16 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
 
     @Override
     public EntHealthReportVo checkByEntName(String entName, OrgEnum org) {
+        if(StringUtils.isEmpty(entName)) {
+            throw new ServiceException("entName must not be null!");
+        }
         CloudInfoTimeliness cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
         if(cloudInfoTimeliness == null) {
-            cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(StrUtils.brackets(entName));
+            String orgEntName = entName;
+            entName = StrUtils.brackets(orgEntName);
+            if(!entName.equals(orgEntName)) {
+                cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
+            }
         }
         String reqId = "";
         try{

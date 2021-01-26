@@ -160,7 +160,7 @@ public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements Ind
         String orgEntName = entName;
         if(response == null){
             entName = StrUtils.brackets(entName);
-            if(StringUtils.isEmpty(entName) || orgEntName.equals(entName)) {
+            if(orgEntName.equals(entName)) {
                 return;
             }
             response = wySourceDataService.getIndustrialAndJusticeData(entName);

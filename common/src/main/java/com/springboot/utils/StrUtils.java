@@ -146,7 +146,7 @@ public class StrUtils {
         if (StringUtils.isEmpty(str)) {
             return str;
         }
-        String result = "";
+        String result = str;
         if (str.contains(ZH_LEFT) || str.contains(ZH_RIGHT)) {
             String fistStepResult = str.replaceAll(ZH_LEFT, "(");
             result = fistStepResult.replaceAll(ZH_RIGHT, ")");

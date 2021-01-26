@@ -96,7 +96,7 @@ public class IntellectualPropertyServiceImpl extends QuotaTaskHandel implements 
         String orgEntName = entName;
         if(CollectionUtils.isEmpty(iaAsPartentModelList) && CollectionUtils.isEmpty(iaAsBrandList) && CollectionUtils.isEmpty(iaAsCopyrightList)) {
             entName = StrUtils.brackets(entName);
-            if(StringUtils.isEmpty(entName) && orgEntName.equals(entName)){
+            if(orgEntName.equals(entName)){
                 return;
             }
             iaAsPartentModelList = wySourceDataService.getPatentData(entName, cloudQueryLog);
