@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.springboot.model.UserRoleDomain;
 
@@ -344,6 +345,20 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new ServiceException("密码不正确");
         }
+    }
+
+    @Override
+    public UserInfoVo info() {
+        UserInfoVo userInfoVo = ConvertUtils.sourceToTarget(UserAuthInfoContext.getUser(), UserInfoVo.class);
+        Optional.ofNullable(ServerCacheUtils.getAreaById(userInfoVo.getAreaId())).ifPresent((area)->{
+            userInfoVo.setAreaName(area.getAreaName());
+        });
+
+        UserAuthInfoContext.getRolePerms().stream().min(Comparator.comparingLong(Role::getId)).ifPresent((role)->{
+            userInfoVo.setRoleName(role.getRoleName());
+        });
+
+        return userInfoVo;
     }
 
 }

@@ -4,10 +4,7 @@ import com.springboot.domain.User;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
-import com.springboot.vo.RegUserVo;
-import com.springboot.vo.UserPageVo;
-import com.springboot.vo.UserVo;
-import com.springboot.vo.UserWithRoleVo;
+import com.springboot.vo.*;
 
 import java.util.List;
 
@@ -81,4 +78,6 @@ public interface UserService {
      * @param regUserVo
      */
     void updateUserPassword(RegUserVo regUserVo);
+
+    UserInfoVo info();
 }

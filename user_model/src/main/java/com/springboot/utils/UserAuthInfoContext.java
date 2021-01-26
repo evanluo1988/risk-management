@@ -32,6 +32,8 @@ public class UserAuthInfoContext {
     private static class UserAuthInfoHolder {
         private Long id;
         private String userName;
+        private String loginName;
+        private String phone;
         private Long areaId;
         private Date createTime;
         private Date updateTime;

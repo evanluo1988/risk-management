@@ -5,10 +5,7 @@ import com.springboot.page.Pagination;
 import com.springboot.service.UserService;
 import com.springboot.ret.ReturnT;
 import com.springboot.utils.ReturnTUtils;
-import com.springboot.vo.RegUserVo;
-import com.springboot.vo.UserPageVo;
-import com.springboot.vo.UserVo;
-import com.springboot.vo.UserWithRoleVo;
+import com.springboot.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +22,12 @@ import javax.validation.Valid;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @GetMapping("/info")
+    public ReturnT<UserInfoVo> info(){
+        UserInfoVo userInfoVo = userService.info();
+        return ReturnTUtils.getReturnT(userInfoVo);
+    }
 
     @GetMapping("/list")
     public ReturnT<Pagination<UserPageVo>> findUsers(UserVo userVo){
