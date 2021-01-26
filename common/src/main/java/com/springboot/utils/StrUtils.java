@@ -73,8 +73,13 @@ public class StrUtils {
             return "";
         }
         BigDecimal money = new BigDecimal(moneyStr);
-
-        return money.divide(BigDecimal.valueOf(10000)).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "万元";
+        BigDecimal divide = null;
+        if(regCapCur.equals("万元")){
+            divide = BigDecimal.ONE;
+        }else {
+            divide = BigDecimal.valueOf(10000);
+        }
+        return money.divide(divide).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "万元";
     }
 
     /**

@@ -47,6 +47,6 @@ public class ShareholderVo {
     }
 
     public String getSubconam() {
-        return StrUtils.getMoneyText(subconam,null);
+        return StrUtils.getMoneyText(subconam,"万元");
     }
 }
