@@ -50,4 +50,8 @@ public class TaskCheckPageVo {
      * 是否逾期
      */
     private Boolean overdue;
+    /**
+     * 退回统计
+     */
+    private Long refundCount;
 }

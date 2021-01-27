@@ -36,4 +36,6 @@ public class InformPageVo {
     private String areaName;
     //逾期时间
     private LocalDate expireTime;
+    // 退回统计
+    private Long refundCount;
 }

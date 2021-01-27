@@ -18,6 +18,7 @@ public class TaskModel extends Task {
     private LocalDate expireTime;
     private String relatedClues;
     private String enable;
+    private Long refundCount;
 
 //    public TaskPageVo convertVo(){
 //        TaskPageVo taskVo = new TaskPageVo();

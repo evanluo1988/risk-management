@@ -52,7 +52,8 @@
             case tc.check_status
             when 'CHECKED' then 0
             else tc.expire_time &lt; now() end, 0) as overdue,
-        tc.enable
+        tc.enable,
+        IFNULL(rf.refundCount,0) as refundCount
     </sql>
 
     <sql id="TaskExport">
@@ -108,6 +109,9 @@
         LEFT JOIN tasks t ON tc.task_id = t.id
         LEFT JOIN task_dispositions td ON td.task_check_id = tc.id
         LEFT JOIN enterprises e ON tc.enterprise_id = e.id
+        LEFT JOIN (
+          select task_check_id ,count(task_check_id) refundCount from task_refunds group by task_check_id
+        ) rf ON rf.task_check_id = tc.id
         WHERE tc.enable = 'Y'
         and tc.area_id in
         <foreach collection="areaIds" item="id" index="i" open="(" close=")" separator=",">

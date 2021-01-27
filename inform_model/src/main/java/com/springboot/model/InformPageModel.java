@@ -40,4 +40,6 @@ public class InformPageModel {
     private LocalDate expireTime;
     //操作列表
     private List<String> operations;
+    // 退回统计
+    private Long refundCount;
 }

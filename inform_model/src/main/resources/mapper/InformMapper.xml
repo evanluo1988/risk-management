@@ -43,7 +43,8 @@
         when 'CHECKED' then 0
         else  i.expire_time &lt; now() end, 0) as overdue,
 	  ic.verification,
-	  ir.reward_status
+	  ir.reward_status,
+	  IFNULL(rf.refundCount,0) as refundCount
     </sql>
 
     <sql id="Inform_Export_Column">
@@ -94,6 +95,9 @@
         LEFT JOIN inform_checks ic ON i.id = ic.inform_id
         LEFT JOIN inform_rewards ir ON i.id = ir.inform_id
         LEFT JOIN areas a ON i.area_id = a.id
+        LEFT JOIN (
+          select inform_id,count(inform_id) refundCount from inform_refunds group by inform_id
+        ) rf ON rf.inform_id = i.id
         WHERE i.enable = 'Y'
         and i.area_id in
         <foreach collection="areaIds" item="id" index="i" open="(" close=")" separator=",">
