@@ -243,7 +243,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             Enterprise enterpriseById = enterpriseService.getEnterpriseById(taskCheckById.getEnterpriseId());
             area = areaService.getArea(enterpriseById.getEnterpriseName());
         } else {
-            List<Long> areaIdsById = areaService.findAreaIdsById(areaId, false);
+            List<Long> areaIdsById = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId(), false);
             if (!areaIdsById.contains(areaId)){
                 throw new ServiceException("分派区域异常");
             }
