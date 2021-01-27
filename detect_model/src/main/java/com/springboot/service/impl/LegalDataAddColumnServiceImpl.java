@@ -802,15 +802,15 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
                     } else {
                         if (finalList.size() == 1) {
 
-                            if("99".equals(finalList.get(0).get("CODE"))){
-                                SetParamSpecial(J4_SLJG, finalList.get(0).get("CODE"), finalList.get(0).get("DESCRIPTION"),"1");
+                            if("99".equals(finalList.get(0).get("code"))){
+                                SetParamSpecial(J4_SLJG, finalList.get(0).get("code"), finalList.get(0).get("description"),"1");
                             }else{
-                                SetParamSpecial(J4_SLJG, finalList.get(0).get("CODE"), finalList.get(0).get("DESCRIPTION"),"0");
+                                SetParamSpecial(J4_SLJG, finalList.get(0).get("code"), finalList.get(0).get("description"),"0");
                             }
 
                         } else {
-                            SetParamSpecial(J4_SLJG, joinResult(finalList, "CODE"),
-                                    joinResult(finalList, "DESCRIPTION"), "0");
+                            SetParamSpecial(J4_SLJG, joinResult(finalList, "code"),
+                                    joinResult(finalList, "description"), "0");
                         }
                     }
                 }
@@ -1030,8 +1030,8 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
                     paramMap.put("resultCode", SentenceBrief);
                     Map<String, Object> resultMap = jaMapper.resultImpact(paramMap);
                     if (resultMap != null) {
-                        J8_AJJGDKHYX.setValueLabel((String) resultMap.get("IMPACT"));
-                        String code = (String) resultMap.get("CODE");
+                        J8_AJJGDKHYX.setValueLabel((String) resultMap.get("impact"));
+                        String code = (String) resultMap.get("code");
                         J8_AJJGDKHYX.setLegalValue(code);
                         if ("99".equals(code)) {
                             J8_AJJGDKHYX.setNeedingVerify("1");
