@@ -21,7 +21,7 @@ public class LitigaInitiative implements QuotaComponent{
     public String execQuota(String reqId) {
         List<LitigaInitiativeModel> litigaInitiativeModelList = stdLegalDataStructuredTempMapper.getLitigaInitiativeResult(reqId);
         if(CollectionUtils.isEmpty(litigaInitiativeModelList)) {
-            return null;
+            return "偏被动";
         }
         List<LitigaInitiativeModel> plaintiff = litigaInitiativeModelList.stream().filter(item -> item.getPlaintiff() != null).collect(Collectors.toList());
         if(CollectionUtils.isEmpty(plaintiff)) {
