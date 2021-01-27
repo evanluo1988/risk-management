@@ -79,6 +79,14 @@ public class DataHandleServiceImpl implements DataHandleService {
         return entHealthReportVo;
     }
 
+    @Override
+    public void culQuotasForTest(String reqId) {
+        industrialJusticeService.culQuotas(reqId,"QUOTA");
+        industrialJusticeService.culQuotas(reqId, "MODEL");
+        intellectualPropertyService.culQuotas(reqId, "QUOTA");
+        intellectualPropertyService.culQuotas(reqId, "MODEL");
+    }
+
     /**
      * 企业健康评价
      * @return

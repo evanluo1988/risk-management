@@ -75,9 +75,10 @@ public class TestController {
      * @param reqId
      * @return
      */
-    @GetMapping("/culQuotas")
-    public ReturnT culQuotas(@RequestParam("reqId") String reqId){
-        dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
+    @GetMapping("/culQuotasForTest")
+    public ReturnT culQuotasForTest(@RequestParam("reqId") String reqId){
+        dataHandleService.culQuotasForTest(reqId);
+        //dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
         return ReturnTUtils.newCorrectReturnT();
     }
 }
