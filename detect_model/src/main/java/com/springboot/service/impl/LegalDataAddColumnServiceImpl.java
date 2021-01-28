@@ -1193,7 +1193,7 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
         legalDataAdded.setEntName(EntName);
         legalDataAdded.setSerialNo(serialno);
         legalDataAdded.setVarName(VarName);
-        legalDataAdded.setValueLabel(VarLabel);
+        legalDataAdded.setVarLabel(VarLabel);
     }
 
     /**
