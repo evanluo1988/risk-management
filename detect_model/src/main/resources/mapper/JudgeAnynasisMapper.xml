@@ -30,7 +30,7 @@
 
     <!-- 案件结果对客户的影响，通过客户角色和审理结果获取对应的取值和对应的文字描述 -->
     <select id="resultImpact" parameterType="java.util.Map" resultType="java.util.Map">
-        select trim(code) code,trim(impact) impact from eds_ss_add_ajjgdkhyx_rule where role=#{role} and result_code = #{resultcode} and enable='Y'
+        select trim(code) code,trim(impact) impact from eds_ss_add_ajjgdkhyx_rule where role=#{role} and result_code = #{resultCode} and enable='Y'
     </select>
 
     <!-- 获取涉案金额，正则基础配置表 -->
