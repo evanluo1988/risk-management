@@ -2,6 +2,7 @@ package com.springboot.controller;
 
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
+import com.springboot.service.TaskRefundService;
 import com.springboot.service.TaskService;
 import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.*;
@@ -23,6 +24,8 @@ import java.util.Set;
 public class TaskController {
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private TaskRefundService taskRefundService;
 
     /**
      * 核查导入
@@ -166,6 +169,12 @@ public class TaskController {
     public ReturnT recheck(@PathVariable("id") Long id){
         taskService.recheck(id);
         return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @GetMapping("/refund/list/{taskCheckId}")
+    public ReturnT<List<TaskRefundOutputVo>> refundList(@PathVariable("taskCheckId") Long taskCheckId){
+        List<TaskRefundOutputVo> taskRefundOutputVos = taskRefundService.listRefundByTaskCheckId(taskCheckId);
+        return ReturnTUtils.getReturnT(taskRefundOutputVos);
     }
 
 //    @GetMapping

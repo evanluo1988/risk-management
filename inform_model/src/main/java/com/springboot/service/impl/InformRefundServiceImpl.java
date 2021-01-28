@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import com.springboot.domain.InformRefund;
 import com.springboot.mapper.InformRefundDao;
 import com.springboot.service.InformRefundService;
+import com.springboot.utils.ConvertUtils;
+import com.springboot.vo.InformRefundOutputVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +25,13 @@ import java.util.Objects;
 public class InformRefundServiceImpl extends ServiceImpl<InformRefundDao, InformRefund> implements InformRefundService {
 
     @Override
-    public List<InformRefund> listRefundByInformId(Long informId) {
+    public List<InformRefundOutputVo> listRefundByInformId(Long informId) {
         if (Objects.isNull(informId)){
             return Lists.newArrayListWithCapacity(0);
         }
         LambdaQueryWrapper<InformRefund> queryWrapper = new LambdaQueryWrapper<InformRefund>()
                 .eq(InformRefund::getInformId, informId);
-        return list(queryWrapper);
+        List<InformRefund> list = list(queryWrapper);
+        return ConvertUtils.sourceToTarget(list, InformRefundOutputVo.class);
     }
 }

@@ -2,6 +2,9 @@ package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.TaskRefund;
+import com.springboot.vo.TaskRefundOutputVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,4 +17,6 @@ import com.springboot.domain.TaskRefund;
 public interface TaskRefundService extends IService<TaskRefund> {
 
     void refund(Long taskCheckId, String refundReason);
+
+    List<TaskRefundOutputVo> listRefundByTaskCheckId(Long taskCheckId);
 }

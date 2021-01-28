@@ -2,6 +2,7 @@ package com.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.InformRefund;
+import com.springboot.vo.InformRefundOutputVo;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ import java.util.List;
  */
 public interface InformRefundService extends IService<InformRefund> {
 
-    List<InformRefund> listRefundByInformId(Long informId);
+    List<InformRefundOutputVo> listRefundByInformId(Long informId);
 }

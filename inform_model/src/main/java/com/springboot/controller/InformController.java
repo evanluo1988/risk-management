@@ -75,7 +75,7 @@ public class InformController {
      */
     @GetMapping("/refund/list/{informId}")
     public ReturnT refundList(@PathVariable("informId")Long informId){
-        List<InformRefund> refundList = informRefundService.listRefundByInformId(informId);
+        List<InformRefundOutputVo> refundList = informRefundService.listRefundByInformId(informId);
         return ReturnTUtils.getReturnT(refundList);
     }
 
@@ -141,10 +141,10 @@ public class InformController {
      * @param informVo
      * @return
      */
-    @Validated(InformRefundVo.RefundGroup.class)
+    @Validated(InformRefundInputVo.RefundGroup.class)
     @PutMapping("/return/{id}")
     public ReturnT goBack(@PathVariable("id") Long id,
-                          @RequestBody @Valid InformRefundVo informVo) {
+                          @RequestBody @Valid InformRefundInputVo informVo) {
         informService.goBack(id,informVo.getRefundReason());
         return ReturnTUtils.newCorrectReturnT();
     }
