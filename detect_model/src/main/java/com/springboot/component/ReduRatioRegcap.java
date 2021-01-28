@@ -74,7 +74,7 @@ public class ReduRatioRegcap implements QuotaComponent {
             }
         }
 
-        BigDecimal result = (altbeNum.subtract(altafNum)).divide(altbeNum, 6);
+        BigDecimal result = (altbeNum.subtract(altafNum)).divide(altbeNum, 2, BigDecimal.ROUND_HALF_UP);
         return String.valueOf(result.doubleValue());
     }
 
