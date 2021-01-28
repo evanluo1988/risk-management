@@ -81,6 +81,20 @@ public class TestController {
     }
 
     /**
+     * 计算指标
+     * @param reqIds
+     * @return
+     */
+    @PostMapping("/batchCulQuotasForTest")
+    public ReturnT batchCulQuotasForTest(@RequestBody Set<String> reqIds){
+        for (String reqId : reqIds) {
+            dataHandleService.culQuotasForTest(reqId);
+        }
+        //dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+    /**
      * 模型计算
      * @param reqId
      * @return
@@ -89,19 +103,6 @@ public class TestController {
     public ReturnT culModelsForTest(@RequestParam("reqId") String reqId){
         dataHandleService.culModelsForTest(reqId);
         //dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
-        return ReturnTUtils.newCorrectReturnT();
-    }
-
-    /**
-     * 模型计算
-     * @param reqIds
-     * @return
-     */
-    @PostMapping("/batchBulModelsForTest")
-    public ReturnT culModelsForTest(@RequestBody Set<String> reqIds){
-        for (String reqId : reqIds) {
-            dataHandleService.culModelsForTest(reqId);
-        }
         return ReturnTUtils.newCorrectReturnT();
     }
 }
