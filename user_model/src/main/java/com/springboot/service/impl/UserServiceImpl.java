@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
         UserVo userVo = new UserVo();
 
         User user = userMapper.selectById(id);
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user) || EnableEnum.N.getCode().equalsIgnoreCase(user.getEnable())){
             throw new ServiceException("用户信息不存在");
         }
 
@@ -155,6 +155,10 @@ public class UserServiceImpl implements UserService {
         }
 
         User oldUser = userMapper.selectById(regUserVo.getId());
+        if (Objects.isNull(oldUser) || EnableEnum.N.getCode().equalsIgnoreCase(oldUser.getEnable())){
+            throw new ServiceException("当前用户不存在");
+        }
+
         User user = new User();
         BeanUtils.copyProperties(regUserVo, user, "loginName");
         user.setPassword(oldUser.getPassword());
@@ -335,6 +339,10 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         BeanUtils.copyProperties(UserAuthInfoContext.getUser(), user);
         User u = userMapper.selectById(user.getId());
+        if (Objects.isNull(u) || EnableEnum.N.getCode().equalsIgnoreCase(u.getEnable())){
+            throw new ServiceException("当前用户不存在");
+        }
+
         if(BCrypt.checkpw(regUserVo.getOldPassword(), u.getPassword())) {
             if(PswUtils.isConformRule(regUserVo.getPassword())) {
                 user.setPassword(BCrypt.hashpw(regUserVo.getPassword(), BCrypt.gensalt()));
