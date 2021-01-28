@@ -6,7 +6,6 @@ import com.springboot.domain.StdEntAlter;
 import com.springboot.mapper.StdEntAlterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -57,11 +56,9 @@ public class ReduRatioRegcap implements QuotaComponent {
         String altbeStr = getNumber(altbe);
         String altafStr = getNumber(altaf);
 
-        if (StringUtils.isBlank(altbeStr)) {
+        if (StringUtils.isBlank(altbeStr) || StringUtils.isBlank(altafStr)) {
             return null;
         }
-
-        Assert.notNull(altafStr);
 
         BigDecimal altbeNum = new BigDecimal(altbeStr);
         BigDecimal altafNum = new BigDecimal(altafStr);
