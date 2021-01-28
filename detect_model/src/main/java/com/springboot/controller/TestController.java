@@ -8,12 +8,10 @@ import com.springboot.service.IndustrialJusticeService;
 import com.springboot.service.StdLegalService;
 import com.springboot.utils.ReturnTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * @author lhf
@@ -91,6 +89,19 @@ public class TestController {
     public ReturnT culModelsForTest(@RequestParam("reqId") String reqId){
         dataHandleService.culModelsForTest(reqId);
         //dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+    /**
+     * 模型计算
+     * @param reqIds
+     * @return
+     */
+    @PostMapping("/batchBulModelsForTest")
+    public ReturnT culModelsForTest(@RequestBody Set<String> reqIds){
+        for (String reqId : reqIds) {
+            dataHandleService.culModelsForTest(reqId);
+        }
         return ReturnTUtils.newCorrectReturnT();
     }
 }
