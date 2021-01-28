@@ -57,14 +57,14 @@
     </sql>
 
     <select id="findUserWithRoleById" parameterType="Long" resultMap="UserRoleResultMap">
-        select <include refid="Column_List"/> from users u where u.id = #{id}
+        select <include refid="Column_List"/> from users u where u.enable = 'Y' and u.id = #{id}
     </select>
 
     <select id="findAllUsersByAreaIds" resultMap="UserInfoResultMap" parameterType="Map">
         select <include refid="Column_List"/> from users u
         left join areas a on a.id = u.area_id
         <where>
-            1=1
+            enable = 'Y'
             <if test="loginName != null and loginName !=''">
                 and u.login_name like '%${loginName}%'
             </if>
