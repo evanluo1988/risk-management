@@ -81,4 +81,16 @@ public class TestController {
         //dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
         return ReturnTUtils.newCorrectReturnT();
     }
+
+    /**
+     * 模型计算
+     * @param reqId
+     * @return
+     */
+    @GetMapping("/culModelsForTest")
+    public ReturnT culModelsForTest(@RequestParam("reqId") String reqId){
+        dataHandleService.culModelsForTest(reqId);
+        //dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
+        return ReturnTUtils.newCorrectReturnT();
+    }
 }

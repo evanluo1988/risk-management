@@ -29,4 +29,6 @@ public interface DataHandleService {
     public EntHealthReportVo getEntHealthReportVo(String reqId, OrgEnum org);
 
     void culQuotasForTest(String reqId);
+
+    void culModelsForTest(String reqId);
 }

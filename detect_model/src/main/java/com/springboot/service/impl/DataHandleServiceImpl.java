@@ -82,8 +82,13 @@ public class DataHandleServiceImpl implements DataHandleService {
     @Override
     public void culQuotasForTest(String reqId) {
         industrialJusticeService.culQuotas(reqId,"QUOTA");
-        industrialJusticeService.culQuotas(reqId, "MODEL");
         intellectualPropertyService.culQuotas(reqId, "QUOTA");
+
+    }
+
+    @Override
+    public void culModelsForTest(String reqId) {
+        industrialJusticeService.culQuotas(reqId, "MODEL");
         intellectualPropertyService.culQuotas(reqId, "MODEL");
     }
 
