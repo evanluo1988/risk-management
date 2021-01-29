@@ -10,6 +10,7 @@ import com.springboot.service.*;
 import com.springboot.utils.Utils;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.vo.risk.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class DataHandleServiceImpl implements DataHandleService {
     @Autowired
@@ -81,7 +83,9 @@ public class DataHandleServiceImpl implements DataHandleService {
 
     @Override
     public void culQuotasForTest(String reqId) {
+        log.info("=====stage1=========工商司法================");
         industrialJusticeService.culQuotas(reqId,"QUOTA");
+        log.info("====stage2========知识产权==================");
         intellectualPropertyService.culQuotas(reqId, "QUOTA");
 
     }

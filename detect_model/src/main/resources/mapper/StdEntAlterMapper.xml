@@ -28,7 +28,7 @@
     <select id="findReduRatioRegcapList" resultMap="BaseResultMap" parameterType="String">
         select distinct altbe,altaf,altdate
         from std_ent_alter_list
-        where timestampdiff(month,altdate ,curdate()) &lt;= 12
+        where PERIOD_DIFF(month,altdate ,curdate()) &lt;= 12
         and (altitem like '%注册资本%' or altitem like '%注册资金%' or
         altitem like '%出资总额%' or altitem like '%投资总额%')
         and req_id = #{reqId}

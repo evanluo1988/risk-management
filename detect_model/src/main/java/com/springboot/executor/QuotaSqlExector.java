@@ -5,6 +5,7 @@ import com.springboot.domain.Quota;
 import com.springboot.domain.StdEntBasic;
 import com.springboot.mapper.ExeSqlMapper;
 import com.springboot.service.StdEntBasicService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service("quotaSqlExector")
 public class QuotaSqlExector implements QuotaExecutor {
     private final static String ENT_NAME = "{entname}";
@@ -29,6 +31,7 @@ public class QuotaSqlExector implements QuotaExecutor {
             map = Maps.newHashMap();
         }
         map.put("quota_sql", exeQuotaSql);
+        log.info("======quotaExeSql=======quotaId:{}==【{}】",quota.getId(),exeQuotaSql);
         return map;
     }
 
