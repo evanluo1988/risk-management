@@ -23,7 +23,7 @@ public class TendencyJudgResult implements QuotaComponent{
     public String execQuota(String reqId) {
         List<VerdictResultModel> verdictResultModelList = stdLegalDataStructuredTempMapper.getVerdictResult(reqId);
         if(CollectionUtils.isEmpty(verdictResultModelList)) {
-            return null;
+            return "未知";
         }
         Map<String,List<VerdictResultModel>> verdictResultModelMap = Utils.getList(verdictResultModelList).stream().collect(Collectors.groupingBy(VerdictResultModel::getSentenceEffect));
         int count1 = Utils.getList(verdictResultModelMap.get("99")).size();
