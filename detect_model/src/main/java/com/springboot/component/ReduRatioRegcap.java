@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,11 @@ public class ReduRatioRegcap implements QuotaComponent {
          * 提取字段中的数字，再执行公式：
          * (①变更前内容【ALTBE】提取注册资本的数字 - ②变更后内容【ALTAF】提取注册资本的数字）/①变更前内容【ALTBE】提取注册资本的数字*100%
          */
-        List<StdEntAlter> sortedStdEntAlters = stdEntAlters.stream().sorted((s1, s2) -> LocalDate.parse(s1.getAltdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(LocalDate.parse(s1.getAltdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")))).collect(Collectors.toList());
+        List<StdEntAlter> sortedStdEntAlters = stdEntAlters
+                .stream()
+                .sorted(Comparator.comparing(s -> LocalDate.parse(s.getAltdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                .collect(Collectors.toList());
+
         StdEntAlter min = sortedStdEntAlters.get(0);
         StdEntAlter max = sortedStdEntAlters.get(sortedStdEntAlters.size() - 1);
 
