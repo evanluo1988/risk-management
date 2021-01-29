@@ -163,9 +163,16 @@ public class StrUtils {
         return result;
     }
 
+    public static String removeComma(String str) {
+        if(StringUtils.isEmpty(str)){
+            return str;
+        }
+        return str.replace(",","").replace("，","");
+    }
+
     public static void main(String[] args) {
-        String entName = "测试(测试括号有限公司)有限公司";
-        System.out.println(StrUtils.brackets(entName));
+        String entName = "12，282.44元";
+        System.out.println(StrUtils.removeComma(entName));
 
     }
 }

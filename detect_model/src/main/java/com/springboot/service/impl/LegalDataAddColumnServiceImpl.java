@@ -8,6 +8,7 @@ import com.springboot.mapper.JudgeAnynasisMapper;
 import com.springboot.service.LegalDataAddColumnService;
 import com.springboot.utils.CNNMFilter;
 import com.springboot.utils.CommonUtil;
+import com.springboot.utils.StrUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -319,7 +320,7 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
                                             Matcher matcher = pattern.matcher(singleResult);
 
                                             if (matcher.find()) {
-                                                sonModeList.add(matcher.group(1));// 分析正则式，得知第一个捕获组是我们要的（金额+金额单位）
+                                                sonModeList.add(StrUtils.removeComma(matcher.group(1)));// 分析正则式，得知第一个捕获组是我们要的（金额+金额单位）
                                                 executeFlag = Boolean.FALSE;// 修修改状态值，step3不执行
                                                 logger.info("Serialno:{}【涉案金额step2】***【{}】:正则【{}】匹配到子串！！！！！", Serialno, singleResult, regexName);
 
