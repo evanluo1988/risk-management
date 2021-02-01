@@ -27,7 +27,7 @@ public class StdIaPartentServiceImpl extends ServiceImpl<StdIaPartentMapper, Std
         StdEntBasic stdEntBasicByReqId = stdEntBasicService.getStdEntBasicByReqId(reqId);
         LambdaQueryWrapper<StdIaPartent> queryWrapper = new LambdaQueryWrapper<StdIaPartent>()
                 .eq(StdIaPartent::getReqId, reqId)
-                .like(StdIaPartent::getIasc,stdEntBasicByReqId.getEntName());
+                .like(StdIaPartent::getApc,stdEntBasicByReqId.getEntName());
         return list(queryWrapper);
     }
 }
