@@ -64,7 +64,7 @@
         select <include refid="Column_List"/> from users u
         left join areas a on a.id = u.area_id
         <where>
-            enable = 'Y'
+            u.enable = 'Y'
             <if test="loginName != null and loginName !=''">
                 and u.login_name like '%${loginName}%'
             </if>

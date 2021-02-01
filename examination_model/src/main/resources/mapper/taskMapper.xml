@@ -48,7 +48,7 @@
         tc.check_status,
         t.start_time,
         tc.expire_time,
-        IF(tc.expire_time != null,
+        IF(tc.expire_time is not null,
             case tc.check_status
             when 'CHECKED' then 0
             else tc.expire_time &lt; now() end, 0) as overdue,
