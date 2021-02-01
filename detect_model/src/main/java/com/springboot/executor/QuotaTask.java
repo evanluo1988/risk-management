@@ -83,7 +83,7 @@ public class QuotaTask implements Callable<QuotaValue> {
      *
      * @return
      */
-    private QuotaGrand getQuotaGrand(String val) {
+    public QuotaGrand getQuotaGrand(String val) {
         //通过分档码得到分档列表
         List<QuotaGrand> quotaGrandList = DetectCacheUtils.getQuotaGrandListByCode(quota.getGrandCode());
         //通过指标值计算出属于那个分档并返回
