@@ -105,4 +105,17 @@ public class TestController {
         //dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
         return ReturnTUtils.newCorrectReturnT();
     }
+
+    /**
+     * 批量模型计算
+     * @param reqIds
+     * @return
+     */
+    @PostMapping("/batchCulModelsForTest")
+    public ReturnT batchCulModelsForTest(@RequestBody Set<String> reqIds){
+        for (String reqId : reqIds) {
+            dataHandleService.culModelsForTest(reqId);
+        }
+        return ReturnTUtils.newCorrectReturnT();
+    }
 }
