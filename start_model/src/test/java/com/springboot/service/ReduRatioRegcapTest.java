@@ -17,7 +17,7 @@ public class ReduRatioRegcapTest extends ApplicationTest {
 
     @Test
     public void test(){
-        String reqId =  "CPZRCQENT068016";
+        String reqId =  "CPZRCQENT068012";
         reduRatioRegcap.execQuota(reqId);
     }
 }

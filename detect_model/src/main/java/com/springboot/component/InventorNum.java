@@ -51,7 +51,13 @@ public class InventorNum implements QuotaComponent{
     }
 
     public Set<String> getInoSet(StdIaPartent stdIaPartent) {
+        String[] split = null;
+        if(stdIaPartent.getIno().contains(";")){
+            split = stdIaPartent.getIno().split(";");
+        }else {
+            split = stdIaPartent.getIno().split("；");
+        }
         return stdIaPartent.getIno() != null ?
-                new HashSet<>(Arrays.asList(stdIaPartent.getIno().split(";"))) : Sets.newHashSet();
+                new HashSet<>(Arrays.asList(split)): Sets.newHashSet();
     }
 }
