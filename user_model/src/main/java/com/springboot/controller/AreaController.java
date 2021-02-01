@@ -28,12 +28,24 @@ public class AreaController {
     @Autowired
     private AreaService areaService;
 
+    /**
+     * 传areaId查自己及自己下的所有区域（带递归）
+     * 如果不传areaId，areaId = user.areaId
+     * @param parentId
+     * @return
+     */
     @GetMapping(value = {"/list/{parentId}","/list"})
     public ReturnT listAreaByParentId(@PathVariable(value = "parentId",required = false) Long parentId){
         Collection<AreaVo> areaVos = areaService.listAreaByParentId(parentId);
         return ReturnTUtils.getReturnT(areaVos);
     }
 
+    /**
+     * 传areaId，查下一级区域（不递归）
+     * 如果不传areaId,areaId=user.areaId
+     * @param parentId
+     * @return
+     */
     @GetMapping(value = {"/subs/{parentId}","/subs"})
     public ReturnT subsAreaByParentId(@PathVariable(value = "parentId",required = false) Long parentId){
         Collection<AreaVo> areaVos = areaService.subsAreaByParentId(parentId);
