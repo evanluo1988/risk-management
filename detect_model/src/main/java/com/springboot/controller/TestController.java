@@ -1,17 +1,28 @@
 package com.springboot.controller;
 
 import com.google.common.collect.Maps;
+import com.springboot.domain.Quota;
+import com.springboot.domain.QuotaGrand;
+import com.springboot.domain.QuotaValue;
 import com.springboot.enums.OrgEnum;
+import com.springboot.executor.QuotaTask;
+import com.springboot.mapper.QuotaMapper;
+import com.springboot.mapper.QuotaValueMapper;
+import com.springboot.model.QuotaModel;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.DataHandleService;
 import com.springboot.service.IndustrialJusticeService;
+import com.springboot.service.QuotaValueService;
 import com.springboot.service.StdLegalService;
 import com.springboot.utils.ReturnTUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author lhf
@@ -28,6 +39,12 @@ public class TestController {
     private IndustrialJusticeService industrialJusticeService;
     @Autowired
     private StdLegalService stdLegalService;
+    @Autowired
+    private QuotaValueService quotaValueService;
+    @Autowired
+    private QuotaMapper quotaMapper;
+    @Autowired
+    private QuotaValueMapper quotaValueMapper;
 
 
     /**
@@ -115,6 +132,28 @@ public class TestController {
     public ReturnT batchCulModelsForTest(@RequestBody Set<String> reqIds){
         for (String reqId : reqIds) {
             dataHandleService.culModelsForTest(reqId);
+        }
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @PostMapping("/batchCulQuotaGrandForTest")
+    public ReturnT batchCulQuotaGrandForTest(@RequestBody Set<String> reqIds) {
+        for(String reqId : reqIds) {
+            List<QuotaModel> quotaModelList = quotaValueService.getQuotaList(reqId);
+            List<QuotaModel> quotaModelList1 = quotaModelList.stream().filter(item -> item.getQuotaType().equals("QUOTA")).collect(Collectors.toList());
+            for(QuotaModel quotaModel : quotaModelList1) {
+                Quota quota = quotaMapper.selectById(quotaModel.getId());
+                QuotaTask quotaTask = new QuotaTask(reqId, quota);
+                if(quota.getGrandCode() != null){
+                    QuotaGrand quotaGrand = quotaTask.getQuotaGrand(quotaModel.getQuotaValue());
+                    QuotaValue quotaValue = new QuotaValue();
+                    BeanUtils.copyProperties(quotaModel, quotaValue);
+                    quotaValue.setQuotaId(quota.getId());
+                    quotaValue.setMinusPoints(quotaGrand.getMinusPoints());
+                    quotaValue.setIdealInterval(quotaGrand.getIdealInterval());
+                    quotaValueMapper.updateById(quotaValue);
+                }
+            }
         }
         return ReturnTUtils.newCorrectReturnT();
     }
