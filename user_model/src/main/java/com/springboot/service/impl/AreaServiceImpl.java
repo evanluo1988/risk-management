@@ -13,10 +13,7 @@ import com.springboot.model.RolePerm;
 import com.springboot.service.AreaService;
 import com.springboot.service.RiskDetectionService;
 import com.springboot.service.remote.GeoRemoteService;
-import com.springboot.utils.ConvertUtils;
-import com.springboot.utils.RoleUtils;
-import com.springboot.utils.ServerCacheUtils;
-import com.springboot.utils.UserAuthInfoContext;
+import com.springboot.utils.*;
 import com.springboot.vo.AreaVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,11 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
     @Value("${map.key}")
     private String key;
 
+    /**
+     *
+     * @param parentId
+     * @return
+     */
     @Override
     public Collection<AreaVo> listAreaByParentId(Long parentId) {
         RolePerm highestLevelRole = RoleUtils.getHighestLevelRole(UserAuthInfoContext.getRolePerms());
@@ -57,35 +59,8 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
             areaIds.add(parentId);
         }
 
-        RoleEnum roleEnum = RoleEnum.nameOf(highestLevelRole.getRoleName());
-        Collection<AreaVo> areaVos = Lists.newArrayList();
-        //一级
-        if (Objects.isNull(parentId)){
-            if (RoleEnum.SYS_ADMIN == roleEnum){
-                Collection<Area> areas = listAreaByParentIds(areaIds);
-                areaVos = ConvertUtils.sourceToTarget(areas, AreaVo.class);
-            }else if (RoleEnum.REGION_ADMIN == roleEnum){
-                Area area = getAreaById(UserAuthInfoContext.getAreaId());
-                AreaVo areaVo = ConvertUtils.sourceToTarget(area, AreaVo.class);
-                areaVos.add(areaVo);
-            } else if (RoleEnum.STREET_ADMIN == roleEnum){
-                Area area = getAreaById(UserAuthInfoContext.getAreaId());
-                Long areaParentId = area.getParentId();
-                Area parentArea = getAreaById(areaParentId);
-                areaVos.add(ConvertUtils.sourceToTarget(parentArea,AreaVo.class));
-            }
-        }else{
-            //二级
-            if (RoleEnum.STREET_ADMIN == roleEnum){
-                Area area = getAreaById(UserAuthInfoContext.getAreaId());
-                AreaVo areaVo = ConvertUtils.sourceToTarget(area, AreaVo.class);
-                areaVos.add(areaVo);
-            }else {
-                Collection<Area> areas = listAreaByParentIds(areaIds);
-                areaVos = ConvertUtils.sourceToTarget(areas, AreaVo.class);
-            }
-        }
-        return areaVos;
+        List<Area> areaList = findAreasById(Objects.isNull(parentId)?UserAuthInfoContext.getAreaId():parentId, true);
+        return ConvertUtils.sourceToTarget(areaList, AreaVo.class);
     }
 
     @Override
@@ -143,24 +118,31 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
 
     @Override
     public List<Long> findAreaIdsById(Long areaId, boolean self) {
+        List<Area> areaList = findAreasById(areaId, self);
+        return Utils.getList(areaList).stream().map(Area::getId).collect(Collectors.toList());
+    }
+
+    private List<Area> findAreasById(Long areaId, boolean self) {
+        List<Area> areaList = Lists.newArrayList();
         HashSet<Long> areaIds = Sets.newHashSetWithExpectedSize(1);
         if (Objects.nonNull(areaId)){
             areaIds.add(areaId);
+            areaList.add(ServerCacheUtils.getAreaById(areaId));
         }
 
         Collection<Area> areas = listAreaByParentIds(areaIds);
-        Set<Long> subAreaIds = areas.stream().map(Area::getId).collect(Collectors.toSet());
-        if (!CollectionUtils.isEmpty(subAreaIds)){
+        areaList.addAll(areas);
+        while(!CollectionUtils.isEmpty(areas)) {
+            Set<Long> subAreaIds = areas.stream().map(Area::getId).collect(Collectors.toSet());
+            areas = listAreaByParentIds(subAreaIds);
             areaIds.addAll(subAreaIds);
-            Collection<Area> subAreas = listAreaByParentIds(subAreaIds);
-            areaIds.addAll(subAreas.stream().map(Area::getId).collect(Collectors.toList()));
+            areaList.addAll(areas);
         }
 
         if(Objects.nonNull(areaId) && !self){
             areaIds.remove(areaId);
         }
-
-        return Lists.newArrayList(areaIds);
+        return areaList;
     }
 
 }

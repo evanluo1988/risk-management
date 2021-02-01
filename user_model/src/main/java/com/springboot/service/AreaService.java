@@ -19,14 +19,19 @@ import java.util.List;
 public interface AreaService extends IService<Area> {
 
     /**
-     * 根据parentId获取
-     * @param parentId
+     * 根据areaId获取自己和下面所有的区域ID（递归）
+     * @param areaId
      * @return
      */
-    Collection<AreaVo> listAreaByParentId(Long parentId);
+    Collection<AreaVo> listAreaByParentId(Long areaId);
 
 
-    Collection<AreaVo> subsAreaByParentId(Long parentId);
+    /**
+     * 根据区域ID获取下一级的区域（不递归）
+     * @param areaId
+     * @return
+     */
+    Collection<AreaVo> subsAreaByParentId(Long areaId);
 
     /**
      * 根据当前区域ID获取它下面的区域ID集合
