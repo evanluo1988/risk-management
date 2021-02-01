@@ -87,6 +87,14 @@ public class InvestorsWithdrawNum implements QuotaComponent{
             while (matcherStr.find()) {
                 set.add(matcherStr.group().replaceAll(" ", ""));
             }
+
+            if(set.isEmpty()) {
+                regGetName = Pattern.compile("[\u4e00-\u9fa5]+(?=(,|，)(\\d+.\\d*)[\u4e00-\u9fa5]+(,|，)(法人股东|自然人股东)(;|；))");
+                matcherStr = regGetName.matcher(str);
+                while (matcherStr.find()) {
+                    set.add(matcherStr.group().replaceAll(" ", ""));
+                }
+            }
         }
         set.remove("");
         set.remove(" ");
