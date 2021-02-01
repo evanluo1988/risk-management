@@ -38,7 +38,7 @@
 	  i.area_id,
 	  i.expire_time,
 	  a.area_name,
-        IF(i.expire_time != null,
+        IF(i.expire_time is not null,
         case i.check_status
         when 'CHECKED' then 0
         else  i.expire_time &lt; now() end, 0) as overdue,
