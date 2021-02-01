@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -21,6 +22,13 @@ public class InventorNumTest extends ApplicationTest {
     private StdIaPartentService stdIaPartentService;
     @Mock
     private StdEntBasicService stdEntBasicService;
+    @Autowired
+    private InventorNum inventorNum1;
+
+    @Test
+    public void test0(){
+        inventorNum1.execQuota("CPZRCQENT056008");
+    }
 
     @Test
     public void testExecQuota() {
