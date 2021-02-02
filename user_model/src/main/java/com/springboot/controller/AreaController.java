@@ -51,4 +51,14 @@ public class AreaController {
         Collection<AreaVo> areaVos = areaService.subsAreaByParentId(parentId);
         return ReturnTUtils.getReturnT(areaVos);
     }
+
+    /**
+     * 下发列表区域
+     * @return
+     */
+    @GetMapping("/getDispatcherAreaList")
+    public ReturnT getDispatcherAreaList(){
+        Collection<AreaVo> areaVos = areaService.getDispatcherAreaList();
+        return ReturnTUtils.getReturnT(areaVos);
+    }
 }

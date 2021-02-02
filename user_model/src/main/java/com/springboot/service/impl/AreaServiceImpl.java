@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.springboot.domain.Area;
+import com.springboot.enums.AreaTypeEnum;
 import com.springboot.enums.EnableEnum;
 import com.springboot.enums.RoleEnum;
 import com.springboot.exception.ServiceException;
@@ -101,6 +102,14 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
             }
         }
         return area;
+    }
+
+    @Override
+    public Collection<AreaVo> getDispatcherAreaList() {
+        Long areaId = UserAuthInfoContext.getAreaId();
+        List<Area> areasById = findAreasById(areaId, false);
+        List<Area> collect = areasById.stream().filter(area -> AreaTypeEnum.S.getCode().equalsIgnoreCase(area.getType())).collect(Collectors.toList());
+        return ConvertUtils.sourceToTarget(collect,AreaVo.class);
     }
 
     private Collection<Area> listAreaByParentIds(Set<Long> parentIds) {

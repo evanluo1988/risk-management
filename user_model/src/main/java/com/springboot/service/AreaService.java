@@ -57,4 +57,10 @@ public interface AreaService extends IService<Area> {
 
 
     Area getArea(String entName);
+
+    /**
+     * 获取下发地域列表
+     * @return
+     */
+    Collection<AreaVo> getDispatcherAreaList();
 }
