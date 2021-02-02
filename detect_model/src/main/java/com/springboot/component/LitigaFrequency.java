@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 @Component("LitigaFrequency")
 public class LitigaFrequency implements QuotaComponent{
 
-    private static final String REG_PATTERN = "(（\\d{4}）)";
+    private static final String REG_PATTERN = "([(|（]\\d{4}[）|)])";
 
     @Autowired
     private StdLegalDataStructuredTempMapper stdLegalDataStructuredTempMapper;
