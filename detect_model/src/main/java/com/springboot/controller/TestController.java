@@ -157,4 +157,29 @@ public class TestController {
         }
         return ReturnTUtils.newCorrectReturnT();
     }
+
+    /**
+     * 分档计算
+     * @param reqId
+     * @return
+     */
+    @GetMapping("/culQuotaGrandForTest")
+    public ReturnT culQuotaGrandForTest(@RequestParam("reqId") String reqId){
+        List<QuotaModel> quotaModelList = quotaValueService.getQuotaList(reqId);
+        List<QuotaModel> quotaModelList1 = quotaModelList.stream().filter(item -> item.getQuotaType().equals("QUOTA")).collect(Collectors.toList());
+        for(QuotaModel quotaModel : quotaModelList1) {
+            Quota quota = quotaMapper.selectById(quotaModel.getId());
+            QuotaTask quotaTask = new QuotaTask(reqId, quota);
+            if(quota.getGrandCode() != null){
+                QuotaGrand quotaGrand = quotaTask.getQuotaGrand(quotaModel.getQuotaValue());
+                QuotaValue quotaValue = new QuotaValue();
+                BeanUtils.copyProperties(quotaModel, quotaValue);
+                quotaValue.setQuotaId(quota.getId());
+                quotaValue.setMinusPoints(quotaGrand.getMinusPoints());
+                quotaValue.setIdealInterval(quotaGrand.getIdealInterval());
+                quotaValueMapper.updateById(quotaValue);
+            }
+        }
+        return ReturnTUtils.newCorrectReturnT();
+    }
 }
