@@ -2,9 +2,11 @@ package com.springboot.controller;
 
 
 import com.springboot.enums.OrgEnum;
+import com.springboot.ret.ReturnT;
 import com.springboot.service.RiskDetectionService;
 import com.springboot.utils.FreemarkerUtils;
 import com.springboot.utils.ITextUtils;
+import com.springboot.utils.ReturnTUtils;
 import com.springboot.vo.risk.EntHealthReportVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +32,8 @@ public class DetectController {
      * @return
      */
     @GetMapping("/finance/{entName}")
-    public EntHealthReportVo detectEntForFinance(@PathVariable String entName) {
-        return riskDetectionService.checkByEntName(entName, OrgEnum.FINANCE_OFFICE);
+    public ReturnT<EntHealthReportVo> detectEntForFinance(@PathVariable String entName) {
+        return ReturnTUtils.getReturnT(riskDetectionService.checkByEntName(entName, OrgEnum.FINANCE_OFFICE));
     }
 
     @GetMapping("/finance/pdf/{entName}")
@@ -50,8 +52,8 @@ public class DetectController {
      * @return
      */
     @GetMapping("/science/{entName}")
-    public EntHealthReportVo detectEntForScience(@PathVariable String entName) {
-        return riskDetectionService.checkByEntName(entName, OrgEnum.SCIENCE_OFFICE);
+    public ReturnT<EntHealthReportVo> detectEntForScience(@PathVariable String entName) {
+        return ReturnTUtils.getReturnT(riskDetectionService.checkByEntName(entName, OrgEnum.SCIENCE_OFFICE));
     }
 
     @GetMapping("/science/pdf/{entName}")
