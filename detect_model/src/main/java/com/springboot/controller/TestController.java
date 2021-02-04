@@ -147,7 +147,8 @@ public class TestController {
                 if(quota.getGrandCode() != null){
                     QuotaGrand quotaGrand = quotaTask.getQuotaGrand(quotaModel.getQuotaValue());
                     QuotaValue quotaValue = new QuotaValue();
-                    BeanUtils.copyProperties(quotaModel, quotaValue);
+                    BeanUtils.copyProperties(quotaModel, quotaValue, "id");
+                    quotaValue.setId(quotaModel.getQuotaValueId());
                     quotaValue.setQuotaId(quota.getId());
                     quotaValue.setMinusPoints(quotaGrand.getMinusPoints());
                     quotaValue.setIdealInterval(quotaGrand.getIdealInterval());
