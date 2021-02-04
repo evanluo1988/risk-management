@@ -6,6 +6,7 @@ import java.io.Serializable;
 @Data
 public class QuotaModel implements Serializable {
     private Long id;
+    private Long quotaValueId;
     private String reqId;
     /**
      * 指标码

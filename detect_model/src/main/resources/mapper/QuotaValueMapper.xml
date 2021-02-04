@@ -37,6 +37,7 @@
 
     <sql id="QuotaModel_Column_List" >
         q.id,
+        qv.id as quota_value_id,
         qv.req_id,
         q.quota_code,
         q.grand_code,
