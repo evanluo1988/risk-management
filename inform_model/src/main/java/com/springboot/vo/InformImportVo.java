@@ -7,6 +7,7 @@ import com.springboot.domain.InformPerson;
 import com.springboot.domain.InformReward;
 import com.springboot.easyexcel.converter.*;
 import com.springboot.enums.AssignmentEnum;
+import com.springboot.enums.CheckStatusEnum;
 import com.springboot.enums.RewardStatusEnum;
 import com.springboot.utils.ConvertUtils;
 import com.springboot.utils.UserAuthInfoContext;
@@ -213,6 +214,7 @@ public class InformImportVo {
         inform.setExpireTime(Objects.isNull(expireTimeStr) ? null : expireTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         inform.setCreateBy(UserAuthInfoContext.getUserName());
         inform.setCreateTime(new Date());
+        inform.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());
         return inform;
     }
 
