@@ -18,6 +18,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class StdLegalServiceTest extends ApplicationTest {
@@ -320,7 +322,7 @@ public class StdLegalServiceTest extends ApplicationTest {
         copyS2.add(s22);
         copyS2.add(s23);
         stdLegalService.clearS2(copyS2);
-        Assert.assertTrue(copyS2.size()==3);
+        Assert.assertTrue(copyS2.size()==2);
 
         copyS2.clear();
         s22.setCaseCreateTime(LocalDate.now());
@@ -330,6 +332,60 @@ public class StdLegalServiceTest extends ApplicationTest {
         copyS2.add(s23);
         stdLegalService.clearS2(copyS2);
         Assert.assertTrue(copyS2.size()==2);
+
+        copyS2.clear();
+        s22.setCaseCreateTime(LocalDate.now());
+        s23.setCaseCreateTime(LocalDate.now().plusDays(1));
+        copyS2.add(s21);
+        copyS2.add(s22);
+        copyS2.add(s23);
+        stdLegalService.clearS2(copyS2);
+        Assert.assertTrue(copyS2.size()==3);
+    }
+
+    @Test
+    public void testCleanS3(){
+        List<StdLegalEntUnexecutedTemp> copyS3 = Lists.newArrayList();
+        StdLegalEntUnexecutedTemp s31 = new StdLegalEntUnexecutedTemp();
+        StdLegalEntUnexecutedTemp s32 = new StdLegalEntUnexecutedTemp();
+        StdLegalEntUnexecutedTemp s33 = new StdLegalEntUnexecutedTemp();
+
+        s31.setCaseRiskLevel(StdLegalServiceImpl.CASERISKLEVEL_M3);
+        s32.setCaseRiskLevel(StdLegalServiceImpl.CASERISKLEVEL_M6);
+        s33.setCaseRiskLevel(StdLegalServiceImpl.CASERISKLEVEL_M6);
+
+        copyS3.add(s31);
+        copyS3.add(s32);
+        copyS3.add(s33);
+
+        stdLegalService.clearS3(copyS3);
+        Assert.assertTrue(copyS3.size() == 2);
+
+        s32.setRegDate(LocalDate.now());
+        copyS3.clear();
+        copyS3.add(s31);
+        copyS3.add(s32);
+        copyS3.add(s33);
+        stdLegalService.clearS3(copyS3);
+        Assert.assertTrue(copyS3.size() == 2);
+
+        s32.setRegDate(LocalDate.now());
+        s33.setRegDate(s32.getRegDate());
+        copyS3.clear();
+        copyS3.add(s31);
+        copyS3.add(s32);
+        copyS3.add(s33);
+        stdLegalService.clearS3(copyS3);
+        Assert.assertTrue(copyS3.size() == 2);
+
+        s32.setRegDate(LocalDate.now());
+        s33.setRegDate(s32.getRegDate().plusDays(1));
+        copyS3.clear();
+        copyS3.add(s31);
+        copyS3.add(s32);
+        copyS3.add(s33);
+        stdLegalService.clearS3(copyS3);
+        Assert.assertTrue(copyS3.size() == 3);
     }
 
     @Test
