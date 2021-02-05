@@ -131,7 +131,6 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void dispatcher(Long id, Long areaId) {
         Inform inform = getInformById(id);
         if (Objects.isNull(inform)) {
@@ -144,7 +143,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
 
         Area area = null;
         if(Objects.isNull(areaId)) {
-             area = areaService.getArea(inform.getInformName());
+            try{
+                area = areaService.getArea(inform.getInformName());
+            }catch(ServiceException e) {
+                throw new ServiceException("举报Id【"+id+"】下发失败");
+            }
+
         } else {
             List<Long> areaIdsById = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId(), false);
             if (!areaIdsById.contains(areaId)){

@@ -1,6 +1,7 @@
 package com.springboot.controller;
 
 
+import com.google.common.collect.Lists;
 import com.springboot.domain.InformRefund;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
@@ -125,14 +126,16 @@ public class InformController {
      */
     @PutMapping("/dispatcher/batch")
     public ReturnT dispatcherBatch(@RequestBody Set<Long> ids){
+        List<String> msgList = Lists.newArrayList();
         for (Long id : ids) {
             try{
                 informService.dispatcher(id, null);
             }catch (Exception e){
                 log.error("下发异常",e);
+                msgList.add(e.getMessage());
             }
         }
-        return ReturnTUtils.newCorrectReturnT();
+        return ReturnTUtils.getReturnT(msgList);
     }
 
     /**
