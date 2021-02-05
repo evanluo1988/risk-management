@@ -3,6 +3,8 @@ package com.springboot.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.metadata.CellData;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -384,6 +386,51 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
 
     @Slf4j
     private static class InformsUploadDataListener extends AnalysisEventListener<InformImportVo> {
+        public static final Map<Integer,String> HEAD0 = new HashMap<>(4);
+        public static final Map<Integer,String> HEAD1 = new HashMap<>(35);
+
+        static {
+            HEAD0.put(0,"举报人信息");
+            HEAD0.put(6,"举报人信息");
+            HEAD0.put(16,"举报人信息");
+            HEAD0.put(31,"举报人信息");
+
+            HEAD1.put(0,"线索编号");
+            HEAD1.put(1,"是否实名举报");
+            HEAD1.put(2,"举报人姓名");
+            HEAD1.put(3,"身份证号");
+            HEAD1.put(4,"联系电话");
+            HEAD1.put(5,"单位住址");
+            HEAD1.put(6,"举报来源");
+            HEAD1.put(7,"举报时间");
+            HEAD1.put(8,"被举报对象名称");
+            HEAD1.put(9,"被举报对象类型");
+            HEAD1.put(10,"案发时间");
+            HEAD1.put(11,"案发地（区）");
+            HEAD1.put(12,"案发地（街道或详细地址）");
+            HEAD1.put(13,"涉及金额（元）");
+            HEAD1.put(14,"举报具体内容");
+            HEAD1.put(15,"附件");
+            HEAD1.put(16,"核查状态");
+            HEAD1.put(17,"核查单位");
+            HEAD1.put(18,"核查时间");
+            HEAD1.put(19,"逾期");
+            HEAD1.put(20,"企业全称");
+            HEAD1.put(21,"核查地点");
+            HEAD1.put(22,"涉及行业");
+            HEAD1.put(23,"线索属实性审核");
+            HEAD1.put(24,"核查对应企业全称");
+            HEAD1.put(25,"核查详情");
+            HEAD1.put(26,"处置措施");
+            HEAD1.put(27,"是否移交");
+            HEAD1.put(28,"移交单位");
+            HEAD1.put(29,"移交原因");
+            HEAD1.put(30,"附件");
+            HEAD1.put(31,"奖励情况");
+            HEAD1.put(32,"奖励金额");
+            HEAD1.put(33,"奖励时间");
+            HEAD1.put(34,"逾期时间");
+        }
 
         private InformService informService;
 
@@ -394,12 +441,35 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         }
 
         @Override
+        public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+            Integer rowIndex = context.readRowHolder().getRowIndex();
+            validHead(rowIndex,headMap);
+            super.invokeHeadMap(headMap, context);
+        }
+
+        private void validHead(Integer rowIndex, Map<Integer, String> headMap) {
+            if (rowIndex == 0){
+//                if (headMap.size()!=HEAD0.size()){
+//                    throw new ServiceException("表头格式不正确");
+//                }
+            }else if (rowIndex==1){
+                if (headMap.size()!=HEAD1.size()){
+                    throw new ServiceException("表头格式不正确");
+                }
+            }else {
+                throw new ServiceException("表头格式不正确");
+            }
+        }
+
+        @Override
         public void invoke(InformImportVo informImportVo, AnalysisContext analysisContext) {
             data.add(informImportVo);
         }
 
         @Override
         public void doAfterAllAnalysed(AnalysisContext analysisContext) {
+            // 已核查的不倒入
+            data = data.stream().filter(item -> !CheckStatusEnum.CHECKED.getCode().equalsIgnoreCase(item.getCheckStatus())).collect(Collectors.toList());
             log.debug("import doAfter");
             //校验线索编号不能重复
             Set<String> clueNumbers = getClueNumbers(data);

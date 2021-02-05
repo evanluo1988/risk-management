@@ -3,6 +3,7 @@ package com.springboot.vo;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.springboot.domain.*;
 import com.springboot.easyexcel.converter.*;
+import com.springboot.enums.CheckStatusEnum;
 import com.springboot.utils.ConvertUtils;
 import com.springboot.utils.DateUtils;
 import com.springboot.utils.ServerCacheUtils;
@@ -127,6 +128,7 @@ public class TaskImportVo {
         taskCheck.setExpireTime(Objects.isNull(expireTimeStr) ? null : expireTimeStr.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         taskCheck.setCreateBy(UserAuthInfoContext.getUserName());
         taskCheck.setCreateTime(new Date());
+        taskCheck.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());
         return taskCheck;
     }
 
