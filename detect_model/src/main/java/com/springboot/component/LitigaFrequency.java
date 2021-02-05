@@ -52,7 +52,7 @@ public class LitigaFrequency implements QuotaComponent{
             initCaseMap(entUnexecuted.getRegDate(), entUnexecuted.getPublishDate(), entUnexecuted.getCaseCode(), caseMap);
         }
         //获取当前时间
-        LocalDate dateNow = LocalDate.now();
+        LocalDate dateNow = LocalDate.of(2020,3,1);
         int yearNow = dateNow.getYear();
         int monthNow = dateNow.getMonthValue();
         if(monthNow > 6){
