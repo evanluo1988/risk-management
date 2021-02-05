@@ -228,7 +228,6 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void dispatcher(Long id, Long areaId) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
@@ -241,7 +240,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         Area area = null;
         if (Objects.isNull(areaId)) {
             Enterprise enterpriseById = enterpriseService.getEnterpriseById(taskCheckById.getEnterpriseId());
-            area = areaService.getArea(enterpriseById.getEnterpriseName());
+            try{
+                area = areaService.getArea(enterpriseById.getEnterpriseName());
+            }catch(ServiceException e){
+                throw new ServiceException("任务Id【"+id+"】下发失败");
+            }
         } else {
             List<Long> areaIdsById = areaService.findAreaIdsById(UserAuthInfoContext.getAreaId(), false);
             if (!areaIdsById.contains(areaId)){

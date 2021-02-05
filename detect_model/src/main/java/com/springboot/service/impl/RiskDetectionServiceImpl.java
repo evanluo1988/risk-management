@@ -71,6 +71,7 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
                 reqId = dataHandleService.handelData(entName, OrgEnum.FINANCE_OFFICE);
             } catch (Exception exception) {
                 exception.printStackTrace();
+                throw new ServiceException("微云取数失败！");
             }
         } else {
             reqId = cloudInfoTimeliness.getReqId();

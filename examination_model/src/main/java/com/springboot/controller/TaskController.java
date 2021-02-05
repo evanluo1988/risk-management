@@ -1,5 +1,6 @@
 package com.springboot.controller;
 
+import com.google.common.collect.Lists;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.TaskRefundService;
@@ -112,14 +113,16 @@ public class TaskController {
      */
     @PutMapping("/dispatcher/batch")
     public ReturnT dispatcher(@RequestBody Set<Long> ids){
+        List<String> msgList = Lists.newArrayList();
         for (Long id : ids) {
             try {
                 taskService.dispatcher(id, null);
             }catch (Exception e){
                 log.error("下发异常：",e);
+                msgList.add(e.getMessage());
             }
         }
-        return ReturnTUtils.newCorrectReturnT();
+        return ReturnTUtils.getReturnT(msgList);
     }
 
     /**
