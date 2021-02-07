@@ -87,14 +87,6 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         }
 
         @Override
-        public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
-            if (headMap.size()!=32){
-                throw new ServiceException("表头格式不正确");
-            }
-            super.invokeHeadMap(headMap, context);
-        }
-
-        @Override
         public void invoke(TaskImportVo taskImportVo, AnalysisContext analysisContext) {
             log.debug("解析到一条数据:{}", JSON.toJSONString(taskImportVo));
             data.add(taskImportVo);
