@@ -116,7 +116,10 @@ public class TaskController {
         List<String> msgList = Lists.newArrayList();
         for (Long id : ids) {
             try {
-                taskService.dispatcher(id, null);
+                String r = taskService.dispatcher(id, null);
+                if(r != null){
+                    msgList.add(r);
+                }
             }catch (Exception e){
                 log.error("下发异常：",e);
                 msgList.add(e.getMessage());

@@ -131,7 +131,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public void dispatcher(Long id, Long areaId) {
+    public String dispatcher(Long id, Long areaId) {
         Inform inform = getInformById(id);
         if (Objects.isNull(inform)) {
             throw new ServiceException("举报信息不存在");
@@ -169,6 +169,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         }
 
         updateById(inform);
+
+        if(AssignmentEnum.ASSIGNED_FAIL.getCode().equals(inform.getAssignment())) {
+            return "举报Id【"+id+"】下发失败";
+        }else{
+            return null;
+        }
     }
 
     @Override

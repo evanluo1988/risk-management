@@ -129,7 +129,10 @@ public class InformController {
         List<String> msgList = Lists.newArrayList();
         for (Long id : ids) {
             try{
-                informService.dispatcher(id, null);
+                String r = informService.dispatcher(id, null);
+                if(r != null){
+                    msgList.add(r);
+                }
             }catch (Exception e){
                 log.error("下发异常",e);
                 msgList.add(e.getMessage());

@@ -31,7 +31,7 @@ public interface TaskService extends IService<Task> {
 
     void del(Long id);
 
-    void dispatcher(Long id, Long areaId);
+    String dispatcher(Long id, Long areaId);
 
     void goBack(Long id, String refundReason);
 

@@ -235,7 +235,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public void dispatcher(Long id, Long areaId) {
+    public String dispatcher(Long id, Long areaId) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("任务不存在");
@@ -273,6 +273,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         }
 
         taskCheckService.updateById(taskCheckById);
+
+        if(AssignmentEnum.ASSIGNED_FAIL.getCode().equals(taskCheckById.getAssignment())) {
+            return "任务Id【"+id+"】下发失败";
+        }else{
+            return null;
+        }
     }
 
     @Override

@@ -57,7 +57,7 @@ public interface InformService extends IService<Inform> {
      * @param id
      * @param areaId
      */
-    void dispatcher(Long id, Long areaId);
+    String dispatcher(Long id, Long areaId);
 
     /**
      * 退回
