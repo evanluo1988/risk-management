@@ -146,6 +146,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             try{
                 area = areaService.getArea(inform.getInformName());
             }catch(ServiceException e) {
+                log.error("安硕查询区域异常：{}",e);
                 throw new ServiceException("举报Id【"+id+"】下发失败");
             }
 
@@ -158,6 +159,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         }
 
         if (Objects.isNull(area)) {
+            log.info("未查询到区域信息，下发失败，id:{},areaId:{}",id,areaId);
             inform.setAssignment(AssignmentEnum.ASSIGNED_FAIL.getCode());
             inform.setUpdateTime(new Date());
             inform.setUpdateBy(UserAuthInfoContext.getUserName());

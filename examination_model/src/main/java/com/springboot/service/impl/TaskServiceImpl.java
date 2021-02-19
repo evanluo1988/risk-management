@@ -242,6 +242,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             try{
                 area = areaService.getArea(enterpriseById.getEnterpriseName());
             }catch(ServiceException e){
+                log.error("安硕查询区域异常：{}",e);
                 throw new ServiceException("任务Id【"+id+"】下发失败");
             }
         } else {
@@ -253,6 +254,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         }
 
         if (Objects.isNull(area)) {
+            log.info("未查询到区域信息，下发失败，id:{},areaId:{}",id,areaId);
             taskCheckById.setAssignment(AssignmentEnum.ASSIGNED_FAIL.getCode());
             taskCheckById.setUpdateTime(new Date());
             taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
