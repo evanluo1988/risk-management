@@ -1,5 +1,6 @@
 package com.springboot.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -16,6 +17,7 @@ import com.springboot.service.RiskDetectionService;
 import com.springboot.service.remote.GeoRemoteService;
 import com.springboot.utils.*;
 import com.springboot.vo.AreaVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
  * @author 刘宏飞
  * @since 2020-11-26
  */
+@Slf4j
 @Service
 public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaService {
 
@@ -89,18 +92,22 @@ public class AreaServiceImpl extends ServiceImpl<AreaDao, Area> implements AreaS
     public Area getArea(String entName) {
         Area area = null;
         String entAddress = riskDetectionService.getEntAddress(entName);
+        log.info("安硕根据entName:{} ,查询到的entAddress：{}",entName,entAddress);
         GeoRemoteService.GeoResponse geoResponse = geoRemoteService.geo(key, entAddress);
+        log.info("调用高德地图geo接口响应报文：{}", JSON.toJSONString(geoResponse));
         if (geoResponse.succ()){
             String location = geoResponse.getGeocodes().get(0).getLocation();
 
             if (StringUtils.isNotBlank(location)){
                 GeoRemoteService.ReGeoResponse regeo = geoRemoteService.regeo(key, location, "base", "false", "1");
+                log.info("调用高德地图rgeo接口响应报文：{}", JSON.toJSONString(regeo));
                 if (regeo.succ()){
                     String township = regeo.getRegeocode().getAddressComponent().getTownship();
                     area = ServerCacheUtils.getAreaLikeName(township);
                 }
             }
         }
+        log.info("根据entName查询到的Area：{}");
         return area;
     }
 
