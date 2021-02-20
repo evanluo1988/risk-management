@@ -1,9 +1,11 @@
 package com.springboot.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.CellData;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -110,24 +112,40 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         if(Objects.isNull(areaId)) {
             areaId = UserAuthInfoContext.getAreaId();
         }
+
+        int currentPage = 1;
+        long totalPage = 1L;
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
-        Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardStatus, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(1, 10000));
-
-        List<Long> ids = page.getRecords().stream().map(InformPageModel::getId).collect(Collectors.toList());
-
-        if (CollectionUtils.isEmpty(ids)){
-            return ;
-        }
-
-        List<InformExportModel> informs = informDao.listInformByIds(ids);
-        List<InformExportVo> informExportVos = ConvertUtils.sourceToTarget(informs, InformExportVo.class);
 
         HttpServletResponse response = HttpServletLocalThread.getResponse();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
         String fileName = URLEncoder.encode("举报任务情况"+LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(),InformExportVo.class).sheet("1").doWrite(informExportVos);
+        ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), InformExportVo.class).build();
+
+        while (currentPage<=totalPage){
+            Page<InformPageModel> informPage = informDao.informPage(checkStatus,assignment,informTimeStart,informTimeEnd,rewardStatus,informName,verification,overdue,checkTimeStart,checkTimeEnd,areaIds,new Page<>(currentPage, 10000));
+            //如果当前页码是默认页码1  需要计算一次总页码
+            if (currentPage == 1){
+                totalPage = new Double(Math.ceil(informPage.getTotal()/10000)).longValue();
+            }
+
+            List<Long> ids = informPage.getRecords().stream().map(InformPageModel::getId).collect(Collectors.toList());
+
+            if (CollectionUtils.isEmpty(ids)){
+                continue ;
+            }
+
+            List<InformExportModel> informs = informDao.listInformByIds(ids);
+            List<InformExportVo> informExportVos = ConvertUtils.sourceToTarget(informs, InformExportVo.class);
+
+            WriteSheet sheet = EasyExcel.writerSheet(currentPage).build();
+            excelWriter.write(informExportVos,sheet);
+            currentPage++;
+        }
+
+        excelWriter.finish();
     }
 
     @Override

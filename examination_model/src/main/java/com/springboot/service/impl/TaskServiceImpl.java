@@ -1,8 +1,10 @@
 package com.springboot.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -374,25 +376,41 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             areaId = UserAuthInfoContext.getAreaId();
         }
 
+        int currentPage = 1;
+        long totalPage = 1L;
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
-        Page<TaskModel> page = taskMapper.pageTasks(disposalStage, taskTimeStart, taskTimeEnd, overdue,
-                taskExpireStart, taskExpireEnd, enterpriseName,
-                checkStatus, assignment, areaIds, new Page<>(1, 10000));
 
-        List<Long> ids = page.getRecords().stream().map(TaskModel::getId).collect(Collectors.toList());
-
-        if (CollectionUtils.isEmpty(ids)) {
-            return;
-        }
-
-        List<TaskExportModel> exportModelList = taskMapper.listTaskByIds(ids);
-        List<TaskExportVo> taskExportVos = ConvertUtils.sourceToTarget(exportModelList, TaskExportVo.class);
         HttpServletResponse response = HttpServletLocalThread.getResponse();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
         String fileName = URLEncoder.encode("核查处置任务情况" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), TaskExportVo.class).sheet("1").doWrite(taskExportVos);
+        ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), TaskExportVo.class).build();
+
+        while (currentPage<=totalPage){
+            Page<TaskModel> page = taskMapper.pageTasks(disposalStage, taskTimeStart, taskTimeEnd, overdue,
+                    taskExpireStart, taskExpireEnd, enterpriseName,
+                    checkStatus, assignment, areaIds, new Page<>(currentPage, 10000));
+            //如果当前页码是默认页码1  需要计算一次总页码
+            if (currentPage == 1){
+                totalPage = new Double(Math.ceil(page.getTotal()/10000)).longValue();
+            }
+
+            List<Long> ids = page.getRecords().stream().map(TaskModel::getId).collect(Collectors.toList());
+
+            if (CollectionUtils.isEmpty(ids)) {
+                continue;
+            }
+
+            List<TaskExportModel> exportModelList = taskMapper.listTaskByIds(ids);
+            List<TaskExportVo> taskExportVos = ConvertUtils.sourceToTarget(exportModelList, TaskExportVo.class);
+
+            WriteSheet sheet = EasyExcel.writerSheet(currentPage).build();
+            excelWriter.write(taskExportVos,sheet);
+            currentPage++;
+        }
+
+        excelWriter.finish();
     }
 
     @Override
