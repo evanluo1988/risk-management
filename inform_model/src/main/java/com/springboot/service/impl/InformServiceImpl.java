@@ -128,7 +128,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             Page<InformPageModel> informPage = informDao.informPage(checkStatus,assignment,informTimeStart,informTimeEnd,rewardStatus,informName,verification,overdue,checkTimeStart,checkTimeEnd,areaIds,new Page<>(currentPage, 10000));
             //如果当前页码是默认页码1  需要计算一次总页码
             if (currentPage == 1){
-                totalPage = new Double(Math.ceil(informPage.getTotal()/10000)).longValue();
+                totalPage = new Double(Math.ceil((double)informPage.getTotal()/10000)).longValue();
             }
 
             List<Long> ids = informPage.getRecords().stream().map(InformPageModel::getId).collect(Collectors.toList());

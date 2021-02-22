@@ -393,7 +393,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
                     checkStatus, assignment, areaIds, new Page<>(currentPage, 10000));
             //如果当前页码是默认页码1  需要计算一次总页码
             if (currentPage == 1){
-                totalPage = new Double(Math.ceil(page.getTotal()/10000)).longValue();
+                totalPage = new Double(Math.ceil((double)page.getTotal()/10000)).longValue();
             }
 
             List<Long> ids = page.getRecords().stream().map(TaskModel::getId).collect(Collectors.toList());
