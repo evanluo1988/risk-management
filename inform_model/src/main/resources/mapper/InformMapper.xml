@@ -84,8 +84,7 @@
     ic.attachment as checkAtta,
     ire.reward_status AS rewardStatus,
     ire.reward_amount AS rewardAmount,
-    DATE_FORMAT(ire.reward_time,'%Y-%m-%d') AS rewardTime,
-    ir.reason
+    DATE_FORMAT(ire.reward_time,'%Y-%m-%d') AS rewardTime
     </sql>
 
     <select id="informPage" parameterType="Map" resultType="com.springboot.model.InformPageModel">
@@ -149,7 +148,6 @@
         FROM informs i
         LEFT JOIN inform_persons ip ON i.inform_person_id = ip.id
         LEFT JOIN inform_checks ic ON i.id = ic.inform_id
-        LEFT JOIN inform_refunds ir ON i.id = ir.inform_id
         LEFT JOIN inform_rewards ire ON i.id = ire.inform_id
         WHERE i.enable = 'Y'
         and i.id IN
