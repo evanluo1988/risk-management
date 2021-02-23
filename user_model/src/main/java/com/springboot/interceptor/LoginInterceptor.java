@@ -3,6 +3,7 @@ package com.springboot.interceptor;
 import com.google.common.collect.Lists;
 import com.springboot.constant.GlobalConstants;
 import com.springboot.domain.User;
+import com.springboot.exception.InvalidAuthException;
 import com.springboot.exception.ServiceException;
 import com.springboot.model.RolePerm;
 import com.springboot.service.UserRoleService;
@@ -38,7 +39,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         log.info("best matching pattern attribute is :{}",s);
         Long userId;
         if (Objects.isNull(userId = (Long) request.getSession().getAttribute(GlobalConstants.USER_ID))) {
-            throw new ServiceException("用户登录凭证失效，请登录！");
+            throw new InvalidAuthException("用户登录凭证失效，请登录！");
         }
         //查询用户实体
         User user = userService.getUserEntityById(userId);

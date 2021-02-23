@@ -1,6 +1,7 @@
 package com.springboot.config;
 
 import com.google.common.collect.Lists;
+import com.springboot.exception.InvalidAuthException;
 import com.springboot.exception.ServiceException;
 import com.springboot.exception.UserLoginException;
 import com.springboot.ret.ReturnT;
@@ -29,6 +30,19 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * 用户认证信息异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(InvalidAuthException.class)
+    public ReturnT InvalidAuthExceptionHandler(InvalidAuthException e){
+        log.error("InvalidAuthException:{}",e);
+        ReturnT<Object> returnT = ReturnTUtils.getReturnT(e);
+        returnT.setCode("NEED_LOGIN");
+        return returnT;
+    }
 
     /**
      * 用户登陆异常
