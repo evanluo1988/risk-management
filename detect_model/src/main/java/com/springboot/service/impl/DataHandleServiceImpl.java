@@ -334,7 +334,9 @@ public class DataHandleServiceImpl implements DataHandleService {
         List<StdIaBrandVo> stdIaBrandVoList = Lists.newArrayList();
         brandInformationVo.setStdIaBrandList(stdIaBrandVoList);
         List<StdIaBrand> stdIaBrandList = stdIaBrandService.findByReqId(reqId);
-        for(StdIaBrand stdIaBrand : Utils.getList(stdIaBrandList)) {
+        //商标明细去重
+        List<StdIaBrand> distinct = stdIaBrandList.stream().distinct().collect(Collectors.toList());
+        for(StdIaBrand stdIaBrand : Utils.getList(distinct)) {
             StdIaBrandVo stdIaBrandVo = new StdIaBrandVo();
             final String type = DicTypeEnum.NICECLASSIFY.name();
             DicTable dicTableByTypeAndDicValue = DetectCacheUtils.getDicTableByTypeAndDicValue(type, stdIaBrand.getNiceClassify());
