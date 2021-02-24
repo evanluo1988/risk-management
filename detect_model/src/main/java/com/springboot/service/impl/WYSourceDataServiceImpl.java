@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -144,7 +145,7 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         if(Objects.nonNull(cloudQueryLog)) {
             cloudQueryLog.setBrandMessage(JSON.toJSONString(brandDataArray));
         }
-        return iaAsBrandList;
+        return iaAsBrandList.stream().distinct().collect(Collectors.toList());
     }
 
 
