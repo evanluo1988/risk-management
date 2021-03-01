@@ -63,9 +63,11 @@ public interface GeoRemoteService {
             public static class AddressComponent{
                 //街道
                 private String township;
+                // 区
+                private String district;
                 private StreetNumber streetNumber;
                 @Data
-                static class StreetNumber{
+                public static class StreetNumber{
                     //街
                     private String street;
                     //号
