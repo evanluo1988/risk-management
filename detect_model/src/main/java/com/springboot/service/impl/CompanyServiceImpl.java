@@ -8,31 +8,46 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.springboot.domain.Company;
+import com.springboot.domain.CompanyDetectErrLog;
 import com.springboot.dto.CompanyImportDto;
+import com.springboot.enums.OrgEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.CompanyMapper;
+import com.springboot.service.CompanyDetectErrLogService;
 import com.springboot.service.CompanyService;
+import com.springboot.service.DataHandleService;
 import com.springboot.service.remote.GeoRemoteService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * @author lhf
  * @date 2021/3/1 3:46 下午
  **/
+@Slf4j
 @Service
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> implements CompanyService {
 
     @Autowired
     private GeoRemoteService geoRemoteService;
+    @Autowired
+    private DataHandleService dataHandleService;
+    @Autowired
+    private CompanyDetectErrLogService companyDetectErrLogService;
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -43,6 +58,40 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             log.error("导入举报信息异常：{}", e);
             throw new ServiceException("导入举报信息错误");
         }
+    }
+
+    @Override
+    public void detect() {
+        String timePattern = "yyyyMMddHHmmssSSS";
+        List<Company> list = list();
+        String random = UUID.randomUUID().toString();
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern(timePattern));
+        String index = now+random;
+        log.info("detect companies data start,index:{}",index);
+        List<CompanyDetectErrLog> errorLogs = Lists.newArrayList();
+        for (int i = 0; i < list.size(); i++) {
+            Company company = list.get(i);
+            log.info("detect companies process {} / {}",i,list.size());
+            try{
+                // 查询数据
+                String reqId = dataHandleService.handelData(company.getEntName(), OrgEnum.SCIENCE_OFFICE);
+                // 计算指标值
+                dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
+            }catch (Exception e){
+                log.error("公司工商司法知识产权数据跑批异常index:{},e:{}",index,JSON.toJSONString(e));
+                CompanyDetectErrLog companyDetectErrLog = new CompanyDetectErrLog();
+                companyDetectErrLog.setCompanyId(company.getId())
+                        .setCompanyName(company.getEntName())
+                        .setExceptionMsg(JSON.toJSONString(e))
+                        .setQueryIndex(index);
+                errorLogs.add(companyDetectErrLog);
+            }
+        }
+        // 记录错误日志
+        if (!CollectionUtils.isEmpty(errorLogs)){
+            companyDetectErrLogService.saveBatch(errorLogs);
+        }
+        log.info("detect companies data end,index:{}",index);
     }
 
 

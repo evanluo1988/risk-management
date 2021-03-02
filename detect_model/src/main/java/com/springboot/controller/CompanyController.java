@@ -1,7 +1,10 @@
 package com.springboot.controller;
 
+import com.springboot.ret.ReturnT;
 import com.springboot.service.CompanyService;
+import com.springboot.utils.ReturnTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +22,15 @@ public class CompanyController {
     private CompanyService companyService;
 
     @PostMapping("/import")
-    public void importCompany(MultipartFile file){
+    public ReturnT importCompany(MultipartFile file){
         companyService.importCompany(file);
+        return ReturnTUtils.newCorrectReturnT();
+    }
+
+
+    @GetMapping("/detectCompany")
+    public ReturnT detectCompany(){
+        companyService.detect();
+        return ReturnTUtils.newCorrectReturnT();
     }
 }

@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.springboot.domain.CloudQueryLog;
 import com.springboot.domain.IaAsBrand;
 import com.springboot.domain.IaAsCopyright;
+import com.springboot.exception.ServiceException;
 import com.springboot.model.IaAsPartentModel;
 import com.springboot.model.remote.*;
 import com.springboot.service.WYSourceDataService;
@@ -22,6 +23,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -68,7 +70,9 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
 
         System.out.println("请求报文："+ JSON.toJSONString(customerDataCollectionRequest));
         CustomerIndustrialAndJusticeResponse customerDataCollectionResponse = wyRemoteService.customerDataCollection(customerDataCollectionRequest);
-
+        if (Objects.isNull(customerDataCollectionResponse)){
+            throw new ServiceException("未查询到企业工商司法数据");
+        }
         return JSON.toJSONString(customerDataCollectionResponse);
     }
 
@@ -219,6 +223,9 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         System.out.println("请求报文："+ JSON.toJSONString(intellectualPropertyRequest));
 
         CustomerIntellectualPropertyResponse customerBrandResponse = wyRemoteService.customerBrandDataCollection(intellectualPropertyRequest);
+        if (Objects.isNull(customerBrandResponse)){
+            throw new ServiceException("未查询到企业知识产权数据");
+        }
         return customerBrandResponse.getData();
     }
 }

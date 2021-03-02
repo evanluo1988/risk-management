@@ -14,4 +14,9 @@ public interface CompanyService extends IService<Company> {
      * @param file
      */
     void importCompany(MultipartFile file);
+
+    /**
+     * 探测数据
+     */
+    void detect();
 }
