@@ -2,6 +2,7 @@ package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -9,6 +10,7 @@ import lombok.experimental.Accessors;
  * @date 2021/3/2 9:43 上午
  **/
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("companies_detect_err_log")
 public class CompanyDetectErrLog extends BaseDomain{

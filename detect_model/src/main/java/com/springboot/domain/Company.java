@@ -2,6 +2,7 @@ package com.springboot.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author lhf
@@ -9,6 +10,7 @@ import lombok.Data;
  **/
 @Data
 @TableName("companies")
+@EqualsAndHashCode(callSuper = true)
 public class Company extends BaseDomain{
     /**
      * 编号

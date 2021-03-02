@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -116,9 +117,7 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         @Override
         public void doAfterAllAnalysed(AnalysisContext analysisContext) {
             List<Company> companies = data.stream().map(CompanyImportDto::toCompany).collect(Collectors.toList());
-            companies.forEach(company -> {
-                geo(company);
-            });
+            companies.forEach(CompanyUploadDataListener.this::geo);
 
             companyService.saveBatch(companies);
         }
