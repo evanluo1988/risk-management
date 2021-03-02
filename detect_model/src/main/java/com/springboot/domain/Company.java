@@ -50,4 +50,8 @@ public class Company extends BaseDomain{
      * 纬度
      */
     private String lat;
+    /**
+     * 最新数据reqId
+     */
+    private String reqId;
 }

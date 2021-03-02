@@ -3,7 +3,6 @@ package com.springboot.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -18,7 +17,6 @@ import com.springboot.service.CompanyService;
 import com.springboot.service.DataHandleService;
 import com.springboot.service.remote.GeoRemoteService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -77,6 +74,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 String reqId = dataHandleService.handelData(company.getEntName(), OrgEnum.SCIENCE_OFFICE);
                 // 计算指标值
                 dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
+                company.setReqId(reqId);
+                updateById(company);
             }catch (Exception e){
                 log.error("公司工商司法知识产权数据跑批异常index:{},e:{}",index,JSON.toJSONString(e));
                 CompanyDetectErrLog companyDetectErrLog = new CompanyDetectErrLog();
