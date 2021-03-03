@@ -1,5 +1,8 @@
 package com.springboot.controller;
 
+import com.springboot.dto.CompanyPageOutputDto;
+import com.springboot.dto.CompanyPageQueryDto;
+import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.CompanyService;
 import com.springboot.utils.ReturnTUtils;
@@ -32,5 +35,11 @@ public class CompanyController {
     public ReturnT detectCompany(){
         companyService.detect();
         return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @GetMapping("/page")
+    public ReturnT<Pagination<CompanyPageOutputDto>> pageCompany(CompanyPageQueryDto query){
+        Pagination<CompanyPageOutputDto> pagination = companyService.pageCompany(query);
+        return ReturnTUtils.getReturnT(pagination);
     }
 }

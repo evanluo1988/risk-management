@@ -7,6 +7,7 @@ import com.springboot.enums.OrgEnum;
 import com.springboot.model.QuotaModel;
 import com.springboot.model.StdGsEntInfoModel;
 import com.springboot.service.*;
+import com.springboot.utils.ConvertUtils;
 import com.springboot.utils.Utils;
 import com.springboot.utils.DetectCacheUtils;
 import com.springboot.vo.risk.*;
@@ -40,6 +41,8 @@ public class DataHandleServiceImpl implements DataHandleService {
     private StdIaBrandService stdIaBrandService;
     @Autowired
     private StdIaCopyrightService stdIaCopyrightService;
+    @Autowired
+    private CompanyScoreService companyScoreService;
 
 
     @Override
@@ -103,7 +106,7 @@ public class DataHandleServiceImpl implements DataHandleService {
     private EntHealthAssessmentVo getEntHealthAssessment(String reqId, List<QuotaModel> quotaModelList, OrgEnum org) {
         EntHealthAssessmentVo entHealthAssessment = new EntHealthAssessmentVo();
         entHealthAssessment.setEntHealthDetectionRadar(getEntHealthDetectionRadar(reqId, quotaModelList));
-        entHealthAssessment.setEntHealthDialysis(getEntHealthDialysis(quotaModelList, org));
+        entHealthAssessment.setEntHealthDialysis(getEntHealthDialysis(reqId, quotaModelList, org));
         return entHealthAssessment;
     }
 
@@ -143,7 +146,7 @@ public class DataHandleServiceImpl implements DataHandleService {
     /**
      * 企业健康检测透析
      */
-    private EntHealthDialysisVo getEntHealthDialysis(List<QuotaModel> quotaModelList, OrgEnum org) {
+    private EntHealthDialysisVo getEntHealthDialysis(String reqId, List<QuotaModel> quotaModelList, OrgEnum org) {
         EntHealthDialysisVo entHealthDialysis = new EntHealthDialysisVo();
         FiveDRaderVo fiveDRader = new FiveDRaderVo();
         List<FiveDRaderItemVo> fiveDRaderItemList = Lists.newArrayList();
@@ -228,7 +231,7 @@ public class DataHandleServiceImpl implements DataHandleService {
                     break;
             }
         }
-        culFiveDRader(fiveDRader, quotaModelList, org);
+        culFiveDRader(reqId, fiveDRader, quotaModelList, org);
 
         return entHealthDialysis;
     }
@@ -576,9 +579,10 @@ public class DataHandleServiceImpl implements DataHandleService {
 
     /**
      * 计算5维雷达综合得分
+     * @param reqId
      * @param fiveDRader
      */
-    private void culFiveDRader(FiveDRaderVo fiveDRader, List<QuotaModel> quotaModelList, OrgEnum org) {
+    private void culFiveDRader(String reqId, FiveDRaderVo fiveDRader, List<QuotaModel> quotaModelList, OrgEnum org) {
         List<Long> firstLevelIds = Lists.newArrayList(10L,12L,13L);
         if(org == OrgEnum.SCIENCE_OFFICE) {
             firstLevelIds.add(11L);
@@ -611,6 +615,10 @@ public class DataHandleServiceImpl implements DataHandleService {
                 fiveDRader.setLegalRiskScore(score);
             }
         }
+
+        CompanyScore companyScore = ConvertUtils.sourceToTarget(fiveDRader, CompanyScore.class);
+        companyScore.setReqId(reqId);
+        companyScoreService.save(companyScore);
     }
 
     private String getDimensionName(Long dimensionId) {

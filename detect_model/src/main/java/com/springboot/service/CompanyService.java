@@ -1,8 +1,14 @@
 package com.springboot.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.Company;
+import com.springboot.dto.*;
+import com.springboot.page.PageIn;
+import com.springboot.page.Pagination;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author lhf
@@ -19,4 +25,36 @@ public interface CompanyService extends IService<Company> {
      * 探测数据
      */
     void detect();
+
+    /**
+     * 街道排名
+     * @return
+     */
+    List<StatisticsCompanyRankByNumOutputDto> streetRank();
+
+    /**
+     * 根据指标值查询企业排名
+     * @param quotaCode
+     * @return
+     */
+    List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(String quotaCode);
+
+    /**
+     * 企业年增长
+     * @return
+     */
+    List<StatisticsCompanyAddedTheYearsOutputDto> addedOverTheYears();
+
+    /**
+     * 企业经营状态
+     * @return
+     */
+    List<StatisticsCompanyOperatingStatusOutputDto> operatingStatus();
+
+    /**
+     * 公司列表
+     * @param query
+     * @return
+     */
+    Pagination<CompanyPageOutputDto> pageCompany(CompanyPageQueryDto query);
 }

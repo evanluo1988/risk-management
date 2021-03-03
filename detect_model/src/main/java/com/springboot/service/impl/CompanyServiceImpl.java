@@ -4,14 +4,17 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.springboot.domain.Company;
 import com.springboot.domain.CompanyDetectErrLog;
-import com.springboot.dto.CompanyImportDto;
+import com.springboot.dto.*;
 import com.springboot.enums.OrgEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.CompanyMapper;
+import com.springboot.page.PageIn;
+import com.springboot.page.Pagination;
 import com.springboot.service.CompanyDetectErrLogService;
 import com.springboot.service.CompanyService;
 import com.springboot.service.DataHandleService;
@@ -28,7 +31,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +41,8 @@ import java.util.stream.Collectors;
 @Service
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> implements CompanyService {
 
+    @Autowired
+    private CompanyMapper companyMapper;
     @Autowired
     private GeoRemoteService geoRemoteService;
     @Autowired
@@ -92,6 +96,33 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             companyDetectErrLogService.saveBatch(errorLogs);
         }
         log.info("detect companies data end,index:{}",index);
+    }
+
+    @Override
+    public List<StatisticsCompanyRankByNumOutputDto> streetRank() {
+        return companyMapper.streetRank();
+    }
+
+    @Override
+    public List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(String quotaCode) {
+        List<StatisticsCompanyRankByQuotaOutputDto> list = companyMapper.quotaRank(quotaCode);
+        return list;
+    }
+
+    @Override
+    public List<StatisticsCompanyAddedTheYearsOutputDto> addedOverTheYears() {
+        return companyMapper.addedOverTheYears();
+    }
+
+    @Override
+    public List<StatisticsCompanyOperatingStatusOutputDto> operatingStatus() {
+        return companyMapper.operatingStatus();
+    }
+
+    @Override
+    public Pagination<CompanyPageOutputDto> pageCompany(CompanyPageQueryDto query) {
+        Page<CompanyPageOutputDto> page = companyMapper.pageCompany(query.getKey(),query.getStreet(),query.getOperatingStatus(),query.convertPage());
+        return Pagination.of(page);
     }
 
 

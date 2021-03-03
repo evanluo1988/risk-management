@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.CompanyMapper" >
+
+    <select id="streetRank" resultType="com.springboot.dto.StatisticsCompanyRankByNumOutputDto">
+        SELECT street,count(street) num FROM companies GROUP BY street ORDER BY num DESC LIMIT 10 OFFSET 0
+    </select>
+
+    <select id="quotaRank" resultType="com.springboot.dto.StatisticsCompanyRankByQuotaOutputDto">
+        SELECT
+            c.ent_name,
+            qv.quota_value
+        FROM
+            companies c
+                LEFT JOIN quota_values qv ON c.req_id = qv.req_id
+                LEFT JOIN quotas q ON q.id = qv.quota_id AND q.quota_code = #{quotaCode}
+        ORDER BY qv.quota_value DESC
+        LIMIT 10 OFFSET 0
+    </select>
+
+    <select id="addedOverTheYears" resultType="com.springboot.dto.StatisticsCompanyAddedTheYearsOutputDto">
+        SELECT YEAR(create_time) yearName,COUNT(id) incrementNum FROM companies GROUP BY yearName ORDER BY yearName DESC
+    </select>
+
+    <select id="operatingStatus" resultType="com.springboot.dto.StatisticsCompanyOperatingStatusOutputDto">
+        SELECT
+            IFNULL(qv.quota_value,'') operatingStatus,
+            COUNT(c.id) num
+        FROM
+            companies c
+                LEFT JOIN quota_values qv ON c.req_id = qv.req_id
+                LEFT JOIN quotas q ON q.id = qv.quota_id AND q.quota_code = 'GS_ENT_ABNORMAL_STATE'
+        GROUP BY operatingStatus
+    </select>
+
+    <select id="pageCompany" resultType="com.springboot.dto.CompanyPageOutputDto">
+        SELECT
+            c.id,
+            c.ent_name entName,
+            IFNULL(qv1.quota_value,'其他') operatingStatus,
+            c.street,
+            qv2.quota_value fr,
+            c.credit_code creditCode,
+            qv3.quota_value employeesNum,
+            c.reg_date regDate,
+            cs.business_stability_score businessStabilityScore,
+            cs.intellectual_property_score intellectualPropertyScore,
+            cs.business_risk_score businessRiskScore,
+            cs.legal_risk_score legalRiskScore,
+            qv4.quota_value patent,
+            qv5.quota_value soft,
+            qv6.quota_value businessPenalty
+        FROM
+            companies c
+            -- 企业经营状态
+            LEFT JOIN quota_values qv1 ON c.req_id = qv1.req_id AND qv1.quota_id = '58'
+            -- 法定代表人
+            LEFT JOIN quota_values qv2 ON c.req_id = qv2.req_id AND qv2.quota_id = '74'
+            -- 员工人数
+            LEFT JOIN quota_values qv3 ON c.req_id = qv3.req_id AND qv3.quota_id = '85'
+            -- 有效专利总数
+            LEFT JOIN quota_values qv4 ON c.req_id = qv4.req_id AND qv4.quota_id = '120'
+            -- 报告主体有效软著数量
+            LEFT JOIN quota_values qv5 ON c.req_id = qv5.req_id AND qv5.quota_id = '50'
+            -- 严重工商处罚次数
+            LEFT JOIN quota_values qv6 ON c.req_id = qv6.req_id AND qv6.quota_id = '59'
+            LEFT JOIN companies_score cs ON cs.req_id = c.req_id
+        WHERE
+            1=1
+            <if test="key!=null and key!=''">
+                AND (c.ent_name like '%${key}%' OR c.credit_code like '%${key}%')
+            </if>
+            <if test="street!=null and street!=''">
+                AND c.street like '%${street}%'
+            </if>
+            <if test="operatingStatus!=null and operatingStatus!=''">
+                AND IFNULL(qv1.quota_value,'其他') like '%${operatingStatus}%'
+            </if>
+        ORDER BY regDate DESC
+    </select>
+</mapper>
