@@ -50,4 +50,10 @@ public interface CompanyMapper extends BaseMapper<Company> {
                                            @Param("street") String street,
                                            @Param("operatingStatus") String operatingStatus,
                                            Page page);
+
+    /**
+     * 查询所有街道
+     * @return
+     */
+    List<String> streets();
 }

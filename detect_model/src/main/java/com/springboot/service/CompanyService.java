@@ -57,4 +57,10 @@ public interface CompanyService extends IService<Company> {
      * @return
      */
     Pagination<CompanyPageOutputDto> pageCompany(CompanyPageQueryDto query);
+
+    /**
+     * 查询所有街道
+     * @return
+     */
+    List<String> streets();
 }

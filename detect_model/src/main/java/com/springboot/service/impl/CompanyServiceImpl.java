@@ -125,6 +125,11 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
         return Pagination.of(page);
     }
 
+    @Override
+    public List<String> streets() {
+        return companyMapper.streets();
+    }
+
 
     @Slf4j
     private static class CompanyUploadDataListener extends AnalysisEventListener<CompanyImportDto> {

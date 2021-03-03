@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * @author lhf
  * @date 2021/3/1 3:56 下午
@@ -41,5 +43,11 @@ public class CompanyController {
     public ReturnT<Pagination<CompanyPageOutputDto>> pageCompany(CompanyPageQueryDto query){
         Pagination<CompanyPageOutputDto> pagination = companyService.pageCompany(query);
         return ReturnTUtils.getReturnT(pagination);
+    }
+
+    @GetMapping("/streets")
+    public ReturnT<List<String>> streets(){
+        List<String> streets = companyService.streets();
+        return ReturnTUtils.getReturnT(streets);
     }
 }

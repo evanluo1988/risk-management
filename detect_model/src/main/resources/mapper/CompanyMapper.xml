@@ -78,4 +78,7 @@
             </if>
         ORDER BY regDate DESC
     </select>
+    <select id="streets" resultType="java.lang.String">
+        SELECT DISTINCT(street) FROM companies WHERE street IS NOT NULL
+    </select>
 </mapper>
