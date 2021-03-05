@@ -19,7 +19,7 @@
     </select>
 
     <select id="addedOverTheYears" resultType="com.springboot.dto.StatisticsCompanyAddedTheYearsOutputDto">
-        SELECT YEAR(create_time) yearName,COUNT(id) incrementNum FROM companies GROUP BY yearName ORDER BY yearName DESC
+        SELECT LEFT(reg_date,4) yearName,COUNT(id) incrementNum FROM companies GROUP BY yearName ORDER BY yearName DESC
     </select>
 
     <select id="operatingStatus" resultType="com.springboot.dto.StatisticsCompanyOperatingStatusOutputDto">

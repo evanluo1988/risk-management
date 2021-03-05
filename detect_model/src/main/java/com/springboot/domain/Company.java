@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 /**
  * @author lhf
  * @date 2021/3/1 3:31 下午
@@ -27,7 +29,7 @@ public class Company extends BaseDomain{
     /**
      * 注册年月
      */
-    private String regDate;
+    private Date regDate;
     /**
      * 区
      */

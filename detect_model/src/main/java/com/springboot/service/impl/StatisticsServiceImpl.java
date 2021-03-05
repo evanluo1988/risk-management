@@ -38,7 +38,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         Date beginDayOfYear = TimeUtils.getBeginDayOfYear();
         Date endDayOfYear = TimeUtils.getEndDayOfYear();
         LambdaQueryWrapper<Company> lambdaQueryWrapper = new LambdaQueryWrapper<Company>()
-                .between(Company::getCreateTime,beginDayOfYear,endDayOfYear);
+                .between(Company::getRegDate,beginDayOfYear,endDayOfYear);
         int annualGrowth = companyService.count(lambdaQueryWrapper);
 
         return new StatisticsCompanyNumOutputDto(total,annualGrowth);
