@@ -1,6 +1,9 @@
 package com.springboot.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * @author lhf
@@ -39,7 +42,8 @@ public class CompanyPageOutputDto {
     /**
      * 注册时间
      */
-    private String regDate;
+    @JsonFormat(pattern = "yyyy-MM", timezone = "GMT+8")
+    private Date regDate;
     /**
      * 经营稳定性综合得分
      */

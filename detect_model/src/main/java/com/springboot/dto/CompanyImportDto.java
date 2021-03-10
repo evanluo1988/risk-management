@@ -1,9 +1,18 @@
 package com.springboot.dto;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.converters.Converter;
+import com.alibaba.excel.enums.CellDataTypeEnum;
+import com.alibaba.excel.metadata.CellData;
+import com.alibaba.excel.metadata.GlobalConfiguration;
+import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.springboot.domain.Company;
+import com.springboot.easyexcel.converter.CompanyRegDateConverter;
 import com.springboot.utils.ConvertUtils;
 import lombok.Data;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author lhf
@@ -29,8 +38,8 @@ public class CompanyImportDto {
     /**
      * 注册年月
      */
-    @ExcelProperty(value = {"注册年月"},index = 3)
-    private String regDate;
+    @ExcelProperty(value = {"注册年月"},index = 3,converter = CompanyRegDateConverter.class)
+    private Date regDate;
     /**
      * 高新区
      */
