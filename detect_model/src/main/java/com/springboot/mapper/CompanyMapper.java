@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.domain.Company;
 import com.springboot.dto.*;
+import com.springboot.order.Sortable;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -43,12 +44,14 @@ public interface CompanyMapper extends BaseMapper<Company> {
      * @param key 关键字，根据企业名称和企业唯一信用代码筛选
      * @param street    街道
      * @param operatingStatus   经营状态
+     * @param sortable
      * @param page
      * @return
      */
     Page<CompanyPageOutputDto> pageCompany(@Param("key") String key,
                                            @Param("street") String street,
                                            @Param("operatingStatus") String operatingStatus,
+                                           @Param("sortable") Sortable sortable,
                                            Page page);
 
     /**

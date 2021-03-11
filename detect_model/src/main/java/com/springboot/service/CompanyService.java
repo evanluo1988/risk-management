@@ -1,10 +1,9 @@
 package com.springboot.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.Company;
 import com.springboot.dto.*;
-import com.springboot.page.PageIn;
+import com.springboot.order.Sortable;
 import com.springboot.page.Pagination;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,9 +53,10 @@ public interface CompanyService extends IService<Company> {
     /**
      * 公司列表
      * @param query
+     * @param sortable
      * @return
      */
-    Pagination<CompanyPageOutputDto> pageCompany(CompanyPageQueryDto query);
+    Pagination<CompanyPageOutputDto> pageCompany(CompanyPageQueryDto query, Sortable sortable);
 
     /**
      * 查询所有街道

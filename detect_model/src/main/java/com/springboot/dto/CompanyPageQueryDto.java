@@ -1,5 +1,6 @@
 package com.springboot.dto;
 
+import com.springboot.order.Sortable;
 import com.springboot.page.PageIn;
 import lombok.Data;
 

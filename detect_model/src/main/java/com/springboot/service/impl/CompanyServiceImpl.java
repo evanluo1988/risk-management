@@ -1,5 +1,6 @@
 package com.springboot.service.impl;
 
+import com.alibaba.druid.sql.ast.SQLOrderingSpecification;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -13,7 +14,7 @@ import com.springboot.dto.*;
 import com.springboot.enums.OrgEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.CompanyMapper;
-import com.springboot.page.PageIn;
+import com.springboot.order.Sortable;
 import com.springboot.page.Pagination;
 import com.springboot.service.CompanyDetectErrLogService;
 import com.springboot.service.CompanyService;
@@ -24,12 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -120,9 +123,24 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     }
 
     @Override
-    public Pagination<CompanyPageOutputDto> pageCompany(CompanyPageQueryDto query) {
-        Page<CompanyPageOutputDto> page = companyMapper.pageCompany(query.getKey(),query.getStreet(),query.getOperatingStatus(),query.convertPage());
+    public Pagination<CompanyPageOutputDto> pageCompany(CompanyPageQueryDto query, Sortable sortable) {
+        defaultSort(sortable);
+        Page<CompanyPageOutputDto> page = companyMapper.pageCompany(query.getKey(),query.getStreet(),query.getOperatingStatus(),sortable,query.convertPage());
         return Pagination.of(page);
+    }
+
+    private void defaultSort(Sortable sortable) {
+        if (Objects.isNull(sortable)){
+            sortable = new Sortable();
+        }
+
+        if (StringUtils.isEmpty(sortable.getOrderColumn())){
+            sortable.setOrderColumn("regDate");
+        }
+
+        if (Objects.isNull(sortable.getOrderingSpecification())){
+            sortable.setOrderingSpecification(SQLOrderingSpecification.DESC);
+        }
     }
 
     @Override

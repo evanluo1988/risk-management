@@ -76,7 +76,7 @@
             <if test="operatingStatus!=null and operatingStatus!=''">
                 AND IFNULL(qv1.quota_value,'其他') like '%${operatingStatus}%'
             </if>
-        ORDER BY regDate DESC
+        ORDER BY ${sortable.orderColumn} ${sortable.orderingSpecification}
     </select>
     <select id="streets" resultType="java.lang.String">
         SELECT DISTINCT(street) FROM companies WHERE street IS NOT NULL

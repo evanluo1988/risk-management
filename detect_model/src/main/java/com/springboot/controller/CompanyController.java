@@ -2,6 +2,8 @@ package com.springboot.controller;
 
 import com.springboot.dto.CompanyPageOutputDto;
 import com.springboot.dto.CompanyPageQueryDto;
+import com.springboot.exception.ServiceException;
+import com.springboot.order.Sortable;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
 import com.springboot.service.CompanyService;
@@ -40,8 +42,10 @@ public class CompanyController {
     }
 
     @GetMapping("/page")
-    public ReturnT<Pagination<CompanyPageOutputDto>> pageCompany(CompanyPageQueryDto query){
-        Pagination<CompanyPageOutputDto> pagination = companyService.pageCompany(query);
+    public ReturnT<Pagination<CompanyPageOutputDto>> pageCompany(CompanyPageQueryDto query, Sortable sortable){
+        sortable.checkColumn(CompanyPageOutputDto.class);
+
+        Pagination<CompanyPageOutputDto> pagination = companyService.pageCompany(query,sortable);
         return ReturnTUtils.getReturnT(pagination);
     }
 
