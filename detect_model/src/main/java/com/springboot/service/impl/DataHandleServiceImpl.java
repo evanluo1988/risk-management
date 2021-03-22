@@ -618,7 +618,13 @@ public class DataHandleServiceImpl implements DataHandleService {
 
         CompanyScore companyScore = ConvertUtils.sourceToTarget(fiveDRader, CompanyScore.class);
         companyScore.setReqId(reqId);
-        companyScoreService.save(companyScore);
+        CompanyScore dbCompanyScore = companyScoreService.getByReqId(reqId);
+        if (Objects.isNull(dbCompanyScore)){
+            companyScoreService.save(companyScore);
+        }else {
+            companyScore.setId(dbCompanyScore.getId());
+            companyScoreService.updateById(companyScore);
+        }
     }
 
     private String getDimensionName(Long dimensionId) {

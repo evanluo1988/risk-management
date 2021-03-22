@@ -1,5 +1,6 @@
 package com.springboot.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.springboot.domain.CompanyScore;
 import com.springboot.mapper.CompanyScoreMapper;
@@ -12,4 +13,10 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class CompanyScoreServiceImpl extends ServiceImpl<CompanyScoreMapper, CompanyScore> implements CompanyScoreService {
+    @Override
+    public CompanyScore getByReqId(String reqId) {
+        final LambdaQueryWrapper<CompanyScore> queryWrapper = new LambdaQueryWrapper<CompanyScore>()
+                .eq(CompanyScore::getReqId, reqId);
+        return getOne(queryWrapper);
+    }
 }
