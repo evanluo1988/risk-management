@@ -45,24 +45,24 @@ public class StatisticsController {
     @GetMapping("/patentRank")
     public ReturnT<List<StatisticsCompanyRankByQuotaOutputDto>> patentRank(PageIn pageIn){
         // 有效专利总数
-        String quotaCode = "ZS_VALID_PATENT_NUM";
-        List<StatisticsCompanyRankByQuotaOutputDto> statisticsCompanyRankByQuotaOutputDtoList = statisticsService.quotaRank(quotaCode,pageIn);
+        Long quotaId = 120L;
+        List<StatisticsCompanyRankByQuotaOutputDto> statisticsCompanyRankByQuotaOutputDtoList = statisticsService.quotaRank(quotaId,pageIn);
         return ReturnTUtils.getReturnT(statisticsCompanyRankByQuotaOutputDtoList);
     }
 
     @GetMapping("/softRank")
     public ReturnT<List<StatisticsCompanyRankByQuotaOutputDto>> softRank(PageIn pageIn){
         // 报告主体有效软著数量
-        String quotaCode = "ZS_NUM_EFFECT_SOFTWORKS_CUR";
-        List<StatisticsCompanyRankByQuotaOutputDto> statisticsCompanyRankByQuotaOutputDtoList = statisticsService.quotaRank(quotaCode,pageIn);
+        Long quotaId = 50L;
+        List<StatisticsCompanyRankByQuotaOutputDto> statisticsCompanyRankByQuotaOutputDtoList = statisticsService.quotaRank(quotaId,pageIn);
         return ReturnTUtils.getReturnT(statisticsCompanyRankByQuotaOutputDtoList);
     }
 
     @GetMapping("/businessPenaltyRank")
     public ReturnT<List<StatisticsCompanyRankByQuotaOutputDto>> businessPenaltyRank(PageIn pageIn){
         // 严重工商处罚次数
-        String quotaCode = "GS_NUM_COMMERCIAL_PENALTIES";
-        List<StatisticsCompanyRankByQuotaOutputDto> statisticsCompanyRankByQuotaOutputDtoList = statisticsService.quotaRank(quotaCode,pageIn);
+        Long quotaId = 59L;
+        List<StatisticsCompanyRankByQuotaOutputDto> statisticsCompanyRankByQuotaOutputDtoList = statisticsService.quotaRank(quotaId,pageIn);
         return ReturnTUtils.getReturnT(statisticsCompanyRankByQuotaOutputDtoList);
     }
 

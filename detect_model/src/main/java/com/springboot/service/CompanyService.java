@@ -36,7 +36,7 @@ public interface CompanyService extends IService<Company> {
      * @param quotaCode
      * @return
      */
-    List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(String quotaCode);
+    List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(Long quotaCode);
 
     /**
      * 企业年增长
@@ -63,4 +63,11 @@ public interface CompanyService extends IService<Company> {
      * @return
      */
     List<String> streets();
+
+    /**
+     * 根据企业名称查询企业
+     * @param entName
+     * @return
+     */
+    Company getCompanyByName(String entName);
 }

@@ -35,7 +35,7 @@ public interface StatisticsService {
      * @param pageIn
      * @return
      */
-    List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(String quotaCode, PageIn pageIn);
+    List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(Long quotaId, PageIn pageIn);
 
     /**
      * 企业历年增长

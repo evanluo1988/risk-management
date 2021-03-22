@@ -25,7 +25,7 @@ public interface CompanyMapper extends BaseMapper<Company> {
      * @param quotaCode
      * @return
      */
-    List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(@Param("quotaCode") String quotaCode);
+    List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(@Param("quotaId") Long quotaId);
 
     /**
      * 企业年增长数

@@ -61,8 +61,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(String quotaCode, PageIn pageIn) {
-        return companyService.quotaRank(quotaCode);
+    public List<StatisticsCompanyRankByQuotaOutputDto> quotaRank(Long quotaId, PageIn pageIn) {
+        return companyService.quotaRank(quotaId);
     }
 
     @Override

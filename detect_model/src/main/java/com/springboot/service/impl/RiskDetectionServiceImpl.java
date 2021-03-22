@@ -1,6 +1,7 @@
 package com.springboot.service.impl;
 
 import com.springboot.domain.CloudInfoTimeliness;
+import com.springboot.domain.Company;
 import com.springboot.domain.EntWyBasic;
 import com.springboot.enums.OrgEnum;
 import com.springboot.exception.ServiceException;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -23,12 +26,15 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
     private EdsGsBasicService edsGsBasicService;
     @Autowired
     private QuotaValueService quotaValueService;
+    @Autowired
+    private CompanyService companyService;
 
     @Override
     public EntHealthReportVo checkByEntName(String entName, OrgEnum org) {
         if(StringUtils.isEmpty(entName)) {
             throw new ServiceException("entName must not be null!");
         }
+
         CloudInfoTimeliness cloudInfoTimeliness = cloudInfoTimelinessService.getCloudInfoTimelinessByEntName(entName);
         if(cloudInfoTimeliness == null) {
             String orgEntName = entName;
@@ -50,6 +56,11 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
             } else {
                 //调用远程接口查询，入库，计算，后返回
                 reqId = dataHandleService.handelData(entName, org);
+                Company company = companyService.getCompanyByName(entName);
+                if (Objects.nonNull(company)){
+                    company.setReqId(reqId);
+                    companyService.updateById(company);
+                }
             }
             //通过本地标准表计算指标值
             dataHandleService.culQuotas(reqId, org);

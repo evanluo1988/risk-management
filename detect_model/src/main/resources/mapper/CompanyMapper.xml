@@ -8,14 +8,14 @@
 
     <select id="quotaRank" resultType="com.springboot.dto.StatisticsCompanyRankByQuotaOutputDto">
         SELECT
-            c.ent_name,
-            qv.quota_value
+            c.ent_name entName,
+            qv.quota_value num
         FROM
             companies c
-                LEFT JOIN quota_values qv ON c.req_id = qv.req_id
-                LEFT JOIN quotas q ON q.id = qv.quota_id AND q.quota_code = #{quotaCode}
-        ORDER BY qv.quota_value DESC
-        LIMIT 10 OFFSET 0
+                LEFT JOIN quota_values qv ON c.req_id = qv.req_id AND qv.quota_id = #{quotaId}
+        ORDER BY
+            qv.quota_value DESC
+            LIMIT 10 OFFSET 0
     </select>
 
     <select id="addedOverTheYears" resultType="com.springboot.dto.StatisticsCompanyAddedTheYearsOutputDto">
