@@ -24,13 +24,13 @@
 
     <select id="operatingStatus" resultType="com.springboot.dto.StatisticsCompanyOperatingStatusOutputDto">
         SELECT
-            IFNULL(qv.quota_value,'') operatingStatus,
-            COUNT(c.id) num
+            IFNULL( qv.quota_value, '' ) operatingStatus,
+            COUNT( c.id ) num
         FROM
             companies c
-                LEFT JOIN quota_values qv ON c.req_id = qv.req_id
-                LEFT JOIN quotas q ON q.id = qv.quota_id AND q.quota_code = 'GS_ENT_ABNORMAL_STATE'
-        GROUP BY operatingStatus
+            LEFT JOIN quota_values qv ON c.req_id = qv.req_id and qv.quota_id = 58
+        GROUP BY
+            operatingStatus
     </select>
 
     <select id="pageCompany" resultType="com.springboot.dto.CompanyPageOutputDto">
