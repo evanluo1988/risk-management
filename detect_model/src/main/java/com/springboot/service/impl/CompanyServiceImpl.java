@@ -83,6 +83,8 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
                 String reqId = dataHandleService.handelData(company.getEntName(), OrgEnum.SCIENCE_OFFICE);
                 // 计算指标值
                 dataHandleService.culQuotas(reqId, OrgEnum.SCIENCE_OFFICE);
+                // 查看计算
+                dataHandleService.getEntHealthReportVo(reqId,OrgEnum.SCIENCE_OFFICE);
                 company.setReqId(reqId);
                 updateById(company);
             }catch (Exception e){
