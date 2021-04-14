@@ -56,6 +56,10 @@ public class TaskCheckPageVo {
      * 退回统计
      */
     private Long refundCount;
+
+    private Long areaId;
+
+    private String areaName;
     // 核查街道联系方式
     private List<User> areaContact;
 }

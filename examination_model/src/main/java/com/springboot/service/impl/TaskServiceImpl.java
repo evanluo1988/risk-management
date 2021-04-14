@@ -64,6 +64,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     private AreaService areaService;
     @Autowired
     private TaskProcessService taskProcessService;
+    @Autowired
+    private UserService userService;
 
 
     @Override
@@ -201,7 +203,19 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             taskPageVo.setStartTime(DateUtils.toLocalDate(taskModel.getStartTime()));
             taskPageVoList.add(taskPageVo);
         }
+        additionAreaContact(taskPageVoList);
         return Pagination.of(taskPageVoList, page.getTotal());
+    }
+
+    private void additionAreaContact(List<TaskCheckPageVo> taskPageVoList) {
+        final List<Long> areaIds = taskPageVoList.stream().map(TaskCheckPageVo::getAreaId).collect(Collectors.toList());
+        Map<Long,List<User>> areaUsers = userService.groupUserByAreaIds(areaIds);
+        for (TaskCheckPageVo taskCheckPageVo : taskPageVoList) {
+            final Long areaId = taskCheckPageVo.getAreaId();
+            if (Objects.nonNull(areaId)&&areaUsers.containsKey(areaId)){
+                taskCheckPageVo.setAreaContact(areaUsers.get(areaId));
+            }
+        }
     }
 
     @Override

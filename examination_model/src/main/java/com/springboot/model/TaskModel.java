@@ -19,6 +19,7 @@ public class TaskModel extends Task {
     private String relatedClues;
     private String enable;
     private Long refundCount;
+    private Long areaId;
 
 //    public TaskPageVo convertVo(){
 //        TaskPageVo taskVo = new TaskPageVo();

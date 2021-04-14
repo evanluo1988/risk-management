@@ -43,6 +43,7 @@
         e.enterprise_name,
         tc.check_region,
         tc.related_clues,
+        tc.area_id,
         e.disposal_stage,
         tc.assignment,
         tc.check_status,
