@@ -10,4 +10,8 @@ public class InformDispatcherVo {
 
     @NotNull(groups = InformDispatcherVo.DispatcherGroup.class,message = "区域不能为空")
     private Long areaId;
+    /**
+     * 操作意见
+     */
+    private String opMessage;
 }

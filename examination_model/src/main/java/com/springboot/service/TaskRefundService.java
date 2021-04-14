@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface TaskRefundService extends IService<TaskRefund> {
 
-    void refund(Long taskCheckId, String refundReason);
+    TaskRefund refund(Long taskCheckId, String refundReason, Long processId);
 
     List<TaskRefundOutputVo> listRefundByTaskCheckId(Long taskCheckId);
 }

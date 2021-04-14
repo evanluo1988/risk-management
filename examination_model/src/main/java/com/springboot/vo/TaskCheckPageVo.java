@@ -1,8 +1,10 @@
 package com.springboot.vo;
 
+import com.springboot.domain.User;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class TaskCheckPageVo {
@@ -54,4 +56,6 @@ public class TaskCheckPageVo {
      * 退回统计
      */
     private Long refundCount;
+    // 核查街道联系方式
+    private List<User> areaContact;
 }

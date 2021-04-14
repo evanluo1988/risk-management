@@ -42,7 +42,7 @@ public class TaskCheckServiceImpl extends ServiceImpl<TaskCheckMapper,TaskCheck>
     }
 
     @Override
-    public void goBack(Long taskCheckId) {
+    public void goBack(Long taskCheckId, Long taskRefundId) {
         if (Objects.isNull(taskCheckId)){
             return ;
         }
@@ -59,6 +59,7 @@ public class TaskCheckServiceImpl extends ServiceImpl<TaskCheckMapper,TaskCheck>
                 .set(TaskCheck::getCheckRegion,parentArea.getAreaName())
                 .set(TaskCheck::getUpdateBy, UserAuthInfoContext.getUserName())
                 .set(TaskCheck::getUpdateTime, new Date())
+                .set(TaskCheck::getLastRefundId,taskRefundId)
                 .eq(TaskCheck::getId,taskCheckId);
         this.update(updateWrapper);
     }

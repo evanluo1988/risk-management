@@ -79,4 +79,9 @@ public class TaskDisposition extends BaseDomain {
      */
     private LocalDate otherTime;
 
+    /**
+     * 处理流程id
+     */
+    private Long processId;
+
 }

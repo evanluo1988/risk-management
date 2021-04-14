@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.springboot.domain.InformRefund;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
+import com.springboot.service.InformProcessService;
 import com.springboot.service.InformRefundService;
 import com.springboot.service.InformService;
 import com.springboot.utils.ReturnTUtils;
@@ -38,6 +39,8 @@ public class InformController {
     private InformService informService;
     @Autowired
     private InformRefundService informRefundService;
+    @Autowired
+    private InformProcessService informProcessService;
 
     /**
      * 举报列表
@@ -66,6 +69,19 @@ public class InformController {
     @GetMapping("/view/{id}")
     public ReturnT view(@PathVariable("id") Long id){
         InformViewVo informViewVo = informService.view(id);
+        return ReturnTUtils.getReturnT(informViewVo);
+    }
+
+    /**
+     * 查看中间过程内容
+     * @param id
+     * @param processId
+     * @return
+     */
+    @GetMapping("/view/{id}/{processId}")
+    public ReturnT viewOnProcess(@PathVariable("id") Long id,
+                                 @PathVariable("processId") Long processId){
+        InformViewVo informViewVo = informService.viewOnProcess(id,processId);
         return ReturnTUtils.getReturnT(informViewVo);
     }
 
@@ -115,7 +131,7 @@ public class InformController {
     @PutMapping("/dispatcher/{id}")
     @Validated({InformDispatcherVo.DispatcherGroup.class})
     public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid InformDispatcherVo informVo) {
-        informService.dispatcher(id, informVo.getAreaId());
+        informService.dispatcher(id, informVo.getAreaId(),informVo.getOpMessage());
         return ReturnTUtils.newCorrectReturnT();
     }
 
@@ -129,7 +145,7 @@ public class InformController {
         List<String> msgList = Lists.newArrayList();
         for (Long id : ids) {
             try{
-                String r = informService.dispatcher(id, null);
+                String r = informService.dispatcher(id, null,null);
                 if(r != null){
                     msgList.add(r);
                 }
@@ -199,5 +215,11 @@ public class InformController {
     public ReturnT del(@PathVariable("id") Long id){
         informService.del(id);
         return ReturnTUtils.newCorrectReturnT();
+    }
+
+    @GetMapping("/process/list/{id}")
+    public ReturnT<List<InformProcessVo>> processList(@PathVariable("id") Long id){
+        List<InformProcessVo> taskProcessVoList = informProcessService.listProcess(id);
+        return ReturnTUtils.getReturnT(taskProcessVoList);
     }
 }

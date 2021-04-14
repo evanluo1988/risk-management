@@ -8,7 +8,7 @@ public interface TaskCheckService extends IService<TaskCheck> {
 
     TaskCheck getTaskCheckById(Long id);
 
-    void goBack(Long taskCheckId);
+    void goBack(Long taskCheckId, Long taskRefundId);
 
     void revoke(Long id);
 }

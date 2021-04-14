@@ -17,4 +17,9 @@ public class TaskPageVo {
     @NotBlank(message = "退回原因必填",groups = RefundGroup.class)
     private String refundReason;
 
+    /**
+     * 操作备注
+     */
+    private String opMessage;
+
 }

@@ -33,4 +33,9 @@ public class TaskRefund extends BaseDomain {
      * 退回原因
      */
     private String reason;
+
+    /**
+     * 处理流程id
+     */
+    private Long processId;
 }

@@ -56,8 +56,9 @@ public interface InformService extends IService<Inform> {
      * 分派
      * @param id
      * @param areaId
+     * @param opMessage
      */
-    String dispatcher(Long id, Long areaId);
+    String dispatcher(Long id, Long areaId, String opMessage);
 
     /**
      * 退回
@@ -104,6 +105,14 @@ public interface InformService extends IService<Inform> {
      * @return
      */
     InformViewVo view(Long id);
+
+    /**
+     * 查询中间过程数据
+     * @param id
+     * @param processId
+     * @return
+     */
+    InformViewVo viewOnProcess(Long id, Long processId);
 
     void revoke(Long id);
 

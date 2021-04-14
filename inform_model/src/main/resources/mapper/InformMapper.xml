@@ -91,8 +91,8 @@
         SELECT
         <include refid="Inform_Page_Column"/>
         FROM informs i
-        LEFT JOIN inform_checks ic ON i.id = ic.inform_id
-        LEFT JOIN inform_rewards ir ON i.id = ir.inform_id
+        LEFT JOIN inform_checks ic ON i.last_check_id = ic.id
+        LEFT JOIN inform_rewards ir ON i.last_reward_id = ir.id
         LEFT JOIN areas a ON i.area_id = a.id
         LEFT JOIN (
           select inform_id,count(inform_id) refundCount from inform_refunds group by inform_id
@@ -147,8 +147,8 @@
         <include refid="Inform_Export_Column"/>
         FROM informs i
         LEFT JOIN inform_persons ip ON i.inform_person_id = ip.id
-        LEFT JOIN inform_checks ic ON i.id = ic.inform_id
-        LEFT JOIN inform_rewards ire ON i.id = ire.inform_id
+        LEFT JOIN inform_checks ic ON i.last_check_id = ic.id
+        LEFT JOIN inform_rewards ire ON i.last_reward_id = ire.id
         WHERE i.enable = 'Y'
         and i.id IN
         <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">

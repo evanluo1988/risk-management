@@ -27,7 +27,20 @@ public class InformRewardServiceImpl extends ServiceImpl<InformRewardDao, Inform
             return null;
         }
         LambdaQueryWrapper<InformReward> queryWrapper = new LambdaQueryWrapper<InformReward>()
-                .eq(InformReward::getInformId, informId);
+                .eq(InformReward::getInformId, informId)
+                .orderByDesc(InformReward::getCreateTime);
+        return getOne(queryWrapper);
+    }
+
+    @Override
+    public InformReward getByInformIdAndProcessId(Long informId, Long processId) {
+        if (Objects.isNull(informId)){
+            return null;
+        }
+        LambdaQueryWrapper<InformReward> queryWrapper = new LambdaQueryWrapper<InformReward>()
+                .eq(InformReward::getInformId, informId)
+                .eq(InformReward::getProcessId,processId)
+                .orderByDesc(InformReward::getCreateTime);
         return getOne(queryWrapper);
     }
 }

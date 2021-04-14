@@ -63,8 +63,8 @@ public class InformCheckReqVo {
     @DateTimeFormat(pattern = DateFormatConfig.DATE_FORMAT)
     private LocalDate checkTime;
     /**
-     * 核查状态
+     * 核查状态：状态基自动切换
      */
-    @NotNull(groups = InformCheckVo.CheckGroup.class,message = "核查状态必填")
-    private String checkStatus;
+    //@NotNull(groups = InformCheckVo.CheckGroup.class,message = "核查状态必填")
+    //private String checkStatus;
 }

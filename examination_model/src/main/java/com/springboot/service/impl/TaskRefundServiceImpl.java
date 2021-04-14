@@ -25,13 +25,15 @@ import java.util.List;
 public class TaskRefundServiceImpl extends ServiceImpl<TaskRefundDao, TaskRefund> implements TaskRefundService {
 
     @Override
-    public void refund(Long taskCheckId, String refundReason) {
+    public TaskRefund refund(Long taskCheckId, String refundReason, Long processId) {
         TaskRefund taskRefund = new TaskRefund();
+        taskRefund.setProcessId(processId);
         taskRefund.setTaskCheckId(taskCheckId)
                 .setReason(refundReason);
         taskRefund.setCreateBy(UserAuthInfoContext.getUserName());
         taskRefund.setCreateTime(new Date());
         save(taskRefund);
+        return taskRefund;
     }
 
     @Override

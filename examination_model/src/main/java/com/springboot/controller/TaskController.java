@@ -3,6 +3,7 @@ package com.springboot.controller;
 import com.google.common.collect.Lists;
 import com.springboot.page.Pagination;
 import com.springboot.ret.ReturnT;
+import com.springboot.service.TaskProcessService;
 import com.springboot.service.TaskRefundService;
 import com.springboot.service.TaskService;
 import com.springboot.utils.ReturnTUtils;
@@ -27,6 +28,8 @@ public class TaskController {
     private TaskService taskService;
     @Autowired
     private TaskRefundService taskRefundService;
+    @Autowired
+    private TaskProcessService taskProcessService;
 
     /**
      * 核查导入
@@ -69,6 +72,13 @@ public class TaskController {
         return ReturnTUtils.getReturnT(taskDetailVo);
     }
 
+    @GetMapping("/view/{id}/{processId}")
+    public ReturnT detailOnProcess(@PathVariable("id") Long id,
+                                   @PathVariable("processId") Long processId){
+        TaskDetailVo taskDetailVo = taskService.detailOnProcess(id,processId);
+        return ReturnTUtils.getReturnT(taskDetailVo);
+    }
+
     /**
      * 核查删除
      * @param id
@@ -88,7 +98,7 @@ public class TaskController {
     @PutMapping("/dispatcher/{id}")
     @Validated(TaskPageVo.DispatcherGroup.class)
     public ReturnT dispatcher(@PathVariable("id") Long id, @RequestBody @Valid TaskPageVo taskVo){
-        taskService.dispatcher(id, taskVo.getAreaId());
+        taskService.dispatcher(id, taskVo.getAreaId(),taskVo.getOpMessage());
         return ReturnTUtils.newCorrectReturnT();
     }
 
@@ -116,7 +126,7 @@ public class TaskController {
         List<String> msgList = Lists.newArrayList();
         for (Long id : ids) {
             try {
-                String r = taskService.dispatcher(id, null);
+                String r = taskService.dispatcher(id, null,null);
                 if(r != null){
                     msgList.add(r);
                 }
@@ -183,9 +193,9 @@ public class TaskController {
         return ReturnTUtils.getReturnT(taskRefundOutputVos);
     }
 
-//    @GetMapping
-//    public ReturnT<Pagination<TaskVo>> findTaskList(PageIn pageIn){
-//        return ReturnTUtils.getReturnT(taskService.findTasks(pageIn));
-//    }
-
+    @GetMapping("/process/list/{id}")
+    public ReturnT<List<TaskProcessVo>> processList(@PathVariable("id") Long id){
+        List<TaskProcessVo> taskProcessVoList = taskProcessService.listProcess(id);
+        return ReturnTUtils.getReturnT(taskProcessVoList);
+    }
 }

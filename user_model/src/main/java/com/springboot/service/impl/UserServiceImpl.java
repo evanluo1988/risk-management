@@ -3,6 +3,8 @@ package com.springboot.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.springboot.constant.GlobalConstants;
 import com.springboot.domain.*;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -42,7 +45,7 @@ import com.springboot.model.UserRoleDomain;
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
 
     @Autowired
     private UserMapper userMapper;
@@ -369,4 +372,14 @@ public class UserServiceImpl implements UserService {
         return userInfoVo;
     }
 
+    @Override
+    public Map<Long, List<User>> groupUserByAreaIds(List<Long> areaIds) {
+        if (CollectionUtils.isEmpty(areaIds)){
+            return Maps.newHashMapWithExpectedSize(0);
+        }
+        final LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>()
+                .in(User::getAreaId, areaIds);
+        final List<User> list = this.list(queryWrapper);
+        return list.stream().collect(Collectors.groupingBy(User::getAreaId));
+    }
 }

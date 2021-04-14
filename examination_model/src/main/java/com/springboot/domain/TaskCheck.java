@@ -50,4 +50,7 @@ public class TaskCheck extends BaseDomain {
      * 逾期时间
      */
     private LocalDate expireTime;
+
+    private Long lastDispositionId;
+    private Long lastRefundId;
 }

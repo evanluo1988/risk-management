@@ -42,4 +42,9 @@ public class InformReward extends BaseDomain {
      * 举报ID
      */
     private Long informId;
+
+    /**
+     * 处理过程id
+     */
+    private Long processId;
 }

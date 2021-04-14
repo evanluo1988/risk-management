@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.Task;
 import com.springboot.model.TaskPendingListModel;
 import com.springboot.model.TaskGraphModel;
-import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.vo.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,9 +28,11 @@ public interface TaskService extends IService<Task> {
 
     TaskDetailVo detail(Long id);
 
+    TaskDetailVo detailOnProcess(Long id, Long processId);
+
     void del(Long id);
 
-    String dispatcher(Long id, Long areaId);
+    String dispatcher(Long id, Long areaId, String opMessage);
 
     void goBack(Long id, String refundReason);
 

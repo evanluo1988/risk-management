@@ -109,4 +109,8 @@ public class Inform extends BaseDomain {
      * 逾期时间
      */
     private LocalDate expireTime;
+
+    private Long lastCheckId;
+    private Long lastRewardId;
+    private Long lastRefundId;
 }

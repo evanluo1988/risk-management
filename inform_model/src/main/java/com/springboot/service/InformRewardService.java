@@ -15,4 +15,6 @@ import com.springboot.domain.InformReward;
 public interface InformRewardService extends IService<InformReward> {
 
     InformReward getByInformId(Long informId);
+
+    InformReward getByInformIdAndProcessId(Long informId, Long processId);
 }

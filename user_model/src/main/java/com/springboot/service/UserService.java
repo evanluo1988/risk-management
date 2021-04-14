@@ -1,5 +1,6 @@
 package com.springboot.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.springboot.domain.User;
 import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
@@ -7,11 +8,12 @@ import com.springboot.ret.ReturnT;
 import com.springboot.vo.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author evan
  */
-public interface UserService {
+public interface UserService extends IService<User> {
     /**
      * 获取用户列表
      * @return
@@ -80,4 +82,11 @@ public interface UserService {
     void updateUserPassword(RegUserVo regUserVo);
 
     UserInfoVo info();
+
+    /**
+     * 根据区域id分组查询所有用户信息
+     * @param areaIds
+     * @return
+     */
+    Map<Long, List<User>> groupUserByAreaIds(List<Long> areaIds);
 }

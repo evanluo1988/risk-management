@@ -1,9 +1,12 @@
 package com.springboot.vo;
 
+import com.springboot.domain.User;
+import com.springboot.model.UserInfo;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author 刘宏飞
@@ -38,4 +41,6 @@ public class InformPageVo {
     private LocalDate expireTime;
     // 退回统计
     private Long refundCount;
+    // 核查街道联系方式
+    private List<User> areaContact;
 }

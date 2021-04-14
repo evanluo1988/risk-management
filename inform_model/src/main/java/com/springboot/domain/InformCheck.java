@@ -98,4 +98,8 @@ public class InformCheck extends BaseDomain {
      */
     private String attachment;
 
+    /**
+     * 处理过程id
+     */
+    private Long processId;
 }

@@ -22,5 +22,4 @@ public interface ReportService {
     PendingListVo pendingList();
 
     public GraphVo getStatisticalGraph(LocalDate startDate, LocalDate endDate);
-
 }

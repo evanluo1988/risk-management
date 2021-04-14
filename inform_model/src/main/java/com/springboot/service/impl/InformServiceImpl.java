@@ -4,9 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.metadata.CellData;
 import com.alibaba.excel.write.metadata.WriteSheet;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -16,6 +14,7 @@ import com.springboot.domain.*;
 import com.springboot.enums.EnableEnum;
 import com.springboot.enums.AssignmentEnum;
 import com.springboot.enums.CheckStatusEnum;
+import com.springboot.enums.ProcessTypeEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.InformDao;
 import com.springboot.model.InformExportModel;
@@ -73,6 +72,10 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     private InformRefundService informRefundService;
     @Autowired
     private InformDao informDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private InformProcessService informProcessService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -104,6 +107,10 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             //store informReward
             informReward.setInformId(inform.getId());
             informRewardService.save(informReward);
+
+            inform.setLastRewardId(informReward.getId());
+            inform.setLastCheckId(informCheck.getId());
+            updateById(inform);
         }
     }
 
@@ -149,7 +156,8 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
-    public String dispatcher(Long id, Long areaId) {
+    @Transactional(rollbackFor = Exception.class)
+    public String dispatcher(Long id, Long areaId, String opMessage) {
         Inform inform = getInformById(id);
         if (Objects.isNull(inform)) {
             throw new ServiceException("举报信息不存在");
@@ -183,9 +191,12 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             inform.setUpdateBy(UserAuthInfoContext.getUserName());
         }else {
             inform.setAreaId(area.getId())
-                    .setAssignment(AssignmentEnum.ASSIGNED.getCode());
+                    .setAssignment(AssignmentEnum.ASSIGNED.getCode())
+                    .setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());
             inform.setUpdateTime(new Date());
             inform.setUpdateBy(UserAuthInfoContext.getUserName());
+
+            addInformProcess(inform.getId(), ProcessTypeEnum.DISPATCHER,opMessage);
         }
 
         updateById(inform);
@@ -195,6 +206,10 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         }else{
             return null;
         }
+    }
+
+    private InformProcess addInformProcess(Long informId, ProcessTypeEnum processTypeEnum, String opMessage) {
+        return informProcessService.addProcess(informId,processTypeEnum,opMessage,UserAuthInfoContext.getUserId());
     }
 
     @Override
@@ -215,22 +230,28 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("找不到父级区域，撤回失败");
         }
 
-        LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
-                .set(Inform::getAssignment, AssignmentEnum.RETURNED.getCode())
-                .set(Inform::getAreaId, parentId.getId())
-                .set(Inform::getUpdateBy, UserAuthInfoContext.getUserName())
-                .set(Inform::getUpdateTime, LocalDateTime.now())
-                .eq(Inform::getId, id)
-                .eq(Inform::getAssignment, AssignmentEnum.ASSIGNED.getCode());
-        update(updateWrapper);
+        final InformProcess process = addInformProcess(id, ProcessTypeEnum.RETURN, refundReason);
 
         //store inform refund
         InformRefund informRefund = new InformRefund();
+        informRefund.setProcessId(process.getId());
         informRefund.setInformId(informById.getId());
         informRefund.setReason(refundReason);
         informRefund.setCreateTime(new Date());
         informRefund.setCreateBy(UserAuthInfoContext.getUserName());
         informRefundService.save(informRefund);
+
+        LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
+                .set(Inform::getAssignment, AssignmentEnum.RETURNED.getCode())
+                .set(Inform::getAreaId, parentId.getId())
+                .set(Inform::getUpdateBy, UserAuthInfoContext.getUserName())
+                .set(Inform::getUpdateTime, LocalDateTime.now())
+                .set(Inform::getLastRefundId,informRefund.getId())
+                .eq(Inform::getId, id)
+                .eq(Inform::getAssignment, AssignmentEnum.ASSIGNED.getCode());
+        update(updateWrapper);
+
+
     }
 
     @Override
@@ -241,41 +262,33 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("举报信息不存在");
         }
 
-        InformCheck informCheckByInformId = informCheckService.getByInformId(id);
-        if (Objects.isNull(informCheckByInformId)){
-            //store informCheck
-            InformCheck informCheck = ConvertUtils.sourceToTarget(informVo, InformCheck.class);
-            informCheck.setCheckTime(LocalDateTime.of(informVo.getCheckTime(), LocalTime.of(0,0)));
-            informCheck.setInformId(informById.getId());
-            informCheck.setCreateBy(UserAuthInfoContext.getUserName());
-            informCheck.setCreateTime(new Date());
-            informCheckService.save(informCheck);
-        }else {
-            BeanUtils.copyProperties(informVo,informCheckByInformId,"id");
-            informCheckByInformId.setCheckTime(LocalDateTime.of(informVo.getCheckTime(), LocalTime.of(0,0)));
-            informCheckByInformId.setUpdateBy(UserAuthInfoContext.getUserName());
-            informCheckByInformId.setUpdateTime(new Date());
-            informCheckService.updateById(informCheckByInformId);
+        if (!informById.getCheckStatus().equalsIgnoreCase(CheckStatusEnum.WAITING_CHECK.getCode())){
+            throw new ServiceException("任务不是待核查状态，不能核查");
         }
+
+        InformProcess process = addInformProcess(id,ProcessTypeEnum.PROCESS,null);
+        //store informCheck
+        InformCheck informCheck = ConvertUtils.sourceToTarget(informVo, InformCheck.class);
+        informCheck.setProcessId(process.getId());
+        informCheck.setCheckTime(LocalDateTime.of(informVo.getCheckTime(), LocalTime.of(0,0)));
+        informCheck.setInformId(informById.getId());
+        informCheck.setCreateBy(UserAuthInfoContext.getUserName());
+        informCheck.setCreateTime(new Date());
+        informCheckService.save(informCheck);
 
         // reward
-        InformReward rewardByInformId = informRewardService.getByInformId(id);
-        if (Objects.isNull(rewardByInformId)){
-            InformReward informReward = ConvertUtils.sourceToTarget(informVo, InformReward.class);
-            informReward.setCreateTime(new Date());
-            informReward.setCreateBy(UserAuthInfoContext.getUserName());
-            informRewardService.save(informReward);
-        }else{
-            BeanUtils.copyProperties(informVo,rewardByInformId,"id");
-            rewardByInformId.setUpdateTime(new Date());
-            rewardByInformId.setUpdateBy(UserAuthInfoContext.getUserName());
-            informRewardService.updateById(rewardByInformId);
-        }
+        InformReward informReward = ConvertUtils.sourceToTarget(informVo, InformReward.class);
+        informReward.setProcessId(process.getId());
+        informReward.setCreateTime(new Date());
+        informReward.setCreateBy(UserAuthInfoContext.getUserName());
+        informRewardService.save(informReward);
 
         //update checkStatus
-        informById.setCheckStatus(informVo.getCheckStatus());
+        informById.setCheckStatus(CheckStatusEnum.CHECKED.getCode());
         informById.setUpdateTime(new Date());
         informById.setUpdateBy(UserAuthInfoContext.getUserName());
+        informById.setLastCheckId(informCheck.getId());
+        informById.setLastRewardId(informReward.getId());
         updateById(informById);
     }
 
@@ -292,7 +305,20 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         }
         List<Long> areaIds = areaService.findAreaIdsById(areaId);
         Page<InformPageModel> page = informDao.informPage(checkStatus, assignment, informTimeStart, informTimeEnd, rewardStatus, informName, verification, overdue, checkTimeStart, checkTimeEnd, areaIds, new Page(pageNo, pageSize));
-        return Pagination.of(ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class), page.getTotal());
+        final List<InformPageVo> informPageVos = ConvertUtils.sourceToTarget(page.getRecords(), InformPageVo.class);
+        additionAreaContact(informPageVos);
+        return Pagination.of(informPageVos, page.getTotal());
+    }
+
+    private void additionAreaContact(List<InformPageVo> informPageVos) {
+        final List<Long> areaIds = informPageVos.stream().map(InformPageVo::getAreaId).collect(Collectors.toList());
+        Map<Long,List<User>> areaUsers = userService.groupUserByAreaIds(areaIds);
+        for (InformPageVo informPageVo : informPageVos) {
+            final Long areaId = informPageVo.getAreaId();
+            if (Objects.nonNull(areaId)&&areaUsers.containsKey(areaId)){
+                informPageVo.setAreaContact(areaUsers.get(areaId));
+            }
+        }
     }
 
     @Override
@@ -337,6 +363,27 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
     }
 
     @Override
+    public InformViewVo viewOnProcess(Long id, Long processId) {
+        Inform informById = getInformById(id);
+        InformViewVo informViewVo = new InformViewVo();
+
+        InformInfoVo informInfoVo = ConvertUtils.sourceToTarget(informById, InformInfoVo.class);
+        Optional.ofNullable(informInfoVo).ifPresent((informInfoVoTemp)->{
+            informInfoVo.setAreaName(ServerCacheUtils.getAreaById(informInfoVoTemp.getAreaId()).getAreaName());
+        });
+        informViewVo.setInform(informInfoVo);
+        if (Objects.nonNull(informById)){
+            InformCheck informCheck = informCheckService.getByInformIdAndProcessId(id,processId);
+            informViewVo.setInformCheck(ConvertUtils.sourceToTarget(informCheck,InformCheckVo.class));
+
+            InformReward informReward = informRewardService.getByInformIdAndProcessId(id,processId);
+            informViewVo.setInformReward(ConvertUtils.sourceToTarget(informReward,InformRewardVo.class));
+        }
+
+        return informViewVo;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void revoke(Long id) {
         Inform informById = getInformById(id);
@@ -357,6 +404,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("找不到父级区域，撤回失败");
         }
 
+        addInformProcess(id,ProcessTypeEnum.REVOKE,null);
         LambdaUpdateWrapper<Inform> updateWrapper = new LambdaUpdateWrapper<Inform>()
                 .set(Inform::getAssignment, AssignmentEnum.REVOKE.getCode())
                 .set(Inform::getAreaId, parentArea.getId())
@@ -377,6 +425,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
             throw new ServiceException("该条举报信息还未核查");
         }
 
+        addInformProcess(id,ProcessTypeEnum.RECHECK,null);
         informById.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());
         informById.setUpdateBy(UserAuthInfoContext.getUserName());
         informById.setUpdateTime(new Date());

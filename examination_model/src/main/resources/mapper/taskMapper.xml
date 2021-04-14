@@ -107,7 +107,7 @@
         SELECT <include refid="TaskPage"/>
         FROM task_checks tc
         LEFT JOIN tasks t ON tc.task_id = t.id
-        LEFT JOIN task_dispositions td ON td.task_check_id = tc.id
+        LEFT JOIN task_dispositions td ON td.id = tc.last_disposition_id
         LEFT JOIN enterprises e ON tc.enterprise_id = e.id
         LEFT JOIN (
           select task_check_id ,count(task_check_id) refundCount from task_refunds group by task_check_id
@@ -159,7 +159,7 @@
         FROM task_checks tc
         LEFT JOIN enterprises e ON tc.enterprise_id = e.id
         LEFT JOIN tasks t ON t.id = tc.task_id
-        LEFT JOIN task_dispositions td ON tc.id = td.task_check_id
+        LEFT JOIN task_dispositions td ON tc.last_disposition_id = td.id
         WHERE tc.enable = 'Y'
         and tc.id IN
         <foreach collection="ids" separator="," open="(" close=")" item="id" index="index">

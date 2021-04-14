@@ -29,7 +29,21 @@ public class TaskDispositionServiceImpl extends ServiceImpl<TaskDispositionMappe
         }
 
         LambdaQueryWrapper<TaskDisposition> queryWrapper = new LambdaQueryWrapper<TaskDisposition>()
-                .eq(TaskDisposition::getTaskCheckId, taskCheckId);
+                .eq(TaskDisposition::getTaskCheckId, taskCheckId)
+                .orderByDesc(TaskDisposition::getCreateTime);
+        return getOne(queryWrapper,false);
+    }
+
+    @Override
+    public TaskDisposition getDispositionByTaskCheckIdAndProcessId(Long taskCheckId, Long processId) {
+        if (Objects.isNull(taskCheckId)){
+            return null;
+        }
+
+        LambdaQueryWrapper<TaskDisposition> queryWrapper = new LambdaQueryWrapper<TaskDisposition>()
+                .eq(TaskDisposition::getTaskCheckId, taskCheckId)
+                .eq(TaskDisposition::getProcessId,processId)
+                .orderByDesc(TaskDisposition::getCreateTime);
         return getOne(queryWrapper,false);
     }
 }

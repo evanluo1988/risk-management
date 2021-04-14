@@ -27,7 +27,21 @@ public class InformCheckServiceImpl extends ServiceImpl<InformCheckDao, InformCh
         }
 
         LambdaQueryWrapper<InformCheck> queryWrapper = new LambdaQueryWrapper<InformCheck>()
-                .eq(InformCheck::getInformId, informId);
+                .eq(InformCheck::getInformId, informId)
+                .orderByDesc(InformCheck::getCreateTime);
+        return getOne(queryWrapper,false);
+    }
+
+    @Override
+    public InformCheck getByInformIdAndProcessId(Long informId, Long processId) {
+        if (Objects.isNull(informId)){
+            return null;
+        }
+
+        LambdaQueryWrapper<InformCheck> queryWrapper = new LambdaQueryWrapper<InformCheck>()
+                .eq(InformCheck::getInformId, informId)
+                .eq(InformCheck::getProcessId,processId)
+                .orderByDesc(InformCheck::getCreateTime);
         return getOne(queryWrapper,false);
     }
 }

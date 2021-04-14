@@ -7,7 +7,6 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -15,13 +14,13 @@ import com.springboot.domain.*;
 import com.springboot.enums.AssignmentEnum;
 import com.springboot.enums.CheckStatusEnum;
 import com.springboot.enums.EnableEnum;
+import com.springboot.enums.ProcessTypeEnum;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.TaskMapper;
 import com.springboot.model.TaskExportModel;
 import com.springboot.model.TaskGraphModel;
 import com.springboot.model.TaskModel;
 import com.springboot.model.TaskPendingListModel;
-import com.springboot.page.PageIn;
 import com.springboot.page.Pagination;
 import com.springboot.service.*;
 import com.springboot.utils.ConvertUtils;
@@ -63,6 +62,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     private TaskRefundService taskRefundService;
     @Autowired
     private AreaService areaService;
+    @Autowired
+    private TaskProcessService taskProcessService;
 
 
     @Override
@@ -173,6 +174,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
                 taskDisposition.setTaskCheckId(taskCheck.getId());
                 taskDispositionService.save(taskDisposition);
+
+                taskCheck.setLastDispositionId(taskDisposition.getId());
+                taskCheckService.updateById(taskCheck);
             }
         });
     }
@@ -211,6 +215,16 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
+    public TaskDetailVo detailOnProcess(Long id, Long processId) {
+        TaskCheck taskCheck = taskCheckService.getTaskCheckById(id);
+        Task task = getTaskById(taskCheck.getTaskId());
+        TaskDisposition taskDisposition = taskDispositionService.getDispositionByTaskCheckIdAndProcessId(taskCheck.getId(),processId);
+        Enterprise enterprise = enterpriseService.getEnterpriseById(taskCheck.getEnterpriseId());
+        return new TaskDetailVo(ConvertUtils.sourceToTarget(task, TaskInfoVo.class), ConvertUtils.sourceToTarget(taskCheck, TaskCheckInfoVo.class)
+                , ConvertUtils.sourceToTarget(taskDisposition, TaskDispositionVo.class), ConvertUtils.sourceToTarget(enterprise, EnterpriseVo.class));
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void del(Long id) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
@@ -229,7 +243,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     }
 
     @Override
-    public String dispatcher(Long id, Long areaId) {
+    public String dispatcher(Long id, Long areaId, String opMessage) {
         TaskCheck taskCheckById = taskCheckService.getTaskCheckById(id);
         if (Objects.isNull(taskCheckById)) {
             throw new ServiceException("任务不存在");
@@ -262,10 +276,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
         } else {
             taskCheckById.setAssignment(AssignmentEnum.ASSIGNED.getCode())
+                    .setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode())
                     .setAreaId(area.getId())
                     .setCheckRegion(area.getAreaName());
             taskCheckById.setUpdateTime(new Date());
             taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
+
+            addTaskProcess(id, ProcessTypeEnum.DISPATCHER,opMessage);
         }
 
         taskCheckService.updateById(taskCheckById);
@@ -275,6 +292,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         }else{
             return null;
         }
+    }
+
+    private TaskProcess addTaskProcess(Long id, ProcessTypeEnum processTypeEnum, String opMessage) {
+        return taskProcessService.addProcess(id,processTypeEnum,opMessage,UserAuthInfoContext.getUserId());
     }
 
     @Override
@@ -290,8 +311,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("已核查不允许退回");
         }
 
-        taskCheckService.goBack(id);
-        taskRefundService.refund(id, refundReason);
+        final TaskProcess taskProcess = addTaskProcess(id, ProcessTypeEnum.RETURN, refundReason);
+        TaskRefund taskRefund = taskRefundService.refund(id, refundReason,taskProcess.getId());
+        taskCheckService.goBack(id,taskRefund.getId());
     }
 
     @Override
@@ -310,6 +332,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("已核查不能撤回");
         }
 
+        addTaskProcess(id, ProcessTypeEnum.REVOKE, null);
         taskCheckService.revoke(id);
     }
 
@@ -321,24 +344,22 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("任务不存在");
         }
 
-        TaskDisposition dispositionByTaskCheckId = taskDispositionService.getDispositionByTaskCheckId(id);
-        if (Objects.isNull(dispositionByTaskCheckId)) {
-            TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(taskVo, TaskDisposition.class);
-            taskDisposition.setTaskCheckId(id);
-            taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
-            taskDisposition.setCreateTime(new Date());
-            taskDispositionService.save(taskDisposition);
-        } else {
-            //taskVo.setId(dispositionByTaskCheckId.getId());
-            BeanUtils.copyProperties(taskVo, dispositionByTaskCheckId, "id");
-            dispositionByTaskCheckId.setUpdateBy(UserAuthInfoContext.getUserName());
-            dispositionByTaskCheckId.setUpdateTime(new Date());
-            taskDispositionService.updateById(dispositionByTaskCheckId);
+        if (!taskCheckById.getCheckStatus().equalsIgnoreCase(CheckStatusEnum.WAITING_CHECK.getCode())){
+            throw new ServiceException("任务不是待核查状态，不能核查");
         }
 
-        taskCheckById.setCheckStatus(taskVo.getCheckStatus());
+        final TaskProcess process = addTaskProcess(id, ProcessTypeEnum.PROCESS, null);
+        TaskDisposition taskDisposition = ConvertUtils.sourceToTarget(taskVo, TaskDisposition.class);
+        taskDisposition.setProcessId(process.getId());
+        taskDisposition.setTaskCheckId(id);
+        taskDisposition.setCreateBy(UserAuthInfoContext.getUserName());
+        taskDisposition.setCreateTime(new Date());
+        taskDispositionService.save(taskDisposition);
+
+        taskCheckById.setCheckStatus(CheckStatusEnum.CHECKED.getCode());
         taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
         taskCheckById.setUpdateTime(new Date());
+        taskCheckById.setLastDispositionId(taskDisposition.getId());
         taskCheckService.updateById(taskCheckById);
     }
 
@@ -353,6 +374,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
             throw new ServiceException("该条任务信息还未核查");
         }
 
+        addTaskProcess(id,ProcessTypeEnum.RECHECK,null);
         taskCheckById.setCheckStatus(CheckStatusEnum.WAITING_CHECK.getCode());
         taskCheckById.setUpdateBy(UserAuthInfoContext.getUserName());
         taskCheckById.setUpdateTime(new Date());

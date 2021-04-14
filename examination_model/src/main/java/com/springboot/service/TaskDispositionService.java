@@ -7,4 +7,6 @@ public interface TaskDispositionService extends IService<TaskDisposition> {
     public void create(TaskDisposition taskDisposition);
 
     TaskDisposition getDispositionByTaskCheckId(Long taskCheckId);
+
+    TaskDisposition getDispositionByTaskCheckIdAndProcessId(Long taskCheckId, Long processId);
 }
