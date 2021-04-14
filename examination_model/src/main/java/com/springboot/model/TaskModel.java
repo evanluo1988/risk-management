@@ -20,6 +20,7 @@ public class TaskModel extends Task {
     private String enable;
     private Long refundCount;
     private Long areaId;
+    private String areaName;
 
 //    public TaskPageVo convertVo(){
 //        TaskPageVo taskVo = new TaskPageVo();

@@ -212,7 +212,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
         Map<Long,List<User>> areaUsers = userService.groupUserByAreaIds(areaIds);
         for (TaskCheckPageVo taskCheckPageVo : taskPageVoList) {
             final Long areaId = taskCheckPageVo.getAreaId();
-            if (Objects.nonNull(areaId)&&areaUsers.containsKey(areaId)){
+            if (Objects.nonNull(areaId)&&areaUsers.containsKey(areaId)&&taskCheckPageVo.getAssignment().equalsIgnoreCase(AssignmentEnum.ASSIGNED.getCode())){
                 taskCheckPageVo.setAreaContact(areaUsers.get(areaId));
             }
         }

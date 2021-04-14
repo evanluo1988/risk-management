@@ -315,7 +315,7 @@ public class InformServiceImpl extends ServiceImpl<InformDao, Inform> implements
         Map<Long,List<User>> areaUsers = userService.groupUserByAreaIds(areaIds);
         for (InformPageVo informPageVo : informPageVos) {
             final Long areaId = informPageVo.getAreaId();
-            if (Objects.nonNull(areaId)&&areaUsers.containsKey(areaId)){
+            if (Objects.nonNull(areaId)&&areaUsers.containsKey(areaId)&&informPageVo.getAssignment().equalsIgnoreCase(AssignmentEnum.ASSIGNED.getCode())){
                 informPageVo.setAreaContact(areaUsers.get(areaId));
             }
         }
