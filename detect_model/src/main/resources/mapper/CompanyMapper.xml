@@ -14,7 +14,7 @@
             companies c
                 LEFT JOIN quota_values qv ON c.req_id = qv.req_id AND qv.quota_id = #{quotaId}
         ORDER BY
-            qv.quota_value DESC
+            qv.quota_value+0 DESC
             LIMIT 10 OFFSET 0
     </select>
 

@@ -117,7 +117,9 @@ public class DataHandleServiceImpl implements DataHandleService {
     private EntHealthDetectionRadarVo getEntHealthDetectionRadar(String reqId, List<QuotaModel> quotaModelList) {
         EntHealthDetectionRadarVo entHealthDetectionRadarVo = new EntHealthDetectionRadarVo();
         StdEntBasic stdEntBasic = stdEntBasicService.getStdEntBasicByReqId(reqId);
-        entHealthDetectionRadarVo.setEntName(stdEntBasic.getEntName());
+        if (Objects.nonNull(stdEntBasic)){
+            entHealthDetectionRadarVo.setEntName(stdEntBasic.getEntName());
+        }
         for(QuotaModel quotaModel : quotaModelList) {
             switch(quotaModel.getQuotaCode().trim()){
                 case "GS_ENT_INDUSTRY":

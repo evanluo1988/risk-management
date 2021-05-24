@@ -10,6 +10,7 @@ import com.springboot.mapper.*;
 import com.springboot.model.RemoteDataModel;
 import com.springboot.service.*;
 import com.springboot.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +19,11 @@ import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements IndustrialJusticeService {
     @Autowired
@@ -139,6 +142,9 @@ public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements Ind
      */
     @Override
     public void analysisJustice(String reqId) throws Exception {
+        if (StringUtils.isEmpty(reqId)){
+            return;
+        }
         //解析司法引擎
         List<StdLegalDataStructured> stdLegalDataStructuredList = stdLegalDataStructuredService.findStdLegalDataStructuredByReqId(reqId);
         List<StdLegalDataAdded> stdLegalDataAddedList = Lists.newArrayList();
@@ -173,6 +179,11 @@ public class IndustrialJusticeServiceImpl extends QuotaTaskHandel implements Ind
         JSONObject dataObject = jsonObject.getJSONObject("data");
         JSONArray gsDataJsonArray = (JSONArray)dataObject.getJSONObject("R11C53").get("data");
 
+        // fix npe
+        if (Objects.isNull(gsDataJsonArray) || gsDataJsonArray.size()<1){
+            log.error("！！！！！！！！！！响应报文中不存在工商数据！！！！！！！！！！");
+            return ;
+        }
         RemoteDataModel data = JSON.parseObject(gsDataJsonArray.get(0).toString(), RemoteDataModel.class);
         //insert EDS_GS_BASIC
         for(EntWyBasic edsGsBasic : Utils.getList(data.getBasicList())){

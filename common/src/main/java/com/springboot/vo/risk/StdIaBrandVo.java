@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -48,6 +49,9 @@ public class StdIaBrandVo {
     }
 
     public String getRegistrationDate() {
+        if (Objects.isNull(registrationDate)){
+            return "";
+        }
         return registrationDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 }

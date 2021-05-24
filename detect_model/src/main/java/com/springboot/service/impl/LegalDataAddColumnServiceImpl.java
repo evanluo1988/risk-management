@@ -227,8 +227,9 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
             caseReason.setNeedingVerify(ANYNASIS_BLANK);//是否需要人工审核
             return caseReason;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceException("处理案由分类异常");
+            // throw new ServiceException("处理案由分类异常");
+            logger.error("处理案由分类异常",e);
+            return null;
         }
 
     }
@@ -505,8 +506,9 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
                 SetParamSpecial(involvedMoneyorUnity, ANYNASIS_BLANK, ANYNASIS_BLANK, ANYNASIS_BLANK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceException("处理涉案金额+涉案金额单位异常:" + e);
+            logger.error("处理涉案金额+涉案金额单位异常:" , e);
+            // throw new ServiceException("处理涉案金额+涉案金额单位异常:" + e);
+            return null;
         }
 
         resultLegalDataAdded[0] = involvedMoney;
@@ -568,7 +570,7 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
                                 if ("r0404".equals(singleArray)) {
                                     regex = regex.replaceAll("【被告】", PartyWithoutKuoHao);
                                 }
-                                if (Pattern.compile(regex).matcher(singleResult).matches()) {
+                                if (Pattern.compile(regex).matcher(singleResult.replace("*","\\*")).matches()) {
                                     JudgeResultList.add(singleArray);
                                     logger.info("Serialno:{}【审理结果】***【{}】:正则【{}】匹配到子串！！！！！", Serialno, singleResult, singleArray);
                                     continue loop4;
@@ -820,7 +822,8 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
             }
         } catch (Exception e) {
             logger.error("处理审理结果异常", e);
-            throw new ServiceException("处理审理结果异常");
+            return null;
+            // throw new ServiceException("处理审理结果异常");
         }
         return J4_SLJG;
     }
@@ -872,7 +875,8 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
             }
         } catch (Exception e) {
             logger.error("处理审理程序异常", e);
-            throw new ServiceException("处理审理程序异常");
+            // throw new ServiceException("处理审理程序异常");
+            return null;
         }
         return J5_SLCX;
     }
@@ -928,7 +932,8 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
 
         } catch (Exception e) {
             logger.error("处理法院等级异常", e);
-            throw new ServiceException("处理法院等级异常");
+            // throw new ServiceException("处理法院等级异常");
+            return null;
         }
         return J6_FYDJ;
     }
@@ -988,7 +993,8 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
             }
         } catch (Exception e) {
             logger.error("处理案件影响力异常", e);
-            throw new ServiceException("处理案件影响力异常");
+            // throw new ServiceException("处理案件影响力异常");
+            return null;
         }
         return J7_AJYXL;
     }
@@ -1059,7 +1065,9 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
             }
 
         } catch (Exception e) {
-            throw new ServiceException("处理案件结果对客户的影响异常:" + e);
+            // throw new ServiceException("处理案件结果对客户的影响异常:" + e);
+            logger.error("处理案件结果对客户的影响异常:",e);
+            return null;
         }
         return J8_AJJGDKHYX;
 
@@ -1173,7 +1181,8 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
             }
         } catch (Exception e) {
             logger.error("客户诉讼角色准确性校验", e);
-            throw new ServiceException("客户诉讼角色准确性校验");
+            // throw new ServiceException("客户诉讼角色准确性校验");
+            return null;
         }
         return J9_KHSSJSZQXJY;
 

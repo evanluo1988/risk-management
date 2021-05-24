@@ -18,6 +18,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -68,11 +69,12 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
                 .setTimestamp(timeStamp)
                 .setSignature(sign);
 
-        System.out.println("请求报文："+ JSON.toJSONString(customerDataCollectionRequest));
+        log.info("请求报文：{}",JSON.toJSONString(customerDataCollectionRequest));
         CustomerIndustrialAndJusticeResponse customerDataCollectionResponse = wyRemoteService.customerDataCollection(customerDataCollectionRequest);
         if (Objects.isNull(customerDataCollectionResponse)){
             throw new ServiceException("未查询到企业工商司法数据");
         }
+        log.info("响应报文：{}",JSON.toJSONString(customerDataCollectionResponse));
         return JSON.toJSONString(customerDataCollectionResponse);
     }
 
@@ -86,8 +88,18 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
         JSONObject jsonObject = JSONObject.parseObject(data);
         patentDataArray.add(data);
 
-        //解析页码
-        String pageMsg = jsonObject.getJSONObject("R11A73").getString("msg");
+        //解析页码 fix npe bug
+        String pageMsg = null;
+        if (Objects.nonNull(jsonObject)){
+            final JSONObject r11A73 = jsonObject.getJSONObject("R11A73");
+            if (Objects.nonNull(r11A73)){
+                pageMsg = r11A73.getString("msg");
+            }
+        }
+
+        if (StringUtils.isEmpty(pageMsg)){
+            return Lists.newArrayListWithCapacity(0);
+        }
         Integer totalPage = getTotalPage(pageMsg);
         JSONArray partentDataJsonArray = (JSONArray)jsonObject.getJSONObject("R11A73").get("data");
         List<IaAsPartentModel> iaAsPartentModelList = Lists.newArrayList();
@@ -220,12 +232,12 @@ public class WYSourceDataServiceImpl implements WYSourceDataService {
                 .setAppID(appId)
                 .setTimestamp(timeStamp)
                 .setSignature(sign);
-        System.out.println("请求报文："+ JSON.toJSONString(intellectualPropertyRequest));
-
+        log.info("请求报文：{}", JSON.toJSONString(intellectualPropertyRequest));
         CustomerIntellectualPropertyResponse customerBrandResponse = wyRemoteService.customerBrandDataCollection(intellectualPropertyRequest);
         if (Objects.isNull(customerBrandResponse)){
             throw new ServiceException("未查询到企业知识产权数据");
         }
+        log.info("响应报文：{}",JSON.toJSONString(customerBrandResponse));
         return customerBrandResponse.getData();
     }
 }

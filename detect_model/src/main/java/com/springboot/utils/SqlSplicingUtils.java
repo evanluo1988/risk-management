@@ -34,7 +34,11 @@ public class SqlSplicingUtils {
                 if(MySqlTypeUtils.MYSQL_TYPE_DECIMAL.equals(sqlType)){
                     sbValues.append(value +", ");
                 } else{
-                    sbValues.append(" '"+value + "', ");
+                    /**
+                     * 源代码：<p> sbValues.append(" '"+value + "', "); </p>
+                     * fix value中存在 abc'd 的情况
+                     */
+                    sbValues.append(" \""+value.replace("\"", "\\\"") + "\", ");
                 }
             }
         }

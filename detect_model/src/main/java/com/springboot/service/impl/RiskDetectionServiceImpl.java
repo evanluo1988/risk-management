@@ -11,6 +11,7 @@ import com.springboot.vo.risk.EntHealthReportVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Objects;
@@ -51,6 +52,11 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
                 int count = quotaValueService.countQuotaValues(reqId);
                 if(count > 0) {
                     EntHealthReportVo reportVo = dataHandleService.getEntHealthReportVo(reqId, org);
+                    Company company = companyService.getCompanyByName(entName);
+                    if (Objects.nonNull(company) && StringUtils.isEmpty(company.getReqId())){
+                        company.setReqId(reqId);
+                        companyService.updateById(company);
+                    }
                     return reportVo;
                 }
             } else {
@@ -65,9 +71,14 @@ public class RiskDetectionServiceImpl implements RiskDetectionService {
             //通过本地标准表计算指标值
             dataHandleService.culQuotas(reqId, org);
             EntHealthReportVo reportVo = dataHandleService.getEntHealthReportVo(reqId, org);
+            Company company = companyService.getCompanyByName(entName);
+            if (Objects.nonNull(company) && StringUtils.isEmpty(company.getReqId())){
+                company.setReqId(reqId);
+                companyService.updateById(company);
+            }
             return reportVo;
         } catch (Exception e) {
-            log.info("checkByEntName:" + e.getMessage());
+            log.info("checkByEntName:" ,e);
         }
         return null;
     }
