@@ -570,6 +570,7 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
                                 if ("r0404".equals(singleArray)) {
                                     regex = regex.replaceAll("【被告】", PartyWithoutKuoHao);
                                 }
+                                logger.info("regex= [" + regex +"]  singleResult = [" +  singleResult+"]");
                                 if (Pattern.compile(regex).matcher(singleResult.replace("*","\\*")).matches()) {
                                     JudgeResultList.add(singleArray);
                                     logger.info("Serialno:{}【审理结果】***【{}】:正则【{}】匹配到子串！！！！！", Serialno, singleResult, singleArray);
