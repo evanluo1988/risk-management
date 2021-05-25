@@ -567,7 +567,7 @@ public class LegalDataAddColumnServiceImpl implements LegalDataAddColumnService 
                             for (String singleArray : regexArray) {
                                 String regex = REGEXMAP_SLJG.get(singleArray).replaceAll("【企业名称】",
                                         EntNameWithoutKuoHao);
-                                    if ("r0404".equals(singleArray)) {
+                                if ("r0404".equals(singleArray)) {
                                     regex = regex.replaceAll("【被告】", PartyWithoutKuoHao);
                                 }
                                 logger.info("regex= [" + regex +"]  singleResult = [" +  singleResult+"]");
